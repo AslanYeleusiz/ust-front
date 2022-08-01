@@ -1,0 +1,531 @@
+
+@media all and (max-width: 1450px){
+    .main_ustazdar {
+    background: center/auto 100% url(/_nuxt/assets/images/main_ustazdar.jpg);
+}
+}
+@media all and (max-width: 1099px){
+    .cst-ct{
+        max-width: 700px;
+    }
+
+    .block1{
+        background: center/auto 100% url(/_nuxt/assets/images/block1.png);
+    }
+    .link-item{
+        width: auto;
+        height: auto;
+    }
+    .otherLinks{
+        grid-template-columns: 1fr 1fr 1fr;
+    }
+    .block1 .bcontent{
+        align-items: center;
+    }
+    .main_slider {
+        height: 318px;
+        grid-template-columns: 419px 1fr;
+        grid-gap: 15px;
+        margin-top: 40px;
+    }
+    .block2, .block3 {
+        padding: 15px 74px 10px 11px;
+    }
+    .htext {
+        font-size: 36px;
+        line-height: 42px;
+    }
+    .block1 .dtext {
+        font-size: 16px;
+        line-height: 20px;
+    }
+    .block2 .htext {
+        font-size: 18px;
+        line-height: 19px;
+    }
+    .block2 .dtext {
+        font-size: 13px;
+        line-height: 16px;
+    }
+    .block3 .htext {
+        font-size: 32px;
+        line-height: 38px;
+    }
+    .block2 button, .block3 button {
+        width: 138px;
+        height: 35px;
+        font-size: 12px;
+        margin-top: 10px;
+    }
+    .otherLinks {
+        margin-top: 40px;
+    }
+
+}
+@media all and (max-width: 991px){
+    .cst-ct{
+        max-width: 580px;
+    }
+    .h1, .h2 {
+        font-size: 26px;
+        font-weight: 700;
+        line-height: 30px;
+    }
+    .htext {
+        font-size: 32px;
+        line-height: 34px;
+    }
+    .block1 .bcontent button{
+        font-size: 16px;
+        width: 224px;
+        height: 48px;
+    }
+    .main_slider {
+        grid-template-columns: 359px 1fr;
+        height: 255px;
+    }
+    .block2, .block3 {
+        padding: 15px 44px 15px 15px;
+    }
+    .block2 .htext {
+        font-size: 16px;
+        line-height: 16px;
+    }
+    .block2 .dtext {
+        font-size: 12px;
+        line-height: 16px;
+    }
+    .block2 button, .block3 button {
+        width: 133px;
+        height: 28px;
+        font-size: 11px;
+        margin-top: 7px;
+    }
+    .block3 .htext {
+        font-size: 28px;
+        line-height: 32px;
+    }
+    .block3 .dtext {
+        font-size: 11px;
+        line-height: 12px;
+    }
+    .otherLinks {
+        margin-top: 40px;
+    }
+    .main_ustazdar {
+        margin-top: 70px;
+        padding: 70px 0 100px;
+    }
+    .main_cst_slider{
+        overflow-x: scroll;
+    }
+    .mu_block{
+        min-width: 280px;
+    }
+    .ms_block{
+        min-width: 270px;
+    }
+    .main_sharalar{
+        overflow-x: scroll;
+        padding: 70px 0;
+    }
+    .main_calc{
+        padding: 70px 0;
+    }
+    .calc_header h2 {
+        font-size: 34px;
+        line-height: 36px;
+    }
+    .calc_header span {
+        font-size: 16px;
+        line-height: 19px;
+    }
+    .mu_h2 {
+        font-size: 40px;
+        line-height: 46px;
+    }
+    .link_section{
+        grid-template-columns: 1fr 1fr 1fr 1fr;
+    }
+    .main_about{
+        padding: 70px 0 80px;
+    }
+    .ms_search {
+        grid-template-columns: 1fr 180px;
+    }
+    .main_questions{
+        padding: 70px 0;
+    }
+}
+@media all and (max-width: 883px){
+    .cst-ct{
+        max-width: 480px;
+    }
+
+    .main .h2 {
+        margin: 30px 0 0 0;
+        padding: 0;
+    }
+    .htext {
+        font-size: 26px;
+    }
+    .block1 .dtext {
+        font-size: 14px;
+        line-height: 17px;
+    }
+    .main_slider {
+        height: 246px;
+        grid-template-columns: 303px 1fr;
+        grid-gap: 10px;
+    }
+    .block2 {
+        background-position: 50% 50%;
+    }
+    .block2, .block3 {
+        padding: 10px 15px 10px 15px;
+    }
+    .lbody {
+        font-size: 14px;
+        line-height: 17px;
+    }
+    .link-item img {
+        width: 40px;
+        height: 40px;
+    }
+    .mu_h2 {
+        font-size: 34px;
+    }
+    .main_sharalar .h2 {
+        font-size: 36px;
+        line-height: 48px;
+    }
+    .calc_grid {
+        grid-template-areas: 'a' 'b' 'c';
+        grid-template-columns: 1fr;
+        grid-gap: 40px;
+    }
+    .main_questions .header {
+        font-size: 30px;
+        line-height: 36px;
+    }
+    .main_questions {
+        padding: 50px 0;
+    }
+    .link-item {
+        padding: 20px 20px;
+    }
+    .mu_block {
+        height: 60px;
+    }
+}
+@media all and (max-width: 767px){
+    .menu_btn{
+        display: block;
+    }
+    .open_menu_button.d-flex{
+        display: none !important;
+    }
+    .menuSlideBar.disabled{
+        width: 0;
+        overflow: hidden;
+    }
+    .main .h2 {
+        margin: 20px 0 0 0;
+    }
+    .h1, .h2 {
+        font-size: 24px;
+        font-weight: 700;
+        line-height: 28px;
+    }
+    .menuSlideBar{
+        overflow: hidden;
+    }
+/*
+    .main_slider {
+        margin-top: 20px;
+        height: 282px;
+    }
+*/
+    .main_header{
+        position: fixed;
+        top: 66px;
+    }
+    .main_header .free-cert{
+        display: none !important;
+    }
+    .free-cert-button{
+        display: none;
+    }
+    .main_slider{
+        display: none;
+    }
+    .mobile_main_slider{
+        display: block;
+    }
+    .block2 .htext, .block3 .htext{
+        font-size: 40px;
+        line-height: 47px;
+        text-align: left;
+    }
+    .block3 .bcontent{
+        align-items: center;
+    }
+    .bcontent{
+        align-items: flex-start;
+    }
+    .block2, .block3{
+        padding: 40px 206px 25px 30px;
+    }
+    .block3{
+        padding-right: 171px;
+    }
+    .block2 .dtext, .block3 .dtext{
+        font-size: 18px;
+        font-weight: 400;
+        line-height: 21px;
+        margin-top: 15px;
+    }
+    .block2 button, .block3 button{
+        margin-top: 30px;
+        width: 240px;
+        height: 55px;
+        background: #1E63E9;
+        border-radius: 36px;
+        font-size: 18px;
+        font-weight: 500;
+        color: #ffffff;
+    }
+    .otherLinks {
+        margin-top: 30px;
+    }
+    .link-item {
+        padding: 15px 20px;
+    }
+    .main_ustazdar {
+        margin-top: 50px;
+        padding: 60px 0 80px;
+    }
+    .mu_fst span {
+        font-size: 14px;
+        line-height: 16px;
+    }
+    .main_sharalar {
+        padding: 50px 0;
+    }
+    .main_sharalar .h2, .calc_header h2 {
+        font-size: 32px;
+        line-height: 36px;
+    }
+    .main_calc {
+        padding: 50px 0;
+    }
+    .calc_header span {
+        font-size: 14px;
+    }
+    .main_about {
+        padding: 50px 0 60px;
+    }
+    .ms_search button, .ms_search input {
+        height: 40px;
+    }
+    .ms_search {
+        grid-template-columns: 1fr 132px;
+    }
+    .main_questions .mq_list {
+        margin-top: 35px;
+    }
+    .main_questions .header {
+        font-size: 26px;
+        line-height: 30px;
+    }
+    .bg_popup{
+        position: fixed;
+        width: 100vw;
+        height: 100vh;
+        background: rgba(0,0,0,0.4);
+        transition: 0.4s;
+        opacity: 0;
+        z-index: 16;
+    }
+    .bg_popup.active{
+    animation-name: example;
+    animation-duration: 0.4s;
+    opacity: 1;
+}
+    @keyframes example {
+      0%   {opacity: 0;}
+      100% {opacity: 1;}
+    }
+}
+@media all and (max-width: 500px){
+    .cst-ct{
+        max-width: 100%;
+        padding: 0 10px;
+    }
+    .mq_list {
+        grid-template-columns: 1fr 1fr;
+        grid-gap: 20px;
+    }
+    .calc_buttons {
+        grid-template-columns: 1fr;
+        grid-gap: 10px;
+    }
+    .lhead{
+        font-size: 14px;
+        line-height: 16px;
+    }
+    .lbody{
+        font-size: 10px;
+        line-height: 12px;
+    }
+    .link-item img{
+        width: 30px;
+        height: 30px;
+    }
+    .main_ustazdar {
+        padding: 60px 0px 80px 20px;
+    }
+    .main_sharalar .h2, .calc_header h2 {
+        font-size: 28px;
+        line-height: 33px;
+    }
+    .mu_fst span{
+        font-size: 14px;
+        line-height: 16px;
+    }
+    .block1 .htext {
+        font-size: 24px;
+        line-height: 28px;
+    }
+    .block2 .htext, .block3 .htext {
+        font-size: 22px;
+        line-height: 26px;
+    }
+    .block2, .block3 {
+        padding: 40px 133px 25px 30px;
+    }
+    .block3 .htext {
+        font-size: 36px;
+        line-height: 42px;
+    }
+    .main_sharalar .h2, .calc_header h2 {
+        font-size: 28px;
+        line-height: 33px;
+    }
+    .ms_head{
+        font-size: 16px;
+        line-height: 19px;
+    }
+    .type {
+        padding: 5px 10px;
+        font-size: 10px;
+        line-height: 12px;
+    }
+    .ms_link {
+        font-size: 16px;
+        line-height: 19px;
+    }
+    .main_about a {
+        font-size: 16px;
+        line-height: 19px;
+    }
+    .main_profile img{
+        width: 120px;
+        height: 120px;
+    }
+    .main_about .header {
+        font-size: 16px;
+        line-height: 19px;
+    }
+    .main_profile .span {
+        font-size: 14px;
+        line-height: 16px;
+    }
+    .ms_search {
+        grid-template-columns: 1fr;
+    }
+    .main_search span {
+        font-size: 14px;
+        line-height: 16px;
+    }
+    .main_questions .header {
+        font-size: 24px;
+        line-height: 28px;
+    }
+    .mq_block .desc {
+        font-size: 12px;
+        line-height: 14px;
+    }
+    .block1 {
+        background-image: url(/_nuxt/assets/images/block1.png);
+    }
+}
+@media all and (max-width: 472px){
+    .mobile_main_slider .block3 {
+        padding: 40px 50px 40px 50px;
+        background-position: 80% 100%;
+        background-size: 80%;
+    }
+    .mobile_main_slider .block2 .htext {
+        font-size: 28px;
+        line-height: 30px;
+    }
+    .mobile_main_slider .block2 {
+        padding: 40px 79px 40px 30px;
+        background-position: 80% 50%;
+    }
+    .mobile_main_slider .block1 .bcontent button {
+        font-size: 16px;
+        width: 224px;
+        height: 55px;
+    }
+}
+
+@media all and (max-width: 460px){
+    .h1, .h2 {
+        font-size: 22px;
+        font-weight: 700;
+        line-height: 26px;
+    }
+
+}
+@media all and (max-width: 452px){
+    .mobile_main_slider .block1 {
+        background-size: auto 100%;
+    }
+    .mobile_main_slider .block2 {
+        padding: 40px 30px;
+    }
+    .mobile_main_slider .block2 .htext {
+        font-size: 24px;
+        line-height: 28px;
+    }
+    .mobile_main_slider .block2 .dtext,
+    .mobile_main_slider .block3 .dtext {
+        margin-top: 15px;
+    }
+    .block1 button,
+    .block2 button,
+    .block3 button {
+        width: 100%;
+        max-width: 240px;
+
+    }
+}
+@media all and (max-width: 424px){
+    .mobile_main_slider .block3 {
+        padding: 0 30px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+}
+@media all and (max-width: 400px){
+    .link-item {
+        padding: 10px 16px;
+    }
+}
+@media all and (max-width: 360px){
+
+}
