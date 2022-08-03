@@ -1,24 +1,11 @@
 <template>
     <div>
-        <header>
-            <div class="otstup"></div>
-            <div class="main_header">
-                <div class="cst-ct d-flex a-c j-b">
-                    <div class="d-flex">
-                        <NuxtLink to="/turnirler" class="NuxtLink-item active">
-                            Турнирлер
-                        </NuxtLink>
-                        <NuxtLink to="/menin-turnirlerim" class="NuxtLink-item">
-                            Менің турнирлерім
-                        </NuxtLink>
-                    </div>
-                    <div class="d-flex a-c free-cert">
-                        <div class="free-cert-button">Тегін сертификат алу</div>
-                        <img class="notification" src="~assets/images/notification.svg">
-                    </div>
-                </div>
-            </div>
-        </header>
+        <headerLink
+            firstLink="/turnirler"
+            firstLinkName="Турнирлер"
+            secondLink="/menin-turnirlerim"
+            secondLinkName="Менің турнирлерім"
+        />
         <div class="main">
             <div class="head">
                 <div class="cst-ct">
@@ -84,10 +71,26 @@
 
 <script>
     import arrowLeft from '@/components/svg/arrow-left.vue'
+    import headerLink from '@/components/header.vue'
 
     export default {
+        head(){
+            return {
+                title: 'Блиц-турнир ұстаздарға, оқушыларға, тәрбиешілерге, студенттерге арналған турнирлер, жарыстар, дипломдар',
+                meta: [{
+                    hid: 'description',
+                    name: 'description',
+                    content: 'Ұстаздарға, оқушыларға, тәрбиешілерге, студенттерге арналған турнирлер, жарыстар, олимпиадалар. Турнирге қатысу арқылы I, II, III дәрежелі дипломдар және сертификаттар мен марапаттаулар беріледі. Мұғалімдер біліктілігін арттырып онлайн тесттерді тапсыра алады.'
+                },{
+                    hid: 'keywords',
+                    name: 'keywords',
+                    content: 'дипломдар, олимпиадалар, турнир, жарыстар,мұғалімдерге сертификаттар, ұстаздарға дипломдар, оқушыларға жарыстар, тәрбиешілерге жарыстар, блиц турнир, олимпиада сұрақтары, онлайн тест, мұғалімдерге жарыстар, олимпиадаға дайындық, I II III дәрежелі дипломдар, ұстаздарға марапаттаулар'
+                },],
+            }
+        },
         components: {
-            arrowLeft
+            arrowLeft,
+            headerLink
         },
         data() {
             return {

@@ -1,25 +1,11 @@
 <template>
     <div>
-        <header>
-            <div class="otstup"></div>
-            <div class="main_header">
-                <div class="cst-ct d-flex a-c j-b">
-                    <div class="d-flex">
-                        <NuxtLink to="/olimpiada" class="NuxtLink-item active">
-                            Олимпиада
-                        </NuxtLink>
-                        <NuxtLink to="/menin-olimpiadalarym" class="NuxtLink-item">
-                            Менің олимпиадаларым
-                        </NuxtLink>
-                    </div>
-                    <div class="d-flex a-c free-cert">
-                        <div class="free-cert-button">Тегін сертификат алу</div>
-                        <img class="notification" src="~assets/images/notification.svg">
-                    </div>
-                </div>
-            </div>
-        </header>
-
+        <headLink
+            firstLink="/olimpiada"
+            firstLinkName="Олимпиада"
+            secondLink="/menin-olimpiadalarym"
+            secondLinkName="Менің олимпиадаларым"
+        />
         <section class="main">
             <div class="cst-ct">
                 <div class="head">
@@ -73,17 +59,9 @@
                     </div>
                 </div>
                 <div class="d-flex j-c">
-                    <NuxtLink to="/respublikalyq">
-                        <button class="btn btn-primary enter">
-                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M16.5984 7.45837L11.1651 12.8917C10.5234 13.5334 9.47344 13.5334 8.83177 12.8917L3.39844 7.45837" stroke="#ffffff" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" />
-                        </svg>
-                        <span class="span">Олимпиадаға қатысу</span>
-                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M16.5984 7.45837L11.1651 12.8917C10.5234 13.5334 9.47344 13.5334 8.83177 12.8917L3.39844 7.45837" stroke="#ffffff" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" />
-                        </svg>
-                    </button>
-                    </NuxtLink>
+                    <div class="enter">
+                        <bigBtn @click.native="gotoOlimp" text='Олимпиадаға қатысу'/>
+                    </div>
                 </div>
             </div>
         </section>
@@ -139,11 +117,15 @@
 
 <script>
     import daryn from '../components/svg/daryn.vue'
+    import bigBtn from '@/components/forms/bigBtn.vue'
+    import headLink from '@/components/header.vue'
 
     export default {
         layout: 'default',
         components: {
-            daryn
+            daryn,
+            bigBtn,
+            headLink
         },
         data() {
             return {
@@ -157,6 +139,7 @@
                     seconds: 0,
                 },
                 timer: null,
+                title: 'Зияткерлік олипиада | Қазақстандық интернет олипиадалар'
             }
         },
         mounted() {
@@ -180,64 +163,31 @@
             stopTimer() {
                 clearTimeout(this.timer)
             },
+            gotoOlimp(){
+                this.$router.push('/respublikalyq')
+            }
         },
+        head(){
+            return {
+                title: this.title,
+                meta: [{
+                    hid: 'description',
+                    name: 'description',
+                    content: 'Олимпиадаларға барлық ұстаздар, тәрбиешілер, білім бөлімдерінің мамандары және мектепалды даярлық, балабақша, мектеп оқушылары, гимназия, лицей оқушылары, студенттер барлық қолданушылар қатыса алады.'
+                },{
+                    hid: 'keywords',
+                    name: 'keywords',
+                    content: 'онлайн олимпиадалар, зияткерлік олимпиада, қазақстандық интернет олимпиадалар, қазахстанские интернет олимпиады, кио, cdo kz, оқушыларға арналған интернет олимпиада, қашықтық олимпиада, тегін олипиадалар, клевер олимпиада'
+                },],
+            }
+        },
+
     }
 
 </script>
 
 
 <style scoped lang="scss">
-    .otstup {
-        padding-bottom: 66px;
-
-        @media all and (max-width: 767px) {
-            padding-bottom: 132px;
-        }
-    }
-
-    .main_header {
-        font-family: Raleway;
-        font-size: 16px;
-        font-weight: 500;
-        line-height: 19px;
-        background: #ffffff;
-
-        .cst-ct {
-            height: 100%;
-
-            .d-flex {
-                height: 100%;
-            }
-        }
-
-        .free-cert {
-            position: absolute;
-            right: 66px;
-            .free-cert-button{
-                @media all and (max-width: 883px){
-                    display: none;
-                }
-
-            }
-        }
-
-        .NuxtLink-item {
-            display: flex;
-            align-items: center;
-            color: #363636;
-            height: 100%;
-            margin-right: 40px;
-
-            &:hover {
-                text-decoration: none;
-            }
-        }
-
-        .NuxtLink-item.active {
-            border-bottom: 2px solid #363636;
-        }
-    }
-
     .main {
         padding-bottom: 100px;
         a:hover{
@@ -407,26 +357,51 @@
             margin-top: 40px;
             width: 380px;
             height: 70px;
-            font-size: 20px;
-            font-weight: 800;
-            line-height: 23px;
-            text-transform: uppercase;
-            background: linear-gradient(95.59deg, #1C77FD 75.72%, #BDD8FF 83.81%, #1C77FD 91.57%);
-            border-radius: 46px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            button{
+                font-size: 20px;
+                font-weight: 800;
+                line-height: 23px;
+                text-transform: uppercase;
+                @media all and (max-width: 767px){
+                    font-size: 18px;
+                }
+                &::before{
+                    content: '';
+                    position: absolute;
+                    width: 12px;
+                    height: 12px;
+                    border-bottom: 2px solid #fff;
+                    border-left: 2px solid #fff;
+                    transform: translateX(-30px) rotate(-45deg);
+                    animation: animate1 0.7s alternate infinite;
+
+                }
+                &::after{
+                    content: '';
+                    position: absolute;
+                    width: 12px;
+                    height: 12px;
+                    border-bottom: 2px solid #fff;
+                    border-left: 2px solid #fff;
+                    transform: translateX(18px) rotate(-45deg);
+                    animation: animate2 0.7s alternate infinite;
+                }
+            }
             @media all and (max-width: 767px){
                 width: 100%;
                 height: 60px;
-                font-size: 18px;
             }
-            .span {
-                margin: 0 10px;
-            }
+
         }
     }
-
+    @keyframes animate1{
+        0%{transform: translate(-30px,-2px) rotate(-45deg);}
+        100%{transform: translate(-30px,4px) rotate(-45deg);}
+    }
+    @keyframes animate2{
+        0%{transform: translate(18px,-2px) rotate(-45deg);}
+        100%{transform: translate(18px,4px) rotate(-45deg);}
+    }
     .olimp_list {
         .category-overflow{
             @media all and (max-width: 767px){

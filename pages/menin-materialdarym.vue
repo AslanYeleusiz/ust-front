@@ -63,6 +63,22 @@
     import deletePopup from '@/components/popups/deletePopup.vue'
 
     export default {
+        head(){
+            return {
+                title: 'Менің материалдарым | Ustaz tilegi - Ұстаз тілегі Республикалық ұстаздар сайты',
+                meta: [{
+                    hid: 'description',
+                    name: 'description',
+                    content: 'Ұстаз тілегі Республикалық ұстаздар сайты. Ұстаздарға видео сабақтар, онлайн олимпиадалар, сертификаттар, алғыс хаттар, грамоталар, дипломдар, сабақ жоспарлары'
+                },{
+                    hid: 'keywords',
+                    name: 'keywords',
+                    content: 'онлайн олимпиада, ұстаз тілегі, уст кз, ustaz tilegi, ust kz, ұстаздар сайты, ашық сабақтар, сабақ жоспарлары, видео сабақтар, вебинарлар'
+                },],
+
+            }
+        },
+
         components: {
             myMaterials,
             zhinak,

@@ -27,10 +27,11 @@
                 <div class="main_wrap">
                     <div class="left_bar">
                         <img src="~assets/images/Avatar_profile.png" alt="" class="avatar">
-                        <div class="name">Сейдахметжанов Бақберген Тұрарқожаұлы</div>
-                        <div class="id">ID номер: 123456</div>
-                        <div class="info">Телефон: <b>+7(702)-468-45-05</b> <br>
-                            Email: <b>sembiev_n@mail.ru</b> <br>
+                        <div class="name">{{$auth.user.fio}}</div>
+                        <div class="id">ID номер: {{$auth.user.id}}</div>
+                        <div class="info">
+                            Телефон: <b>{{$auth.user.tel_num}}</b> <br>
+                            Email: <b>{{$auth.user.email}}</b> <br>
                             Құпия сөз: <b>***</b></div>
                         <NuxtLink to="choise" class="btn myBtn">Өзгерту</NuxtLink>
                         <button class="btn exitBtn">
@@ -157,7 +158,8 @@
                         text: 'Сұрақ-жауап',
                         link: '/questions'
                     },
-                ]
+                ],
+                title: 'Ustaz tilegi - Ұстаз тілегі Республикалық ұастаздар сайты'
             }
         },
         methods: {
@@ -165,6 +167,11 @@
                 var images = require.context('../assets/images/', false)
                 return images('./' + pet)
             },
+        },
+        head(){
+            return {
+                title: this.title,
+            }
         }
 
     }

@@ -1,7 +1,7 @@
 export default {
     // Global page headers: https://go.nuxtjs.dev/config-head
     head: {
-        title: 'ust.kz',
+        title: 'Ustaz tilegi - Ұстаз тілегі Республикалық ұастаздар сайты',
         htmlAttrs: {
             lang: 'en'
         },

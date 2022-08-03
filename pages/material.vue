@@ -110,6 +110,22 @@
     import qualik from '@/components/materials/my_materials/forms/qualik.vue'
 
     export default {
+        head(){
+            return {
+                title: 'Ұстаздарға материалдар, ашық сабақтар, сабақ жоспарлары',
+                meta: [{
+                    hid: 'description',
+                    name: 'description',
+                    content: 'Мұғалімдерге ашық сабақтар, сабақ жоспарлары, тәрбие сағаттары, омж, қмж құжаттарды тегін жүктеп сабақта қолдануға болады. Ашық сабақтар сайты'
+                },{
+                    hid: 'keywords',
+                    name: 'keywords',
+                    content: 'ашық сабақтар, сабақ жоспарлары, тәрбие сағаттары, қысқа мерзімді жоспар, орта мерзімді жоспар, олимпиада сұрақтар, қмж, омж, сабақтар'
+                },],
+
+            }
+        },
+
         scrollToTop: true,
         components: {
             Lottie,

@@ -5,22 +5,22 @@
                 <navBarLogo />
             </div>
             <button @click="$emit('openMenu')" class="open_menu_button d-flex aj-c">
-                <img :class="{imgRotate: slideOpen}" src="~assets/images/arrow-left.svg">
+                <arrowLeft :class="{imgRotate: slideOpen}" />
             </button>
             <div class="menu">
                 <ul class="menu-ul">
                     <template v-if="!$auth.user">
                         <li class="menu-li">
-                            <a href="#" @click="$emit('openLogin')" class="d-flex a-c p-0">
-                                <img src="~assets/images/profile-circle.svg" alt="">
+                            <a href="#" @click="$emit('openLogin')" class="d-flex a-c">
+                                <profileCircle/>
                                 <span class="menu-li-span">Кабинетке кіру</span>
                             </a>
                         </li>
                     </template>
                     <template v-if="$auth.user">
                         <li class="menu-li">
-                            <NuxtLink to="/profile" class="d-flex a-c p-0">
-                                <img src="~assets/images/profile-circle.svg" alt="">
+                            <NuxtLink to="/profile" class="d-flex a-c">
+                                <profileCircle/>
                                 <span class="menu-li-span">Жеке кабинет</span>
                             </NuxtLink>
                         </li>
@@ -55,24 +55,86 @@
                 </ul>
                 <div class="menu-syzyq"></div>
                 <ul class="menu-ul">
-                    <template v-for="(menu_item, index) in menu_items">
-                        <li class="menu-li">
-                            <NuxtLink :to="menu_item.route_name" class="d-flex a-c">
-                                <img :src="getImgUrl(menu_item.image)">
-                                <span class="menu-li-span">{{ menu_item.name }}</span>
-                            </NuxtLink>
-                        </li>
-                    </template>
+                    <li class="menu-li">
+                        <NuxtLink to="/kurstar" class="d-flex a-c">
+                            <teacher/>
+                            <span class="menu-li-span">Курстар</span>
+                        </NuxtLink>
+                    </li>
+                    <li class="menu-li">
+                        <NuxtLink to="/olimpiada" class="d-flex a-c">
+                            <cup/>
+                            <span class="menu-li-span">Олимпиядалар</span>
+                        </NuxtLink>
+                    </li>
+                    <li class="menu-li">
+                        <NuxtLink to="/turnirler" class="d-flex a-c">
+                            <medalStar/>
+                            <span class="menu-li-span">Турнирлер</span>
+                        </NuxtLink>
+                    </li>
+                    <li class="menu-li">
+                        <NuxtLink to="/baiqaular" class="d-flex a-c">
+                            <medal/>
+                            <span class="menu-li-span">Байқаулар</span>
+                        </NuxtLink>
+                    </li>
+                    <li class="menu-li">
+                        <NuxtLink to="/vebinarlar" class="d-flex a-c">
+                            <videoSquare/>
+                            <span class="menu-li-span">Вебинарлар</span>
+                        </NuxtLink>
+                    </li>
+                    <li class="menu-li">
+                        <NuxtLink to="/konference" class="d-flex a-c">
+                            <monitorRecorder/>
+                            <span class="menu-li-span">Конференциялар</span>
+                        </NuxtLink>
+                    </li>
+                    <li class="menu-li">
+                        <NuxtLink to="/material" class="d-flex a-c">
+                            <documentText/>
+                            <span class="menu-li-span">Материалдар</span>
+                        </NuxtLink>
+                    </li>
+                    <li class="menu-li">
+                        <NuxtLink to="/zhosparlar" class="d-flex a-c">
+                            <folder/>
+                            <span class="menu-li-span">Сабақ жоспарлар</span>
+                        </NuxtLink>
+                    </li>
                 </ul>
             </div>
         </div>
         <div v-show="!slideOpen" @click="$emit('openMenu')" class="bg_popup" :class="{active: !slideOpen}"></div>
     </div>
-
 </template>
 
 <script>
+    import teacher from '@/components/svg/teacher.vue'
+    import profileCircle from '@/components/svg/profile-circle.vue'
+    import cup from '@/components/svg/cup.vue'
+    import medalStar from '@/components/svg/medalStar.vue'
+    import medal from '@/components/svg/medal.vue'
+    import videoSquare from '@/components/svg/videoSquare.vue'
+    import monitorRecorder from '@/components/svg/monitorRecorder.vue'
+    import documentText from '@/components/svg/documentText.vue'
+    import folder from '@/components/svg/folder.vue'
+    import arrowLeft from '@/components/svg/arrowLeft.vue'
+
     export default {
+        components: {
+            teacher,
+            profileCircle,
+            cup,
+            medalStar,
+            medal,
+            videoSquare,
+            monitorRecorder,
+            documentText,
+            folder,
+            arrowLeft
+        },
         methods: {
             getImgUrl(pet) {
                 var images = require.context('../assets/images/', false)
@@ -80,7 +142,7 @@
             },
             logout() {
                 this.$auth.logout().then(() => {
-                    this.router.push('kurstar')
+                    this.router.push('/')
                 });
             }
         },

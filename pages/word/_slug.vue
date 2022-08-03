@@ -41,7 +41,7 @@
                             <NuxtLink to="/profile-id-2">
                                 <div class="name">
                                     <img src="~assets/images/user-black.svg" alt="">
-                                    <span>{{material.user.fio}}</span>
+                                    <span>{{material.user.s_name}} {{material.user.username}} {{material.user.l_name}}</span>
                                 </div>
                             </NuxtLink>
                             <div class="date">
@@ -73,8 +73,12 @@
                         <span>Материалдың толық нұсқасын жүктеп алып, көруге болады</span>
                     </div>
                 </div>
-
-<!--                <iframe src="http://127.0.0.1:8000/public/embed.aspx?src=eduline.kz/public/storage/uploads/file/RjG5XIH1vIijBSdA486PzQy7fHXoOtUTfy2D3SpV.doc" width="100%" height="820" frameborder="0"></iframe>-->
+                <template v-if="material.raw=='docx'||material.raw=='doc'">
+                    <iframe src='https://view.officeapps.live.com/op/embed.aspx?src=test2.ust.kz/public' width='100%' height='720px' frameborder='0'></iframe>
+                </template>
+                <template v-if="material.raw=='pdf'">
+                    <iframe id="iframepdf" width='100%' height='720px' src="files/example.pdf" frameborder='0'></iframe>
+                </template>
                 <button @click="download()" class="btn btn-primary downloadBtn">
                     <download color="#ffffff" />
                     Материалды жүктеу
@@ -262,6 +266,17 @@
                 }, ]
             }
         },
+        head(){
+            return {
+                title: this.material.title,
+                meta: [{
+                    hid: 'description',
+                    name: 'description',
+                    content: this.material.title+' атты Мақала   - ұстаз тілегі сайтынан тегін жүктеп алыңыз.',
+                }],
+            }
+        },
+
         methods: {
             copyUrl() {
                 let tempInput = document.createElement('textarea');

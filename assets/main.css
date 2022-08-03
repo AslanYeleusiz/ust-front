@@ -81,12 +81,23 @@ select:focus{
     transform: translate(50%, 100px);
     cursor: pointer;
     z-index: 18;
+    transition: 0.2s;
+    border: 1px solid #ffffff;
 }
-.open_menu_button img{
-    transition: 0.4s;
+.open_menu_button:focus{
+    box-shadow: 7px 0px 20px rgba(0, 0, 0, 0.05) !important;
+}
+.open_menu_button svg{
+    stroke: #292D32;
+}
+.open_menu_button:hover{
+    border: 1px solid #0045CB;
+}
+.open_menu_button:hover svg{
+    stroke: #0045CB;
 }
 .menu {
-    padding: 30px;
+    padding: 30px 0;
     overflow: hidden;
 }
 .menu-ul {
@@ -94,7 +105,14 @@ select:focus{
 }
 .menu-li {
     list-style-type: none;
-    margin-bottom: 20px;
+}
+.menu-li a{
+    padding: 10px 30px;
+}
+.menu-li a svg{
+    flex-shrink: 0;
+    stroke: #133881;
+    transition: all 0.4s;
 }
 .menu-li .line{
     margin-left: 5px;
@@ -109,19 +127,26 @@ select:focus{
     color: #363636;
     font-size: 16px;
     line-height: 19px;
+    transition: 0.3s;
 }
 .menu-li a:hover {
     text-decoration: none;
+    background: #0045CB;
+}
+.menu-li a:hover .menu-li-span{
+    color: #ffffff;
+}
+.menu-li a:hover svg{
+    stroke: #ffffff;
 }
 .menu-li-span {
     white-space: nowrap;
-    transition: 0.4s;
+    transition: 0.3s;
     margin-left: 15px;
 }
 .menu-syzyq {
-    padding-top: 10px;
-    margin-bottom: 30px;
-    width: 100%;
+    padding: 10px 0 0;
+    margin: 0 30px 30px;
     height: 1px;
     border-bottom: 1px solid #EAEAEA;
 
@@ -151,13 +176,6 @@ select:focus{
 .free-cert-button{
     width: 240px;
     height: 44px;
-    background: linear-gradient(93.37deg, #58432C 66.81%, rgba(88, 67, 44, 0.55) 77.45%, #58432C 85.05%);
-    border-radius: 26px;
-    color: #FFFFFF;
-    font-weight: 700;
-    display: flex;
-    align-items: center;
-    justify-content: center;
 }
 .mainLogo{
     width: 184px;
@@ -288,8 +306,8 @@ select:focus{
     text-align: center;
     color: #363636;
 }
-.block2 button,
-.block3 button{
+.block2 .cst_btn,
+.block3 .cst_btn{
     width: 150px;
     height: 40px;
     font-size: 14px;
@@ -525,6 +543,10 @@ select:focus{
     font-weight: 700;
     line-height: 23px;
 }
+.btn.money:hover{
+    background: #0045CB;
+    color: #FFFFFF;
+}
 .btn.money.active{
     background: #03B113;
     color: #ffffff;
@@ -563,17 +585,13 @@ select:focus{
     grid-gap: 10px;
 }
 .calc_btn{
-    background: #1E63E9;
     height: 50px;
     width: 100%;
-    border-radius: 36px;
+}
+.calc_btn button{
     font-weight: 500;
     line-height: 16px;
-    color: #ffffff;
     font-size: 14px;
-}
-.calc_btn:hover{
-    color: #ffffff;
 }
 .green{
     font-size: 20px;
@@ -696,18 +714,35 @@ input[type=range]::-webkit-slider-runnable-track  {
 }
 
 .main_questions .mq_list{
-    margin-top: 50px;
+    margin-top: 10px;
 }
 .mq_list{
     display: grid;
     grid-template-columns: 1fr 1fr 1fr 1fr;
     grid-gap: 20px;
 }
+.mq_list a:hover{
+    text-decoration: none;
+    box-shadow: 0px 4px 50px rgba(0, 0, 0, 0.1);
+}
 .mq_block{
     display: flex;
     flex-direction: column;
     align-items: center;
     cursor: pointer;
+    padding: 40px 5px 45px;
+}
+.mq_block .play{
+    width: 70px;
+    height: 70px;
+    background: #1E63E9;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.mq_list a:hover .mq_block .play{
+    background: #0045CB;
 }
 .mq_block .desc{
     margin-top: 20px;

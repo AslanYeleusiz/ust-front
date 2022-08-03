@@ -1,24 +1,11 @@
 <template>
     <div>
-        <header>
-            <div class="otstup"></div>
-            <div class="main_header">
-                <div class="cst-ct d-flex a-c j-b">
-                    <div class="d-flex">
-                        <NuxtLink to="/olimpiada" class="NuxtLink-item active">
-                            Олимпиада
-                        </NuxtLink>
-                        <NuxtLink to="/menin-olimpiadalarym" class="NuxtLink-item">
-                            Менің олимпиадаларым
-                        </NuxtLink>
-                    </div>
-                    <div class="d-flex a-c free-cert">
-                        <div class="free-cert-button">Тегін сертификат алу</div>
-                        <img class="notification" src="~assets/images/notification.svg">
-                    </div>
-                </div>
-            </div>
-        </header>
+        <headerLink
+            firstLink="/olimpiada"
+            firstLinkName="Олимпиада"
+            secondLink="/menin-olimpiadalarym"
+            secondLinkName="Менің олимпиадаларым"
+        />
         <section class="main">
             <div class="cst-ct">
                 <h1>
@@ -54,7 +41,7 @@
                     </div>
                 </div>
                 <div class="zayavka">
-                    <button class="btn olimpBtn">Олимпиадаға қатысу</button>
+                   <div class="olimpBtn"><bigBtn text='Олимпиадаға қатысу'/></div>
                     <div class="info">Диплом және сертификат олимпиадаға қатысқан соң бірден беріледі</div>
                 </div>
                 <div class="kartina">
@@ -134,7 +121,11 @@
                         <div class="desc">{{dip}} дәрежелі диплом</div>
                     </div>
                 </div>
-                <div class="d-flex j-c"><button class="btn olimpBtn">Олимпиадаға қатысу</button></div>
+                <div class="d-flex j-c">
+                <div class="olimpBtn">
+                    <bigBtn text='Олимпиадаға қатысу'/>
+                </div>
+                </div>
             </div>
         </section>
         <section class="questions">
@@ -167,10 +158,15 @@
 </template>
 <script>
     import Lottie from 'vue-lottie/src/lottie.vue'
-    import * as animationData from "~/assets/lottie_files/info_2/animation_kqc42oh6.json";
+    import * as animationData from "~/assets/lottie_files/info_2/animation_kqc42oh6.json"
+    import headerLink from '@/components/header.vue'
+    import bigBtn from '@/components/forms/bigBtn.vue'
+
     export default {
         components: {
-            Lottie
+            Lottie,
+            headerLink,
+            bigBtn
         },
         data() {
             return {
@@ -205,62 +201,16 @@
         transform: translateY(-25%);
         transition: 0.2s;
     }
-    .otstup {
-        padding-bottom: 66px;
-
-        @media all and (max-width: 767px) {
-            padding-bottom: 132px;
-        }
-    }
-    .main_header {
-        font-family: Raleway;
-        font-size: 16px;
-        font-weight: 500;
-        line-height: 19px;
-        background: #ffffff;
-
-        .cst-ct {
-            height: 100%;
-
-            .d-flex {
-                height: 100%;
-            }
-        }
-
-        .free-cert {
-            position: absolute;
-            right: 66px;
-
-            .free-cert-button {
-                @media all and (max-width: 883px) {
-                    display: none;
-                }
-
-            }
-        }
-
-        .NuxtLink-item {
-            display: flex;
-            align-items: center;
-            color: #363636;
-            height: 100%;
-            margin-right: 40px;
-
-            &:hover {
-                text-decoration: none;
-            }
-        }
-
-        .NuxtLink-item.active {
-            border-bottom: 2px solid #363636;
-        }
-    }
     .olimpBtn{
         min-width: 320px;
         height: 70px;
         background: linear-gradient(104.69deg, #1C77FD 35.59%, #BDD8FF 73.96%, #1C77FD 91.02%);
         border-radius: 46px;
         color: #ffffff;
+        button{
+            font-size: 20px;
+            font-weight: 600;
+        }
         @media all and (max-width: 883px){
             min-width: 260px;
             height: 60px;

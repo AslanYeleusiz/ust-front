@@ -51,7 +51,7 @@
         font-size: 32px;
         line-height: 38px;
     }
-    .block2 button, .block3 button {
+    .block2 .cst_btn, .block3 .cst_btn {
         width: 138px;
         height: 35px;
         font-size: 12px;
@@ -95,7 +95,7 @@
         font-size: 12px;
         line-height: 16px;
     }
-    .block2 button, .block3 button {
+    .block2 .cst_btn, .block3 .cst_btn {
         width: 133px;
         height: 28px;
         font-size: 11px;
@@ -285,15 +285,14 @@
         line-height: 21px;
         margin-top: 15px;
     }
-    .block2 button, .block3 button{
+    .block2 div.cst_btn, .block3 div.cst_btn{
         margin-top: 30px;
+    }
+    .block2 .cst_btn, .block3 .cst_btn{
         width: 240px;
         height: 55px;
-        background: #1E63E9;
-        border-radius: 36px;
         font-size: 18px;
         font-weight: 500;
-        color: #ffffff;
     }
     .otherLinks {
         margin-top: 30px;
@@ -474,13 +473,12 @@
         padding: 40px 79px 40px 30px;
         background-position: 80% 50%;
     }
-    .mobile_main_slider .block1 .bcontent button {
+    .mobile_main_slider .block1 .bcontent .cst_btn {
         font-size: 16px;
         width: 224px;
         height: 55px;
     }
 }
-
 @media all and (max-width: 460px){
     .h1, .h2 {
         font-size: 22px;
@@ -524,6 +522,11 @@
 @media all and (max-width: 400px){
     .link-item {
         padding: 10px 16px;
+    }
+}
+@media all and (max-width: 372px){
+    .otherLinks{
+        grid-template-columns: 1fr 1fr;
     }
 }
 @media all and (max-width: 360px){

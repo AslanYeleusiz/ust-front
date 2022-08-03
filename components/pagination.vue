@@ -4,11 +4,11 @@
 
 
             <button v-if="currentPage!=1" @click="$emit('set-page',currentPage-1)" class="btn prev">
-                <img src="~assets/images/arrow-left-blue.svg" alt="">
+                <arrowLeft class="arrow"/>
                 <span>Артқа</span>
             </button>
             <button v-else type="button" class="btn prev disabled">
-                <img src="~assets/images/arrow-left-blue.svg" alt="">
+                <arrowLeft class="arrow"/>
                 <span>Артқа</span>
             </button>
 
@@ -38,11 +38,11 @@
 
 
             <button v-if="currentPage!=lastPage" @click="$emit('set-page',currentPage+1)" class="btn next">
-                <img src="~assets/images/arrow-left-blue.svg" alt="">
+                <arrowLeft class="arrow"/>
                 <span>Келесі</span>
             </button>
             <button v-else type="button" class="btn next disabled">
-                <img src="~assets/images/arrow-left-blue.svg" alt="">
+                <arrowLeft class="arrow"/>
                 <span>Келесі</span>
             </button>
 
@@ -53,7 +53,10 @@
 
 
 <script>
+    import arrowLeft from '@/components/svg/arrow-left.vue'
+
     export default {
+        components: {arrowLeft},
         props: ['currentPage', 'lastPage']
     }
 
@@ -72,7 +75,6 @@
             font-weight: 600;
             line-height: 16px;
             color: #1E63E9;
-
             img {
                 display: none;
 
@@ -102,14 +104,39 @@
                 justify-content: center;
                 align-items: center;
             }
-
+            .arrow{
+                display: none;
+                stroke: #1E63E9;
+                @media all and (max-width: 767px){
+                    display: block;
+                }
+            }
             &.disabled {
                 opacity: 0.5;
+            }
+            &:hover{
+                background: #0045CB;
+                color: #ffffff;
+                &.disabled{
+                    background: #EFF3FF;
+                    color: #1E63E9;
+                    cursor: default;
+                }
+                .arrow{
+                    stroke: #ffffff;
+                }
+            }
+            &:active{
+                background: #0037A1;
+                color: #ffffff;
+                .arrow{
+                    stroke: #ffffff;
+                }
             }
         }
 
         .next {
-            img {
+            .arrow {
                 transform: rotate(180deg);
             }
         }
@@ -122,10 +149,8 @@
             display: flex;
             align-items: center;
             flex-direction: row;
-
             .page_item {
                 margin: 0 7px;
-
                 &.active {
                     color: #1E63E9;
                 }

@@ -37,6 +37,10 @@
             this.$bus.$on('openLogin', ()=>{
                 this.loginPopup = 1;
             })
+            this.$bus.$on('closeMenu', ()=>{
+                this.slideActive = true;
+            })
+
         }
     }
 

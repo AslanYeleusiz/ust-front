@@ -22,28 +22,27 @@
                         <div class="bcontent">
                             <div class="htext">Жеке кабинет</div>
                             <div class="dtext">Сіздің барлық жетістіктеріңіз<br>осында</div>
-                            <button class="btn">
-                                <img src="~assets/images/user.svg" alt="">
-                                Кіру / Тіркелу
-                            </button>
+                            <div class="cst_btn">
+                                <btn @click.native="gotoProfile" style="font-size: 18px" text='Кіру / Тіркелу' img="user.svg"/>
+                            </div>
                         </div>
                     </div>
                     <div class="block2">
                         <div class="bcontent">
                             <div class="htext">Айлықты есептеу калькуляторы</div>
                             <div class="dtext">тегін, әрі оңай</div>
-                            <button class="btn">
-                                Есептеу
-                            </button>
+                            <div class="cst_btn">
+                                <btn text='Есептеу'/>
+                            </div>
                         </div>
                     </div>
                     <div class="block3">
                         <div class="bcontent">
                             <div class="htext">ҚМЖ</div>
                             <div class="dtext">Мұғалімге қажетті барлық құжаттарды жүктеу</div>
-                            <button class="btn">
-                                Тізімді көру
-                            </button>
+                            <div class="cst_btn">
+                                <btn text='Тізімді көру'/>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -55,22 +54,20 @@
                                     <div class="bcontent">
                                         <div class="htext">Жеке кабинет</div>
                                         <div class="dtext">Сіздің барлық жетістіктеріңіз<br>осында</div>
-                                        <button class="btn">
-                                            <img src="~assets/images/user.svg" alt="">
-                                            Кіру / Тіркелу
-                                        </button>
+                                        <div class="cst_btn">
+                                            <btn @click.native="gotoProfile" style="font-size: 16px" text='Кіру / Тіркелу' img="user.svg"/>
+                                        </div>
                                     </div>
                                 </div>
-
                             </slide>
                             <slide>
                                 <div class="block2">
                                     <div class="bcontent">
                                         <div class="htext">Айлықты есептеу калькуляторы</div>
                                         <div class="dtext">тегін, әрі оңай</div>
-                                        <button class="btn">
-                                            Есептеу
-                                        </button>
+                                        <div class="cst_btn">
+                                            <btn text='Есептеу'/>
+                                        </div>
                                     </div>
                                 </div>
 
@@ -80,9 +77,9 @@
                                     <div class="bcontent">
                                         <div class="htext">ҚМЖ</div>
                                         <div class="dtext">Мұғалімге қажетті барлық құжаттарды жүктеу</div>
-                                        <button class="btn">
-                                            Тізімді көру
-                                        </button>
+                                        <div class="cst_btn">
+                                            <btn text="Тізімді көру"/>
+                                        </div>
                                     </div>
                                 </div>
                             </slide>
@@ -200,8 +197,12 @@
                         </div>
                     </div>
                     <div class="calc_buttons">
-                        <button class="btn calc_btn">Жариялап, табыс табу</button>
-                        <button class="btn calc_btn">Материалдар үлгісін көру</button>
+                        <div class="calc_btn">
+                            <btn text='Жариялап, табыс табу'/>
+                        </div>
+                        <div class="calc_btn">
+                            <btn text='Материалдар үлгісін көру'/>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -231,7 +232,8 @@
                 </div>
                 <form action="" class="ms_search">
                     <input type="text" class="form-control" placeholder="Мысалы: KZ123456779">
-                    <button class="btn btn-primary">Тексеру</button>
+                    <btn square=1 text='Тексеру'/>
+
                 </form>
                 <span>Ағылшын әріптерімен жазылады. Егер өз құжатыңызды таба алмасаңыз, 8-771-234-5599 номеріне ватсапқа жазыңыз</span>
             </div>
@@ -243,22 +245,29 @@
                 </div>
                 <div class="mq_list">
                     <template v-for="(links_item, index) in questions">
+                       <NuxtLink :to="links_item.route_name">
                         <div class="mq_block">
-                            <img src="~assets/images/play.png" alt="">
-                            <NuxtLink :to="links_item.route_name" class="desc">{{links_item.title}}</NuxtLink>
+                            <div class="play">
+                            <img src="~assets/images/playCent.svg" alt="">
+                            </div>
+                            <div class="desc">{{links_item.title}}</div>
                         </div>
+                        </NuxtLink>
                     </template>
 
                 </div>
             </div>
         </section>
     </div>
-
 </template>
 
 <script>
+    import btn from '@/components/forms/btn.vue'
 
     export default {
+        components: {
+            btn
+        },
         layout: 'default',
         methods: {
             getImgUrl(pet) {
@@ -269,6 +278,9 @@
                 if (num == 1) return 'Вебинар';
                 else return 'Не вебинар';
             },
+            gotoProfile(){
+                this.$router.push('/profile');
+            }
         },
         props: ['slideOpen'],
         data() {
@@ -281,6 +293,7 @@
                 calcMaterialsValue: 15,
                 calclDownloads: 15,
                 calcMaterialCost: 1000,
+                title: 'Ustaz tilegi - Ұстаз тілегі Республикалық ұастаздар сайты',
                 links_items: [{
                         image: 'userl.svg',
                         head: 'Жеке кабинет',
@@ -461,6 +474,11 @@
 
                 ]
             }
+        },
+        head(){
+            return {
+                title: this.title,
+            }
         }
 
     }
@@ -475,5 +493,10 @@
     }
     .otstup {
         padding-bottom: 66px;
+    }
+
+    .block1 .cst_btn{
+        width: 240px;
+        height: 55px;
     }
 </style>
