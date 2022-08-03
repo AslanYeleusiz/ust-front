@@ -362,7 +362,7 @@
                         padding: 30px 30px;
                         height: 100%;
                         .body {
-                            font-family: Gilroy;
+                            font-family: 'Gilroy-Regular';
                             font-size: 16px;
                             font-weight: 400;
                             line-height: 19px;

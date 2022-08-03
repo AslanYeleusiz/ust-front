@@ -25,20 +25,20 @@
                     <h2>Сәуір айының<br>блиц-турнирі</h2>
                     <div class="timer">
                         <div class="time">
-                            <div class="value">01</div>
+                            <div class="value">{{cT.days}}</div>
                             <div class="types">Күн</div>
                         </div>
                         <div class="time">
-                            <div class="value">01</div>
-                            <div class="types">Күн</div>
+                            <div class="value">{{cT.hours}}</div>
+                            <div class="types">Сағат</div>
                         </div>
                         <div class="time">
-                            <div class="value">01</div>
-                            <div class="types">Күн</div>
+                            <div class="value">{{cT.minuts}}</div>
+                            <div class="types">Минут</div>
                         </div>
                         <div class="time">
-                            <div class="value">01</div>
-                            <div class="types">Күн</div>
+                            <div class="value">{{cT.seconds}}</div>
+                            <div class="types">Секунд</div>
                         </div>
                     </div>
                     <div class="pref">Турнирдің бітуіне қалды</div>
@@ -53,26 +53,26 @@
                         <button class="btn vkladka">Студенттер</button>
                     </div>
                     <div class="block">
-                        <div class="turnir">
+                        <NuxtLink to="turnir/qazaq_tili_men_adebieti.html" class="turnir">
                             Қазақ тілі мен әдебиеті
                             <img src="~assets/images/arrow-right.svg" alt="">
-                        </div>
-                        <div class="turnir">
+                        </NuxtLink>
+                        <NuxtLink to="turnir/matematika.html" class="turnir">
                             Математика
                             <img src="~assets/images/arrow-right.svg" alt="">
-                        </div>
-                        <div class="turnir">
+                        </NuxtLink>
+                        <NuxtLink to="turnir/filosofia_negizderi.html" class="turnir">
                             Философия негіздері
                             <img src="~assets/images/arrow-right.svg" alt="">
-                        </div>
-                        <div class="turnir">
+                        </NuxtLink>
+                        <NuxtLink to="turnir/bastauyshta_oqytu_pedagogikasy_men_adisteri.html" class="turnir">
                             Бастауышта оқыту педагогикасы мен әдістемесі
                             <img src="~assets/images/arrow-right.svg" alt="">
-                        </div>
-                        <div class="turnir">
+                        </NuxtLink>
+                        <NuxtLink to="turnir/qazaq_tili_men_adebieti.html" class="turnir">
                             Қазақ тілі мен әдебиеті
                             <img src="~assets/images/arrow-right.svg" alt="">
-                        </div>
+                        </NuxtLink>
 
                     </div>
                 </div>
@@ -88,7 +88,41 @@
     export default {
         components: {
             arrowLeft
+        },
+        data() {
+            return {
+                cT: {
+                    currentTime: 164795,
+                    days: 0,
+                    hours: 0,
+                    minuts: 0,
+                    seconds: 0,
+                },
+            }
+        },
+        mounted() {
+            this.startTimer()
+        },
+        destroyed() {
+            this.stopTimer()
+        },
+        methods: {
+            startTimer() {
+                this.timer = setInterval(() => {
+                    this.cT.currentTime--;
+                    let s = this.cT.currentTime;
+                    this.cT.days = Math.floor(s / 86400);
+                    this.cT.hours = Math.floor((s % 86400) / 3600);
+                    this.cT.minuts = Math.floor((s % 3600) / 60);
+                    this.cT.seconds = Math.floor(s % 60);
+                    if (s < 1) clearTimeout(this.timer);
+                }, 1000)
+            },
+            stopTimer() {
+                clearTimeout(this.timer)
+            },
         }
+
     }
 
 </script>
@@ -148,6 +182,10 @@
     .main {
         .head {
             padding: 40px 0 30px;
+            @media all and (max-width: 767px){
+                padding: 40px 0 45px;
+            }
+
             background: #FFEAD8;
 
             h2 {
@@ -157,6 +195,38 @@
                 line-height: 51px;
                 text-align: center;
                 text-transform: uppercase;
+                @media all and (max-width: 991px){
+                    font-size: 46px;
+                    line-height: 50px;
+                }
+                @media all and (max-width: 883px){
+                    font-size: 44px;
+                    line-height: 48px;
+                }
+                @media all and (max-width: 767px){
+                    font-size: 42px;
+                    line-height: 46px;
+                }
+                @media all and (max-width: 767px){
+                    font-size: 42px;
+                    line-height: 46px;
+                }
+                @media all and (max-width: 575px){
+                    font-size: 38px;
+                    line-height: 45px;
+                }
+                @media all and (max-width: 472px){
+                    font-size: 34px;
+                    line-height: 43px;
+                }
+                @media all and (max-width: 417px){
+                    font-size: 32px;
+                    line-height: 42px;
+                }
+
+
+
+
             }
 
             .timer {
@@ -225,18 +295,37 @@
         }
         .body {
             padding: 50px 0 150px;
+            overflow: hidden;
             .vkladki {
                 display: grid;
                 grid-template-columns: 1fr 1fr 1fr 1fr;
                 z-index: 3;
                 transform: translateY(1px);
+                max-width: 100%;
+                width: 100%;
+                overflow-x: scroll;
+                &::-webkit-scrollbar{
+                    height: 0;
+                }
                 .vkladka {
                     width: 100%;
-                    padding: 20px 0 30px;
+                    padding: 20px 20px 30px;
                     font-size: 24px;
                     font-weight: 600;
                     line-height: 28px;
                     color: #1E63E9;
+                    @media all and (max-width: 1099px){
+                        font-size: 22px;
+                        line-height: 26px;
+                    }
+                    @media all and (max-width: 991px){
+                        font-size: 20px;
+                        line-height: 24px;
+                    }
+                    @media all and (max-width: 883px){
+                        font-size: 18px;
+                        line-height: 22px;
+                    }
                     &.active{
                         color: #363636;
                         background: #F8F8F8;

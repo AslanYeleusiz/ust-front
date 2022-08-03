@@ -372,9 +372,8 @@
                 grid-gap: 10px;
 
                 .timeBlock {
-                    font-family: Gilroy;
+                    font-family: 'Gilroy-Regular';
                     font-size: 12px;
-                    font-weight: 400;
                     line-height: 14px;
                     text-transform: uppercase;
                     display: flex;

@@ -728,9 +728,8 @@
             button{text-align: left;}
             .question_block{
                 width: 100%;
-                font-family: Gilroy;
+                font-family: 'Gilroy-Regular';
                 font-size: 18px;
-                font-weight: 400;
                 line-height: 22px;
                 padding: 12px 15px 12px 25px;
                 max-width: 790px;
