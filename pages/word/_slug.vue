@@ -74,7 +74,7 @@
                     </div>
                 </div>
                 <template v-if="material.raw=='docx'||material.raw=='doc'">
-                    <iframe src='https://view.officeapps.live.com/op/embed.aspx?src=test2.ust.kz/public' width='100%' height='720px' frameborder='0'></iframe>
+                    <iframe :src="'https://view.officeapps.live.com/op/embed.aspx?src=ust.kz/frontend/web/'+material.file_doc" width='100%' height='720px' frameborder='0'></iframe>
                 </template>
                 <template v-if="material.raw=='pdf'">
                     <iframe id="iframepdf" width='100%' height='720px' src="files/example.pdf" frameborder='0'></iframe>

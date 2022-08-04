@@ -1,17 +1,19 @@
 <template>
     <div>
-       <header>
-          <div class="otstup"></div>
-           <div class="main_header">
-               <div class="cst-ct d-flex a-c j-b">
-                <img class="mainLogo" src="~assets/images/Newlogo.png">
-                <div class="d-flex a-c">
-                   <div class="free-cert-button">Тегін сертификат алу</div>
-                    <img class="notification" src="~assets/images/notification.svg">
+        <header>
+            <div class="otstup"></div>
+            <div class="main_header">
+                <div class="cst-ct d-flex a-c j-b">
+                    <img class="mainLogo" src="~assets/images/Newlogo.png">
+                    <div class="d-flex a-c">
+                        <div class="free-cert-button">
+                            <certBtn text="Тегін сертификат алу" />
+                        </div>
+                        <notification class="notification" />
+                    </div>
                 </div>
             </div>
-           </div>
-       </header>
+        </header>
         <section class="main">
             <div class="cst-ct">
                 <h2 class="h2 t-c">
@@ -23,7 +25,7 @@
                             <div class="htext">Жеке кабинет</div>
                             <div class="dtext">Сіздің барлық жетістіктеріңіз<br>осында</div>
                             <div class="cst_btn">
-                                <btn @click.native="gotoProfile" style="font-size: 18px" text='Кіру / Тіркелу' img="user.svg"/>
+                                <btn @click.native="gotoProfile" style="font-size: 18px" text='Кіру / Тіркелу' img="user.svg" />
                             </div>
                         </div>
                     </div>
@@ -32,7 +34,7 @@
                             <div class="htext">Айлықты есептеу калькуляторы</div>
                             <div class="dtext">тегін, әрі оңай</div>
                             <div class="cst_btn">
-                                <btn text='Есептеу'/>
+                                <btn text='Есептеу' />
                             </div>
                         </div>
                     </div>
@@ -41,7 +43,7 @@
                             <div class="htext">ҚМЖ</div>
                             <div class="dtext">Мұғалімге қажетті барлық құжаттарды жүктеу</div>
                             <div class="cst_btn">
-                                <btn text='Тізімді көру'/>
+                                <btn text='Тізімді көру' />
                             </div>
                         </div>
                     </div>
@@ -55,7 +57,7 @@
                                         <div class="htext">Жеке кабинет</div>
                                         <div class="dtext">Сіздің барлық жетістіктеріңіз<br>осында</div>
                                         <div class="cst_btn">
-                                            <btn @click.native="gotoProfile" style="font-size: 16px" text='Кіру / Тіркелу' img="user.svg"/>
+                                            <btn @click.native="gotoProfile" style="font-size: 16px" text='Кіру / Тіркелу' img="user.svg" />
                                         </div>
                                     </div>
                                 </div>
@@ -66,7 +68,7 @@
                                         <div class="htext">Айлықты есептеу калькуляторы</div>
                                         <div class="dtext">тегін, әрі оңай</div>
                                         <div class="cst_btn">
-                                            <btn text='Есептеу'/>
+                                            <btn text='Есептеу' />
                                         </div>
                                     </div>
                                 </div>
@@ -78,7 +80,7 @@
                                         <div class="htext">ҚМЖ</div>
                                         <div class="dtext">Мұғалімге қажетті барлық құжаттарды жүктеу</div>
                                         <div class="cst_btn">
-                                            <btn text="Тізімді көру"/>
+                                            <btn text="Тізімді көру" />
                                         </div>
                                     </div>
                                 </div>
@@ -198,10 +200,10 @@
                     </div>
                     <div class="calc_buttons">
                         <div class="calc_btn">
-                            <btn text='Жариялап, табыс табу'/>
+                            <btn text='Жариялап, табыс табу' />
                         </div>
                         <div class="calc_btn">
-                            <btn text='Материалдар үлгісін көру'/>
+                            <btn text='Материалдар үлгісін көру' />
                         </div>
                     </div>
                 </div>
@@ -232,7 +234,7 @@
                 </div>
                 <form action="" class="ms_search">
                     <input type="text" class="form-control" placeholder="Мысалы: KZ123456779">
-                    <btn square=1 text='Тексеру'/>
+                    <btn square=1 text='Тексеру' />
 
                 </form>
                 <span>Ағылшын әріптерімен жазылады. Егер өз құжатыңызды таба алмасаңыз, 8-771-234-5599 номеріне ватсапқа жазыңыз</span>
@@ -245,13 +247,13 @@
                 </div>
                 <div class="mq_list">
                     <template v-for="(links_item, index) in questions">
-                       <NuxtLink :to="links_item.route_name">
-                        <div class="mq_block">
-                            <div class="play">
-                            <img src="~assets/images/playCent.svg" alt="">
+                        <NuxtLink :to="links_item.route_name">
+                            <div class="mq_block">
+                                <div class="play">
+                                    <img src="~assets/images/playCent.svg" alt="">
+                                </div>
+                                <div class="desc">{{links_item.title}}</div>
                             </div>
-                            <div class="desc">{{links_item.title}}</div>
-                        </div>
                         </NuxtLink>
                     </template>
 
@@ -263,10 +265,14 @@
 
 <script>
     import btn from '@/components/forms/btn.vue'
+    import certBtn from '@/components/forms/certBtn.vue'
+    import notification from '@/components/svg/notification.vue'
 
     export default {
         components: {
-            btn
+            btn,
+            certBtn,
+            notification
         },
         layout: 'default',
         methods: {
@@ -278,7 +284,7 @@
                 if (num == 1) return 'Вебинар';
                 else return 'Не вебинар';
             },
-            gotoProfile(){
+            gotoProfile() {
                 this.$router.push('/profile');
             }
         },
@@ -475,7 +481,7 @@
                 ]
             }
         },
-        head(){
+        head() {
             return {
                 title: this.title,
             }
@@ -486,17 +492,32 @@
 </script>
 
 <style scoped lang="scss">
-    .main_header{
-        @media all and (max-width: 767px){
+    .main_header {
+        @media all and (max-width: 767px) {
             display: none;
         }
     }
+
     .otstup {
         padding-bottom: 66px;
     }
 
-    .block1 .cst_btn{
+    .block1 .cst_btn {
         width: 240px;
         height: 55px;
     }
+
+    .notification {
+        cursor: pointer;
+        stroke: #363636;
+
+        &:hover {
+            stroke: #0045CB;
+        }
+
+        &:active {
+            stroke: #0037A1;
+        }
+    }
+
 </style>

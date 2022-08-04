@@ -32,10 +32,6 @@ export default {
             {
                 rel: 'stylesheet',
                 href: 'https://fonts.googleapis.com/css2?family=Raleway:wght@400;500;600;700;800&display=swap'
-            },
-            {
-                rel: 'stylesheet',
-                href: 'https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&display=swap'
             }
     ]
     },
@@ -45,6 +41,7 @@ export default {
       '@/assets/main.css',
       '@/assets/media.css',
       '@/assets/fonts/Gilroy/gilroy.css',
+      '@/assets/fonts/PF_Display/font.css',
   ],
 
     // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
