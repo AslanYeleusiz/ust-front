@@ -109,6 +109,9 @@ select:focus{
 .menu-li a{
     padding: 10px 30px;
 }
+.inline .menu-li{
+    padding: 5px 30px;
+}
 .menu-li a svg{
     flex-shrink: 0;
     stroke: #133881;

@@ -27,25 +27,25 @@
                         <transition name="fade">
                             <div class="inline" v-show='!slideOpen'>
                                 <li class="menu-li">
-                                    <div class="d-flex a-c p-0">
+                                    <div class="d-flex a-c">
                                         <span class="line"></span>
                                         <span class="menu-li-span">ID номер: {{$auth.user.id}}</span>
                                     </div>
                                 </li>
                                 <li class="menu-li">
-                                    <div class="d-flex a-c p-0">
+                                    <div class="d-flex a-c">
                                         <span class="line"></span>
-                                        <span class="menu-li-span">Баланс 990 000 ₸</span>
+                                        <span class="menu-li-span">Баланс {{$auth.user.balance}} ₸</span>
                                     </div>
                                 </li>
                                 <li class="menu-li">
-                                    <div class="d-flex a-c p-0">
+                                    <div class="d-flex a-c">
                                         <span class="line"></span>
-                                        <span class="menu-li-span">Бонус 302 000 B</span>
+                                        <span class="menu-li-span">Бонус {{$auth.user.bonus}} B</span>
                                     </div>
                                 </li>
                                 <li class="menu-li">
-                                    <div class="d-flex a-c p-0">
+                                    <div class="d-flex a-c">
                                         <button @click='logout' class="btn menu-li-span">Шығу</button>
                                     </div>
                                 </li>
@@ -120,7 +120,7 @@
     import monitorRecorder from '@/components/svg/monitorRecorder.vue'
     import documentText from '@/components/svg/documentText.vue'
     import folder from '@/components/svg/folder.vue'
-    import arrowLeft from '@/components/svg/arrowLeft.vue'
+    import arrowLeft from '@/components/svg/arrowLeftCopy.vue'
 
     export default {
         components: {
