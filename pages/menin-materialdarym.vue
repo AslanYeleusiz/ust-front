@@ -1,25 +1,7 @@
 <template>
     <div>
     <deletePopup :isOpen="deletePopupOpen" :material_id="deleteMaterialId" @closePopup="deletePopupOpen=false"/>
-        <header>
-            <div class="otstup"></div>
-            <div class="main_header">
-                <div class="cst-ct d-flex a-c j-b">
-                    <div class="d-flex">
-                        <NuxtLink to="/material" class="NuxtLink-item">
-                            Материалдар
-                        </NuxtLink>
-                        <NuxtLink to="/menin-materialdarym" class="NuxtLink-item active">
-                            Менің материалдарым
-                        </NuxtLink>
-                    </div>
-                    <div class="d-flex a-c free-cert">
-                        <div class="free-cert-button">Тегін сертификат алу</div>
-                        <img class="notification" src="~assets/images/notification.svg">
-                    </div>
-                </div>
-            </div>
-        </header>
+        <headLink :head='head' active=1 />
         <div class="main">
             <div class="cst-ct">
                 <div class="header">
@@ -61,6 +43,7 @@
     import zhinak from '@/components/materials/my_materials/zhinak.vue'
     import qmg from '@/components/materials/my_materials/qmg.vue'
     import deletePopup from '@/components/popups/deletePopup.vue'
+    import headLink from '@/components/header.vue'
 
     export default {
         head(){
@@ -83,10 +66,18 @@
             myMaterials,
             zhinak,
             qmg,
-            deletePopup
+            deletePopup,
+            headLink
         },
         data() {
             return {
+                head: [{
+                    link: '/material',
+                    name: 'Материалдар',
+                }, {
+                    link: '/menin-materialdarym',
+                    name: 'Менің материалдарым',
+                }],
                 categories: ['Материалдарым', 'Жинақтарым', 'Дайын ҚМЖ-ларым'],
                 categoryIsActive: 0,
                 deletePopupOpen: false,

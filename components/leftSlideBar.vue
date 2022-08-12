@@ -98,7 +98,7 @@
                         </NuxtLink>
                     </li>
                     <li class="menu-li">
-                        <NuxtLink to="/zhosparlar" class="d-flex a-c">
+                        <NuxtLink to="/test" class="d-flex a-c">
                             <folder/>
                             <span class="menu-li-span">Сабақ жоспарлар</span>
                         </NuxtLink>

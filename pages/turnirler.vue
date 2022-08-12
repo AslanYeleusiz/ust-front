@@ -1,11 +1,6 @@
 <template>
     <div>
-        <headerLink
-            firstLink="/turnirler"
-            firstLinkName="Турнирлер"
-            secondLink="/menin-turnirlerim"
-            secondLinkName="Менің турнирлерім"
-        />
+        <headerLink :head='head' active=0 />
         <div class="main">
             <div class="head">
                 <div class="cst-ct">
@@ -101,6 +96,13 @@
                     minuts: 0,
                     seconds: 0,
                 },
+                head: [{
+                    link: '/turnir',
+                    name: 'Турнирлер',
+                }, {
+                    link: '/menin-turnirlerim',
+                    name: 'Менің турнирлерім',
+                }]
             }
         },
         mounted() {

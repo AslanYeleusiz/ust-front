@@ -1,17 +1,19 @@
 <template>
-    <button class="btn cst_btn" :class="{square:square}">
+    <button class="btn cst_btn" :class="{square:square, disabled:disabled}">
         <img v-if='img' :src='getImgUrl(img)' alt="">
-        {{text}}
+        <div v-if='loading' class="spinner-border" role="status"></div>
+        <span v-else>{{text}}</span>
+        <img v-if='imgToRight' :src='getImgUrl(imgToRight)' class="right" alt="">
     </button>
 </template>
 
 
 <script>
 export default {
-    props: ['text','img', 'square'],
+    props: ['text','img', 'square', 'imgToRight', 'disabled', 'loading'],
     methods: {
         getImgUrl(pet) {
-            var images = require.context('../../assets/images/', false)
+            var images = require.context('@/assets/images/', false)
             return images('./' + pet)
         },
     }
@@ -20,6 +22,10 @@ export default {
 
 
 <style scoped lang="scss">
+    .spinner-border{
+        width: 1rem;
+        height: 1rem;
+    }
     .cst_btn{
         width: 100%;
         height: 100%;
@@ -29,8 +35,23 @@ export default {
         &:hover{background: #0045CB;}
         &:focus{background: #0045CB;}
         &:active{background: #0037A1;}
+        display: flex;
+        justify-content: center;
+        align-items: center;
         &.square{
             border-radius: 6px;
+        }
+        &.disabled{
+            background: #A0A0A0;
+            &:hover{background: #A0A0A0;}
+            &:focus{background: #A0A0A0;}
+            &:active{background: #A0A0A0;}
+        }
+        img{
+            margin: 0 10px 0 0;
+            &.right{
+                margin: 0 0 0 10px;
+            }
         }
     }
 </style>

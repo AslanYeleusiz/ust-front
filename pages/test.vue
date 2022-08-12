@@ -1,10 +1,6 @@
 <template>
     <div>
-        <div class="cst-ct">
-            <div class="cst_ct_btn">
-                <bigBtn text='Олимпиадаға қатысу'/>
-            </div>
-        </div>
+        <header_kroshki :header='header'/>
     </div>
 </template>
 
@@ -13,12 +9,29 @@
     import btn from '@/components/forms/btn.vue'
     import certBtn from '@/components/forms/certBtn.vue'
     import bigBtn from '@/components/forms/bigBtn.vue'
+    import header_kroshki from '@/components/header_kroshki.vue'
 
     export default {
+        data() {
+            return {
+                header:
+                [{
+                    name: 'Материалдар',
+                    link: '/material'
+                },{
+                    name: 'Белг3л3 б3л',
+                    link: '/material'
+                },{
+                    name: 'Белг3л3 б3л',
+                }]
+            }
+        },
+
         components: {
             btn,
             certBtn,
-            bigBtn
+            bigBtn,
+            header_kroshki
         }
     }
 

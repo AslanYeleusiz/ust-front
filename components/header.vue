@@ -3,13 +3,12 @@
         <div class="otstup"></div>
         <div class="main_header">
             <div class="cst-ct d-flex a-c j-b">
-                <div class="d-flex">
-                    <NuxtLink :to="firstLink" class="NuxtLink-item active">
-                        {{firstLinkName}}
-                    </NuxtLink>
-                    <NuxtLink :to="secondLink" class="NuxtLink-item">
-                        {{secondLinkName}}
-                    </NuxtLink>
+                <div class="d-flex overflow">
+                    <template v-for="(h, index) in head">
+                        <NuxtLink :to="h.link" class="NuxtLink-item" :class="{active: index==active}">
+                            {{h.name}}
+                        </NuxtLink>
+                    </template>
                 </div>
                 <div class="d-flex a-c free-cert">
                     <div class="free-cert-button">
@@ -27,14 +26,11 @@
     import certBtn from '@/components/forms/certBtn.vue'
     import notification from '@/components/svg/notification.vue'
     export default {
-        components:{
+        components: {
             certBtn,
             notification
         },
-        props: ['firstLink',
-                'firstLinkName',
-                'secondLink',
-                'secondLinkName',]
+        props: ['head','active']
     }
 
 </script>
@@ -63,7 +59,13 @@
                 height: 100%;
             }
         }
-
+        .overflow{
+            max-width: 100vw;
+            overflow-x: scroll;
+            &::-webkit-scrollbar{
+                height: 0;
+            }
+        }
         .free-cert {
             position: absolute;
             right: 66px;
@@ -94,6 +96,7 @@
             color: #363636;
             height: 100%;
             margin-right: 40px;
+            white-space: nowrap;
 
             &:hover {
                 text-decoration: none;

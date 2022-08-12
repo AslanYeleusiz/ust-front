@@ -1,6 +1,6 @@
 <template>
     <div :class="{danger: danger}">
-        <label :for="nameWrap">{{stringName}}</label>
+        <label v-if='stringName' :for="nameWrap">{{stringName}}</label>
         <input v-if="nameWrap != 'tel_num'" v-model="inputVal" :type="typeName" :id="nameWrap" :name="nameWrap" class="form-control" :placeholder="stringPlaceholder">
 
         <input v-else v-model="inputVal" v-mask="'+7(###) ###-##-##'" :type="typeName" :id="nameWrap" :name="nameWrap" class="form-control" :placeholder="stringPlaceholder">
@@ -52,7 +52,9 @@
             margin-bottom: 15px;
         }
     }
-
+    label{
+        margin-bottom: 5px;
+    }
     .danger input {
         border: 1px solid #dc3545;
     }

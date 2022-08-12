@@ -1,24 +1,6 @@
 <template>
     <div>
-        <header>
-            <div class="otstup"></div>
-            <div class="main_header">
-                <div class="cst-ct d-flex a-c j-b">
-                    <div class="d-flex">
-                        <NuxtLink to="/material" class="NuxtLink-item active">
-                            Материалдар
-                        </NuxtLink>
-                        <NuxtLink to="/menin-materialdarym" class="NuxtLink-item">
-                            Менің материалдарым
-                        </NuxtLink>
-                    </div>
-                    <div class="d-flex a-c free-cert">
-                        <div class="free-cert-button">Тегін сертификат алу</div>
-                        <img class="notification" src="~assets/images/notification.svg">
-                    </div>
-                </div>
-            </div>
-        </header>
+        <headLink :head='head' active=0 />
         <section class="materials">
             <div class="cst-ct d-flex head">
                 <div class="statistic">
@@ -108,6 +90,7 @@
     import list from '@/components/materials/list.vue'
     import zhinak_list from '@/components/materials/zhinak_list.vue'
     import qualik from '@/components/materials/my_materials/forms/qualik.vue'
+    import headLink from '@/components/header.vue'
 
     export default {
         head(){
@@ -133,10 +116,18 @@
             btnGroup,
             list,
             zhinak_list,
-            qualik
+            qualik,
+            headLink
         },
         data() {
             return {
+                head: [{
+                    link: '/material',
+                    name: 'Материалдар',
+                }, {
+                    link: '/menin-materialdarym',
+                    name: 'Менің материалдарым',
+                }],
                 defaultOptions: {
                     animationData: animationData
                 },

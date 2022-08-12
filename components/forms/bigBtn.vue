@@ -1,11 +1,13 @@
 <template>
-    <button class="btn cst_bigBtn">{{text}}</button>
+    <button class="btn cst_bigBtn">
+        {{text}}
+    </button>
 </template>
 
 
 <script>
 export default {
-    props: ['text']
+    props: ['text','img']
 }
 </script>
 

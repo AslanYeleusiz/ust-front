@@ -1,23 +1,6 @@
 <template>
     <div>
-        <header>
-            <div class="otstup"></div>
-            <div class="main_header">
-                <div class="cst-ct d-flex a-c j-b">
-                    <div class="d-flex a-c">
-                        <NuxtLink to="/materialdar">
-                            <button class="btn back">
-                                <img src="~assets/images/arrow-left-blue.svg" alt="">
-                                Артқа қайту
-                            </button>
-                        </NuxtLink>
-                        <div class="kroshki">
-                            <NuxtLink to="materialdar">Материалдар</NuxtLink> / Республикалық дүниетану пәнінен ұстаздар арасындағы олимпиада
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </header>
+        <header_kroshki :header='header'/>
         <section class="main">
             <div class="cst-ct">
                 <div v-if="material.sell" class="private_head">
@@ -41,7 +24,7 @@
                             <NuxtLink to="/profile-id-2">
                                 <div class="name">
                                     <img src="~assets/images/user-black.svg" alt="">
-                                    <span>{{material.user.s_name}} {{material.user.username}} {{material.user.l_name}}</span>
+                                    <span>{{material.user.fio}}</span>
                                 </div>
                             </NuxtLink>
                             <div class="date">
@@ -147,15 +130,20 @@
 <script>
     import download from '@/components/svg/download.vue'
     import block from '@/components/materials/forms/block.vue'
+    import header_kroshki from '@/components/header_kroshki.vue'
 
     export default {
         components: {
             download,
             block,
+            header_kroshki
         },
         data() {
             return {
-                material: [],
+                material: {
+                    user: {
+                    }
+                },
                 materials: [
                     {
                     type: 2,
@@ -263,7 +251,16 @@
                     date: '03 Шілде 2020',
                     views: 135,
                     downloads: 3,
-                }, ]
+                }, ],
+                title: '',
+                header: [{
+                    name: 'Материалдар',
+                    link: '/material'
+                },{
+                    name: '',
+                }],
+
+
             }
         },
         head(){
@@ -307,7 +304,10 @@
             },
         },
         async fetch() {
-            this.material = await this.$axios.$get('/word/'+this.$route.params.slug);
+            await this.$axios.$get('/word/'+this.$route.params.slug).then((res)=>{
+                this.material = res;
+                this.header[1].name = res.title
+            });
         }
     }
 
@@ -315,30 +315,7 @@
 
 
 <style scoped lang="scss">
-    .otstup {
-        padding-bottom: 66px;
 
-        @media all and (max-width: 767px) {
-            padding-bottom: 132px;
-        }
-    }
-
-    .main_header {
-        .back {
-            border: 1px solid #3E6CED;
-            border-radius: 4px;
-            font-weight: 600;
-            line-height: 20px;
-            color: #3E6CED;
-        }
-
-        .kroshki {
-            margin-left: 15px;
-            line-height: 20px;
-            color: #888888;
-        }
-
-    }
 
     .main {
         padding-top: 30px;

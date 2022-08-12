@@ -1,11 +1,6 @@
 <template>
     <div>
-        <headLink
-            firstLink="/olimpiada"
-            firstLinkName="Олимпиада"
-            secondLink="/menin-olimpiadalarym"
-            secondLinkName="Менің олимпиадаларым"
-        />
+        <headLink :head='head' active=0 />
         <section class="main">
             <div class="cst-ct">
                 <div class="head">
@@ -139,7 +134,14 @@
                     seconds: 0,
                 },
                 timer: null,
-                title: 'Зияткерлік олипиада | Қазақстандық интернет олипиадалар'
+                title: 'Зияткерлік олипиада | Қазақстандық интернет олипиадалар',
+                head: [{
+                    link: '/olimpiada',
+                    name: 'Олимпиада',
+                }, {
+                    link: '/menin-olimpiadalarym',
+                    name: 'Менің олимпиадаларым',
+                }]
             }
         },
         mounted() {

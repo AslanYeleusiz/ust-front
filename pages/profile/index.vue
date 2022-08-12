@@ -1,27 +1,6 @@
 <template>
     <div>
-        <header>
-            <div class="otstup"></div>
-            <div class="main_header">
-                <div class="cst-ct d-flex a-c j-b">
-                    <div class="d-flex">
-                        <NuxtLink to="/profile" class="NuxtLink-item active">
-                            Материалдар
-                        </NuxtLink>
-                        <NuxtLink to="/profile/balance" class="NuxtLink-item">
-                            Баланс
-                        </NuxtLink>
-                        <NuxtLink to="/profile/bonus" class="NuxtLink-item">
-                            Бонус
-                        </NuxtLink>
-                    </div>
-                    <div class="d-flex a-c free-cert">
-                        <div class="free-cert-button">Тегін сертификат алу</div>
-                        <img class="notification" src="~assets/images/notification.svg">
-                    </div>
-                </div>
-            </div>
-        </header>
+        <headLink :head='head' active=0 />
         <section class="main">
             <div class="cst-ct">
                 <div class="main_wrap">
@@ -33,7 +12,9 @@
                             Телефон: <b>{{$auth.user.tel_num}}</b> <br>
                             Email: <b>{{$auth.user.email}}</b> <br>
                             Құпия сөз: <b>***</b></div>
-                        <NuxtLink to="choise" class="btn myBtn">Өзгерту</NuxtLink>
+                        <div class="myBtn">
+                            <glassBtn @click.native="()=>{$router.push('/profile/ozgertu')}" text='Өзгерту'/>
+                        </div>
                         <button class="btn exitBtn">
                             <img src="~assets/images/logout.svg" alt=""><span>Сайттан шығу</span>
                         </button>
@@ -71,19 +52,21 @@
                                     <img src="~assets/images/arrow-left-blue.svg" alt="">
                                 </NuxtLink>
                             </div>
-                            <NuxtLink to="choise" class="btn myBtn">Барлығын көру</NuxtLink>
+                            <nuxt-link to="/profile/zhetistikterim" class="myBtn">
+                                <glassBtn text='Барлығын көру'/>
+                            </nuxt-link>
+
                         </div>
                         <div class="head">Менің бөлімдерім</div>
                         <div class="bolimeder">
-                           <template v-for="bolim in bolimder">
-                               <NuxtLink to="asdasd">
-                                <div class="block">
-                                    <img :src="getImgUrl(bolim.img)" alt="">
-                                    <div class="body">{{bolim.text}}</div>
-                                </div>
-                            </NuxtLink>
-                           </template>
-
+                            <template v-for="bolim in bolimder">
+                                <NuxtLink to="asdasd">
+                                    <div class="block">
+                                        <img :src="getImgUrl(bolim.img)" alt="">
+                                        <div class="body">{{bolim.text}}</div>
+                                    </div>
+                                </NuxtLink>
+                            </template>
                         </div>
                     </div>
                 </div>
@@ -94,7 +77,14 @@
 
 
 <script>
+    import headLink from '@/components/header.vue'
+    import glassBtn from '@/components/forms/glassBtn.vue'
+
     export default {
+        components: {
+            headLink,
+            glassBtn
+        },
         data() {
             return {
                 bolimder: [
@@ -159,16 +149,26 @@
                         link: '/questions'
                     },
                 ],
-                title: 'Ustaz tilegi - Ұстаз тілегі Республикалық ұастаздар сайты'
+                title: 'Ustaz tilegi - Ұстаз тілегі Республикалық ұастаздар сайты',
+                head: [{
+                    link: '/profile',
+                    name: 'Жеке кабинет',
+                }, {
+                    link: '/profile/balance',
+                    name: 'Баланс',
+                }, {
+                    link: '/profile/bonus',
+                    name: 'Бонус',
+                }]
             }
         },
         methods: {
             getImgUrl(pet) {
-                var images = require.context('../assets/images/', false)
+                var images = require.context('@/assets/images/', false)
                 return images('./' + pet)
             },
         },
-        head(){
+        head() {
             return {
                 title: this.title,
             }
@@ -240,13 +240,14 @@
             grid-gap: 20px;
             padding-top: 40px;
             padding-bottom: 100px;
+            @media all and (max-width: 767px){
+                grid-template-columns: 1fr;
+                grid-gap: 70px;
+            }
+
             .myBtn {
-                display: block;
                 width: 100%;
                 height: 40px;
-                background: #EFF3FF;
-                border-radius: 6px;
-                color: #1C77FD;
             }
 
             .left_bar {
@@ -261,6 +262,14 @@
                 position: sticky;
                 top: 106px;
                 bottom: 0;
+                @media all and (max-width: 767px){
+                    position: relative;
+                    top: auto;
+                    bottom: auto;
+                    margin: 0 auto;
+                    width: 90%;
+                    margin: 0 auto;
+                }
 
                 .name {
                     margin-top: 20px;
@@ -277,6 +286,7 @@
                 }
 
                 .info {
+                    font-family: 'Gilroy-Regular';
                     margin-top: 30px;
                     font-weight: 400;
                     line-height: 26px;
@@ -311,6 +321,15 @@
                     font-size: 24px;
                     font-weight: 600;
                     line-height: 28px;
+                    @media all and (max-width: 767px){
+                        font-size: 22px;
+                        line-height: 26px;
+                    }
+                    @media all and (max-width: 575px){
+                        font-size: 20px;
+                        line-height: 24px;
+                    }
+
                 }
 
                 .zhetistikter {
@@ -326,9 +345,20 @@
                         .next {
                             color: #1E63E9;
                             margin-top: 5px;
+                            font-size: 14px;
+                            line-height: 20px;
+                            display: flex;
+                            align-items: center;
+                            @media all and (max-width: 767px){
+                                font-size: 12px;
+                                line-height: 17px;
+                            }
 
                             img {
                                 transform: rotate(180deg);
+                                width: 20px;
+                                height: 20px;
+                                margin-left: 5px;
                             }
                         }
 
@@ -336,7 +366,10 @@
                             font-size: 16px;
                             font-weight: 400;
                             line-height: 19px;
-
+                            @media all and (max-width: 767px){
+                                font-size: 14px;
+                                line-height: 17px;
+                            }
                             b {
                                 font-weight: 600;
                             }
@@ -349,16 +382,32 @@
                     display: grid;
                     grid-template-columns: 1fr 1fr 1fr;
                     grid-gap: 20px;
-                    a{
+                    @media all and (max-width: 1099px){
+                        grid-template-columns: 1fr 1fr;
+                    }
+                    @media all and (max-width: 991px){
+                        grid-template-columns: 1fr;
+                    }
+                    @media all and (max-width: 767px){
+                        grid-template-columns: 1fr 1fr;
+                    }
+                    @media all and (max-width: 500px){
+                        grid-gap: 10px;
+                    }
+
+                    a {
                         color: #000000;
-                        &:hover{
+
+                        &:hover {
                             color: #254EE2;
                             text-decoration: none;
-                            .block{
+
+                            .block {
                                 outline: 1px solid #254EE2;
                             }
                         }
                     }
+
                     .block {
                         background: #FFF7F1;
                         border-radius: 6px;
@@ -366,8 +415,18 @@
                         flex-direction: column;
                         align-items: center;
                         justify-content: center;
-                        padding: 30px 30px;
+                        padding: 30px 10px;
                         height: 100%;
+                        @media all and (max-width: 500px){
+                            padding: 30px 20px;
+                        }
+                        @media all and (max-width: 429px){
+                            padding: 30px 10px;
+                        }
+                        @media all and (max-width: 382px){
+                            padding: 30px 0;
+                        }
+
                         .body {
                             font-family: 'Gilroy-Regular';
                             font-size: 16px;
