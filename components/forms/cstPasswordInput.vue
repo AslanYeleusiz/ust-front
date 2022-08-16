@@ -14,7 +14,7 @@
 
 <script>
     export default {
-        props: ['typeName', 'stringName', 'stringPlaceholder', 'nameWrap', 'value','danger','dangerText'],
+        props: ['stringName', 'stringPlaceholder', 'nameWrap', 'value','danger','dangerText'],
         data() {
             return {
                 passwordFieldType: "password",

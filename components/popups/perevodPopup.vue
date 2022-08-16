@@ -25,7 +25,7 @@
                                 </div>
                             </div>
                             <div class="btn_size">
-                                <div v-show="loading" class="spinner-border" role="status"></div>
+                                <cstBtn v-show="loading" square=1 loading=1 />
                                 <cstBtn v-show="!loading" @click.native="translate" square=1 text='Растау' />
                             </div>
 
@@ -65,7 +65,7 @@
                             </div>
                             <template v-if='$auth.user.bonus>=500'>
                                 <div class="btn_size">
-                                    <div v-show="loading" class="spinner-border" role="status"></div>
+                                    <cstBtn v-show="loading" square=1 loading=1 />
                                     <cstBtn v-show="!loading" @click.native="translateToCard" square=1 text='Растау' />
                                 </div>
                             </template>
@@ -262,6 +262,7 @@
                 .btn_size {
                     margin-top: 20px;
                     width: 224px;
+                    height: 40px;
                     display: flex;
                     flex-direction: column;
                     align-items: center;

@@ -1,7 +1,10 @@
 <template>
    <transition name="fadePopup">
     <div v-if="Animate" class="Lottie">
-        <Lottie :width="300" :height="300" :options="defaultOptions" v-on:animCreated="handleAnimation" />
+       <div class="fon">
+           <Lottie :width="250" :height="250" :options="defaultOptions" v-on:animCreated="handleAnimation" />
+       </div>
+
     </div>
     </transition>
 </template>
@@ -71,5 +74,12 @@
         display: flex;
         align-items: center;
         justify-content: center;
+        background: rgba(0,0,0,0.4);
+        .fon{
+            width: 250px;
+            height: 250px;
+            border-radius: 50%;
+            background: radial-gradient(#ffffff 50%, rgba(0,0,0,0) 50%);
+        }
     }
 </style>

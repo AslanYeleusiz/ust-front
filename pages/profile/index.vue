@@ -5,7 +5,7 @@
             <div class="cst-ct">
                 <div class="main_wrap">
                     <div class="left_bar">
-                        <img src="~assets/images/Avatar_profile.png" alt="" class="avatar">
+                        <div class="avatar" :style="{ backgroundImage: `url(${getApiImgUrl(avatar)})`}"></div>
                         <div class="name">{{$auth.user.fio}}</div>
                         <div class="id">ID номер: {{$auth.user.id}}</div>
                         <div class="info">
@@ -159,13 +159,22 @@
                 }, {
                     link: '/profile/bonus',
                     name: 'Бонус',
-                }]
+                }],
+                avatar: ''
             }
+        },
+        fetch() {
+            this.avatar = this.$auth.user.img1 != '' ? this.$auth.user.img1 : 'userDefault.png'
         },
         methods: {
             getImgUrl(pet) {
                 var images = require.context('@/assets/images/', false)
                 return images('./' + pet)
+            },
+            getApiImgUrl(pet) {
+                var images = this.$store.state.apiUrl+'/images/avatars/'+pet;
+                console.log(images)
+                return images
             },
         },
         head() {
@@ -270,7 +279,14 @@
                     width: 90%;
                     margin: 0 auto;
                 }
-
+                .avatar{
+                    width: 150px;
+                    height: 150px;
+                    background-position: 50% 50%;
+                    background-size: 100%;
+                    margin: 0 auto;
+                    border-radius: 50%;
+                }
                 .name {
                     margin-top: 20px;
                     font-size: 18px;
