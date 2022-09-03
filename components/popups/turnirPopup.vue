@@ -75,7 +75,7 @@
                     </div>
                 </div>
                 <div v-if="active==3" class="body mini">
-                <video src="~assets/videos/video.mp4" controls></video>
+<!--                <video src="~assets/videos/video.mp4" controls></video>-->
 <!--                    <video-player src="http://127.0.0.1:8000/storage/videos/video.mp4"/>-->
                 </div>
             </div>
