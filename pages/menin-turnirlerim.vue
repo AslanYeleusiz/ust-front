@@ -27,18 +27,18 @@
                         <cstBtn text="Таңдау" square=1 />
                     </NuxtLink>
                 </div>
-                <div v-show="loading==0" class="block_list">
-                    <div v-for="turnir in turnirs" class="block">
+                <div v-if="loading==0" class="block_list">
+                    <div v-for="(turnir, index) in turnirs" @click="startTurnir(index)" class="block">
                         <div class="head">{{turnir.month_name}} айының Республикалық {{turnir.name}} {{turnir.cat_name}} турнирі</div>
                         <div class="body">
                             <div class="clock">
                                 <img src="~assets/images/clock2.svg" alt="">
                                 <div class="date">{{'01.'+turnir.month+'.'+turnir.year+'-'+turnir.month_end+'.'+turnir.month+'.'+turnir.year}}</div>
-                                <div class="day">7 күн қалды</div>
+                                <div class="day">{{turnir.day_is_left}} күн қалды</div>
                             </div>
                             <div class="tusers">
                                 <img src="~assets/images/humans.svg" alt="">
-                                <div class="tuser_count">Менің қатысушыларым: 4</div>
+                                <div class="tuser_count">Менің қатысушыларым: {{turnir.user_count}}</div>
                             </div>
                         </div>
                     </div>
@@ -85,19 +85,44 @@
         methods: {
             handleAnimation: function(anim) {
                 this.anim = anim;
+            },
+            startTurnir(id) {
+                let slug = this.turnirs[id].lat_name + '-' + this.turnirs[id].id
+                this.$api.$get('/turnirs/' + slug).then((res) => {
+                    this.$router.push({
+                        name: 'turnir-slug',
+                        params: {
+                            slug: slug,
+                            turnir: res.turnir,
+                            turnir_users: res.turnir_users,
+                            zhetekshi: res.zhetekshi,
+                        }
+                    });
+                });
+            },
+            getData() {
+                this.$api.$get('/turnirs/my_turnirs/active').then((res) => {
+                    console.log(res)
+                    if (res.tuser.length == 0) this.loading = 2;
+                    else {
+                        var mySet = new Array();
+                        res.tuser.forEach((tuser) => {
+                            tuser.turnir.user_count = 0
+                        })
+                        res.tuser.forEach((tuser) => {
+                            if (!mySet.includes(tuser.turnir.id)) {
+                                this.turnirs.push(tuser.turnir)
+                                mySet.push(tuser.turnir.id)
+                            }
+                            this.turnirs[mySet.indexOf(tuser.turnir.id)].user_count++;
+                        })
+                        this.loading = 0
+                    }
+                })
             }
         },
         mounted() {
-            this.$api.$get('/turnirs/my_turnirs/active').then((res)=>{
-                console.log(res)
-                if(res.tuser.length == 0) this.loading = 2;
-                else {
-                    res.tuser.forEach((tuser) => {
-                        this.turnirs.push(tuser.turnir);
-                    })
-                    this.loading = 0
-                }
-            })
+            this.getData()
         }
     }
 
@@ -158,14 +183,17 @@
     .list {
         background: #F8F8F8;
         padding-bottom: 200px;
-        .loader{
+
+        .loader {
             padding-top: 30px;
             padding-bottom: 380px;
-            .spinner-border{
+
+            .spinner-border {
                 width: 2.5rem;
                 height: 2.5rem;
             }
         }
+
         .block_list {
             padding-top: 30px;
             display: flex;
