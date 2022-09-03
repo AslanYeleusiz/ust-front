@@ -2,9 +2,7 @@
     <transition name="fadePopup">
         <div v-if='popupIsActive > 0' @mousedown.self="$emit('closePopup')" class="popup">
             <div class="block" :class="{mini:popupIsActive>=10}" >
-                <button @click="$emit('closePopup')" class="btn d-flex aj-c exit">
-                    <img src="~assets/images/ex.svg" alt="">
-                </button>
+                <exitBtn @click.native="$emit('closePopup')" class="exit" />
                 <div v-if="popupIsActive==1" class="body">
                     <div v-if='$auth.user.phone_activated' class="rastalgan_nomer">
                         <div class="num">{{$auth.user.tel_num}}</div>
@@ -148,13 +146,15 @@
     import cstBtn from '@/components/forms/btn.vue'
     import cstPasswordInput from '@/components/forms/cstPasswordInput.vue'
     import PincodeInput from '@/node_modules/vue-pincode-input'
+    import exitBtn from '@/components/forms/exitBtn.vue'
 
     export default {
         components: {
             cstBtn,
             cstInput,
             PincodeInput,
-            cstPasswordInput
+            cstPasswordInput,
+            exitBtn
         },
         props: ['popupIsActive'],
         data() {
@@ -177,13 +177,13 @@
         methods: {
             changePhone() {
                 this.loading = 1;
-                setTimeout(() => {
-                    //
-                    this.popupIsActive = 2;
-                    this.loading = 0;
-                    this.stopTimer();
-                    this.startTimer();
-                }, 1500);
+//                setTimeout(() => {
+//                    //
+//                    this.popupIsActive = 2;
+//                    this.loading = 0;
+//                    this.stopTimer();
+//                    this.startTimer();
+//                }, 1500);
             },
             sendPincodeEnter() {
                 this.loading = 1;
@@ -359,19 +359,10 @@
             max-width: 600px;
             &.mini{max-width: 440px;}
             .exit {
-                width: 20px;
-                height: 20px;
-                border-radius: 50%;
-                background: #C4C4C4;
-                padding: 0;
                 position: absolute;
                 right: 0;
                 top: 0;
                 transform: translate(-10px, 10px);
-
-                &:hover {
-                    background: #0045CB;
-                }
             }
 
             .body {

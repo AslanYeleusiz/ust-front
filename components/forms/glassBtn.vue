@@ -1,5 +1,6 @@
 <template>
     <button class="btn cst_btn" :class="{radian:radian}">
+      <refresh v-if="svg==1" />
        <img v-if='img' :src='getImgUrl(img)' alt="">
         {{text}}
     </button>
@@ -7,8 +8,11 @@
 
 
 <script>
+    import refresh from '@/components/svg/refresh.vue'
+
 export default {
-    props: ['text','img', 'radian'],
+    props: ['text','img', 'radian', 'svg'],
+    components: {refresh},
     methods: {
         getImgUrl(pet) {
             var images = require.context('@/assets/images/', false)
@@ -29,16 +33,27 @@ export default {
         &:hover{
             background: #0045CB;
             color: #FFFFFF;
+            svg{
+                stroke: #FFFFFF;
+            }
         }
         &:active{
             background: #0037A1;
             color: #FFFFFF;
+            svg{
+                stroke: #FFFFFF;
+            }
         }
         &.radian{
             border-radius: 999px;
         }
         img{
             margin-right: 10px;
+        }
+        svg{
+            margin-right: 10px;
+            stroke: #1E63E9;
+            transition: 0.2s;
         }
     }
 </style>

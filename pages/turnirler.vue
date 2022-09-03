@@ -29,33 +29,23 @@
             <div class="body">
                 <div class="cst-ct">
                     <div class="vkladki">
-                        <button class="btn vkladka active">Ұстаздар</button>
-                        <button class="btn vkladka">Тәрбиешілер</button>
-                        <button class="btn vkladka">Оқушылар</button>
-                        <button class="btn vkladka">Студенттер</button>
+                        <button @click="setCategory(2)" class="btn vkladka" :class="{active:category==2}">Ұстаздар</button>
+                        <button @click="setCategory(1)" class="btn vkladka" :class="{active:category==1}">Тәрбиешілер</button>
+                        <button @click="setCategory(3)" class="btn vkladka" :class="{active:category==3}">Оқушылар</button>
+                        <button @click="setCategory(4)" class="btn vkladka" :class="{active:category==4}">Студенттер</button>
                     </div>
                     <div class="block">
-                        <NuxtLink to="turnir/qazaq_tili_men_adebieti.html" class="turnir">
-                            Қазақ тілі мен әдебиеті
-                            <img src="~assets/images/arrow-right.svg" alt="">
-                        </NuxtLink>
-                        <NuxtLink to="turnir/matematika.html" class="turnir">
-                            Математика
-                            <img src="~assets/images/arrow-right.svg" alt="">
-                        </NuxtLink>
-                        <NuxtLink to="turnir/filosofia_negizderi.html" class="turnir">
-                            Философия негіздері
-                            <img src="~assets/images/arrow-right.svg" alt="">
-                        </NuxtLink>
-                        <NuxtLink to="turnir/bastauyshta_oqytu_pedagogikasy_men_adisteri.html" class="turnir">
-                            Бастауышта оқыту педагогикасы мен әдістемесі
-                            <img src="~assets/images/arrow-right.svg" alt="">
-                        </NuxtLink>
-                        <NuxtLink to="turnir/qazaq_tili_men_adebieti.html" class="turnir">
-                            Қазақ тілі мен әдебиеті
-                            <img src="~assets/images/arrow-right.svg" alt="">
-                        </NuxtLink>
-
+                        <div v-if="loading==1" class="d-flex mt-4 pb-4 justify-content-center">
+                            <div class="spinner-border" role="status"></div>
+                        </div>
+                        <div v-else>
+                            <template v-for="(turnir, index) in turnirs">
+                                <a @click.prevent="startTurnir(index)" class="turnir">
+                                    {{turnir.name}}
+                                    <img src="~assets/images/arrow-right.svg" alt="">
+                                </a>
+                            </template>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -69,18 +59,18 @@
     import headerLink from '@/components/header.vue'
 
     export default {
-        head(){
+        head() {
             return {
                 title: 'Блиц-турнир ұстаздарға, оқушыларға, тәрбиешілерге, студенттерге арналған турнирлер, жарыстар, дипломдар',
                 meta: [{
                     hid: 'description',
                     name: 'description',
                     content: 'Ұстаздарға, оқушыларға, тәрбиешілерге, студенттерге арналған турнирлер, жарыстар, олимпиадалар. Турнирге қатысу арқылы I, II, III дәрежелі дипломдар және сертификаттар мен марапаттаулар беріледі. Мұғалімдер біліктілігін арттырып онлайн тесттерді тапсыра алады.'
-                },{
+                }, {
                     hid: 'keywords',
                     name: 'keywords',
                     content: 'дипломдар, олимпиадалар, турнир, жарыстар,мұғалімдерге сертификаттар, ұстаздарға дипломдар, оқушыларға жарыстар, тәрбиешілерге жарыстар, блиц турнир, олимпиада сұрақтары, онлайн тест, мұғалімдерге жарыстар, олимпиадаға дайындық, I II III дәрежелі дипломдар, ұстаздарға марапаттаулар'
-                },],
+                }, ],
             }
         },
         components: {
@@ -97,21 +87,53 @@
                     seconds: 0,
                 },
                 head: [{
-                    link: '/turnir',
+                    link: '/turnirler',
                     name: 'Турнирлер',
                 }, {
                     link: '/menin-turnirlerim',
                     name: 'Менің турнирлерім',
-                }]
+                }],
+                category: 2,
+                turnirs: [],
+                loading: 1,
             }
         },
         mounted() {
             this.startTimer()
+            this.getData()
+
         },
         destroyed() {
             this.stopTimer()
         },
         methods: {
+            getData() {
+                this.loading = 1
+                this.$api.get('/turnirs', {
+                    params: {
+                        category: this.category
+                    }
+                }).then((res) => {
+                    this.turnirs = res.data.turnirs
+                    this.loading = 0
+                }).catch((err) => {
+                    console.log(err);
+                })
+            },
+            startTurnir(id) {
+                let slug = this.turnirs[id].lat_name + '-' + this.turnirs[id].id
+                this.$api.$get('/turnirs/' + slug).then((res) => {
+                    this.$router.push({
+                        name: 'turnir-slug',
+                        params: {
+                            slug: slug,
+                            turnir: res.turnir,
+                            turnir_users: res.turnir_users,
+                            zhetekshi: res.zhetekshi,
+                        }
+                    });
+                });
+            },
             startTimer() {
                 this.timer = setInterval(() => {
                     this.cT.currentTime--;
@@ -126,6 +148,10 @@
             stopTimer() {
                 clearTimeout(this.timer)
             },
+            setCategory(e) {
+                this.category = e
+                this.getData()
+            }
         }
 
     }
@@ -140,6 +166,7 @@
             padding-bottom: 132px;
         }
     }
+
     .main_header {
         font-family: Raleway;
         font-size: 16px;
@@ -184,10 +211,12 @@
             border-bottom: 2px solid #363636;
         }
     }
+
     .main {
         .head {
             padding: 40px 0 30px;
-            @media all and (max-width: 767px){
+
+            @media all and (max-width: 767px) {
                 padding: 40px 0 45px;
             }
 
@@ -200,31 +229,38 @@
                 line-height: 51px;
                 text-align: center;
                 text-transform: uppercase;
-                @media all and (max-width: 991px){
+
+                @media all and (max-width: 991px) {
                     font-size: 46px;
                     line-height: 50px;
                 }
-                @media all and (max-width: 883px){
+
+                @media all and (max-width: 883px) {
                     font-size: 44px;
                     line-height: 48px;
                 }
-                @media all and (max-width: 767px){
+
+                @media all and (max-width: 767px) {
                     font-size: 42px;
                     line-height: 46px;
                 }
-                @media all and (max-width: 767px){
+
+                @media all and (max-width: 767px) {
                     font-size: 42px;
                     line-height: 46px;
                 }
-                @media all and (max-width: 575px){
+
+                @media all and (max-width: 575px) {
                     font-size: 38px;
                     line-height: 45px;
                 }
-                @media all and (max-width: 472px){
+
+                @media all and (max-width: 472px) {
                     font-size: 34px;
                     line-height: 43px;
                 }
-                @media all and (max-width: 417px){
+
+                @media all and (max-width: 417px) {
                     font-size: 32px;
                     line-height: 42px;
                 }
@@ -298,9 +334,11 @@
             }
 
         }
+
         .body {
             padding: 50px 0 150px;
             overflow: hidden;
+
             .vkladki {
                 display: grid;
                 grid-template-columns: 1fr 1fr 1fr 1fr;
@@ -309,9 +347,11 @@
                 max-width: 100%;
                 width: 100%;
                 overflow-x: scroll;
-                &::-webkit-scrollbar{
+
+                &::-webkit-scrollbar {
                     height: 0;
                 }
+
                 .vkladka {
                     width: 100%;
                     padding: 20px 20px 30px;
@@ -319,32 +359,38 @@
                     font-weight: 600;
                     line-height: 28px;
                     color: #1E63E9;
-                    @media all and (max-width: 1099px){
+
+                    @media all and (max-width: 1099px) {
                         font-size: 22px;
                         line-height: 26px;
                     }
-                    @media all and (max-width: 991px){
+
+                    @media all and (max-width: 991px) {
                         font-size: 20px;
                         line-height: 24px;
                     }
-                    @media all and (max-width: 883px){
+
+                    @media all and (max-width: 883px) {
                         font-size: 18px;
                         line-height: 22px;
                     }
-                    &.active{
+
+                    &.active {
                         color: #363636;
                         background: #F8F8F8;
                         border: 1px solid #D6D6D6;
-                        border-bottom: none;
+                        border-bottom: 1px solid #F8F8F8;
                     }
                 }
             }
-            .block{
+
+            .block {
                 padding: 10px 30px;
                 background: #F8F8F8;
                 border: 1px solid #D6D6D6;
                 z-index: 2;
-                .turnir{
+
+                .turnir {
                     display: flex;
                     flex-direction: row;
                     align-items: center;
@@ -355,13 +401,16 @@
                     line-height: 21px;
                     color: #363636;
                     cursor: pointer;
-                    &:last-child{
+
+                    &:last-child {
                         border: none;
                     }
-                    img{
+
+                    img {
                         margin-left: 15px;
                     }
-                    &:hover{
+
+                    &:hover {
                         color: #0045CB;
                     }
                 }

@@ -115,7 +115,7 @@ select:focus{
 .menu-li a svg{
     flex-shrink: 0;
     stroke: #133881;
-    transition: all 0.4s;
+    transition: all 0.3s;
 }
 .menu-li .line{
     margin-left: 5px;

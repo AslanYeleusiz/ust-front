@@ -6,7 +6,7 @@
                 <div class="d-flex a-c">
                     <button @click='gotoBack' class="btn back">
                         <img src="~assets/images/arrow-left-blue.svg" alt="">
-                        Артқа қайту
+                        <span class="backtext">Артқа қайту</span>
                     </button>
                     <div class="kroshki">
                         <template v-for='(head, index) in header'>
@@ -44,6 +44,7 @@
         }
     }
     .main_header {
+        background: #ffffff;
         .back {
             border: 1px solid #3E6CED;
             border-radius: 4px;
@@ -55,6 +56,12 @@
             margin-left: 15px;
             line-height: 20px;
             color: #888888;
+        }
+        .backtext{
+            @media all and (max-width: 767px){
+                display: none;
+            }
+
         }
     }
 

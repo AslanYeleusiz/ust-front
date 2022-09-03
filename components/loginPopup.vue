@@ -5,9 +5,7 @@
                 <div v-show="loginOpen == 1" class="loginBlock loginWidth" >
                     <div class="cst_pd_popup">
                         <div class="closeBtnBar">
-                            <button type="button" @click="$emit('closePopup')" class="btn closeBtn">
-                                <img src="~assets/images/closeBtn.svg" alt="">
-                            </button>
+                            <exitDefaultBtn @click.native="$emit('closePopup')" class="closeBtn" />
                         </div>
                         <div class="header">Кабинетке кіру</div>
                     </div>
@@ -24,9 +22,7 @@
                 <div v-show="loginOpen == 2" class="loginBlock registerWidth" @click.stop>
                     <div class="cst_pd_popup">
                         <div class="closeBtnBar">
-                            <button type="button" @click="$emit('closePopup')" class="btn closeBtn">
-                                <img src="~assets/images/closeBtn.svg" alt="">
-                            </button>
+                            <exitDefaultBtn @click.native="$emit('closePopup')" class="closeBtn" />
                         </div>
                         <div class="header">Тіркелу</div>
                     </div>
@@ -45,9 +41,7 @@
                             <img src="~assets/images/arrow-left-blue.svg" alt="">
                             Артқа
                         </button>
-                        <button type="button" @click="$emit('closePopup')" class="btn closeBtn">
-                            <img src="~assets/images/closeBtn.svg" alt="">
-                        </button>
+                        <exitDefaultBtn @click.native="$emit('closePopup')" class="closeBtn" />
                     </div>
                     <div class="cst_pd_popup">
                         <div class="header">Құпия сөзді жаңарту</div>
@@ -63,9 +57,7 @@
             <transition name="fade">
                 <div v-show="loginOpen == 4" class="loginBlock emailConfirmWidth successWidth" @click.stop>
                     <div class="closeBtnBar">
-                        <button type="button" @click="$emit('closePopup')" class="btn closeBtn">
-                            <img src="~assets/images/closeBtn.svg" alt="">
-                        </button>
+                        <exitDefaultBtn @click.native="$emit('closePopup')" class="closeBtn" />
                     </div>
                     <div class="cst_pd_popup">
                         Sembiev_n@mail.ru почтасына құпия сөз және сайтқа кіру нұсқаулығы жіберілді. Входящие немесе спам деген папкаларды көріңіз.
@@ -81,13 +73,15 @@
     import cstPasswordInput from '@/components/forms/cstPasswordInput.vue'
     import login from '@/components/auth/login.vue'
     import register from '@/components/auth/register.vue'
+    import exitDefaultBtn from '@/components/forms/exitDefaultBtn.vue'
 
     export default {
         components: {
             cstInput,
             cstPasswordInput,
             login,
-            register
+            register,
+            exitDefaultBtn
         },
         props: ['loginOpen'],
     }

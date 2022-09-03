@@ -10,7 +10,7 @@
                     </div>
                     <div class="body head">
                         <div class="h">Бонусты балансқа аудару</div>
-                        <div v-if="perevodOpen==1">
+                        <div v-show="perevodOpen==1">
                             <div class="translate">
                                 <div class="bonus">
                                     <img src="~assets/images/ustbonus.png" alt="">
@@ -31,8 +31,8 @@
 
                             <div class="desc foot">Барлық бонустарыңыз бірден балансқа аударылады. Аударылған ақшаға сайттағы кез-келген қызметке төлем жасай аласыз. Ешқандай коммисия және пайыз ұсталынбайды</div>
                         </div>
-                        <div v-if="perevodOpen==2">
-                            <div class="green_success">Барлық бонустарыңыз балансқа сәтті аударылды.</div>
+                        <div v-show="perevodOpen==2">
+                            <div class="green_success" :class="{red:error}">{{ message }}</div>
                             <div class="desc_success foot">
                                 Аударылған ақшаға сайттағы кез-келген қызметке төлем жасай аласыз. Ешқандай коммисия және пайыз ұсталынбайды
                             </div>
@@ -113,15 +113,21 @@
         data() {
             return {
                 loading: false,
+                message: '',
+                error: 0,
             }
         },
         methods: {
             translate() {
                 this.loading = true;
-                setTimeout(() => {
+                this.$api.$get('/profile/bonus/store').then((res)=>{
                     this.perevodOpen = 2;
+                    this.message = res.success ?? res.error;
+                    this.error = res.error ? 1 : 0;
                     this.loading = false;
-                }, 1500);
+                }).catch(()=>{
+                    this.loading = false;
+                });
             },
             translateToCard() {
                 this.loading = true;
@@ -289,7 +295,9 @@
                         line-height: 22px;
                     }
                 }
-
+                .red {
+                    color: #F11A1A;
+                }
                 .desc_success {
                     font-size: 18px;
                     font-weight: 400;

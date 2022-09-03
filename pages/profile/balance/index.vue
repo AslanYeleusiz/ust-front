@@ -32,13 +32,39 @@
                             <div class="head">Уақыты</div>
                             <div class="head">Сипаттама</div>
                             <div class="head">Сумма</div>
+
                             <div class="time">25.11.2020 / 13:18</div>
                             <div class="description">Банк картасы арқылы шығарылды</div>
                             <div class="sum default">- 25 000 тг</div>
                             <div class="time">25.11.2020 / 13:06</div>
                             <div class="description">Банк картасы арқылы толтырылды</div>
                             <div class="sum green">+ 25 000 тг</div>
+                            <div class="time">25.11.2020 / 13:18</div>
+                            <div class="description">Банк картасы арқылы шығарылды</div>
+                            <div class="sum default">- 25 000 тг</div>
+                            <div class="time">25.11.2020 / 13:06</div>
+                            <div class="description">Банк картасы арқылы толтырылды</div>
+                            <div class="sum green">+ 25 000 тг</div>
+                            <div class="time">25.11.2020 / 13:06</div>
+                            <div class="description">Банк картасы арқылы толтырылды</div>
+                            <div class="sum green">+ 25 000 тг</div>
+
+<!--
+                            <template v-if="loading==0" v-for="balance in balances">
+                                <div class="time">{{balance.date}}</div>
+                                <div class="description">{{balance.perevod_text}}</div>
+                                <div class="sum" :class="{green:balance.plusOrMinus}">{{balance.plusOrMinus ? '+' : '-'}} {{balance.value}} B</div>
+                            </template>
+-->
+
                         </div>
+<!--
+                        <template v-if="loading==1">
+                            <div class="d-flex justify-content-center my-3">
+                                <div class="spinner-border" role="status"></div>
+                            </div>
+                        </template>
+-->
                     </div>
                     <NuxtLink to='/profile/balance/history' class="more">
                         <glassBtn text='Толық ашу' />
@@ -75,9 +101,35 @@
                     name: 'Бонус',
                 }],
                 oplataPopup: 0,
+                balances: [],
+                loading: 1,
             }
         },
-
+        methods: {
+            getData() {
+                this.loading = 1;
+                this.$api.$get('/profile/perevod/history', {
+                    params: {perevod_type: 'balance'}
+                }).then((res) => {
+                    this.balances = res.history;
+                    this.loading = 0;
+                })
+            },
+            showAll() {
+                this.$api.$get('/profile/perevod/history', {
+                    params: {
+                        perevod_type: 'balance',
+                        get: 20,
+                    }
+                }).then((res) => {
+                    console.log(res)
+                    this.$router.push({name: "profile-balance-history", params: { balances: res.history }});
+                })
+            }
+        },
+        mounted() {
+            this.getData();
+        }
     }
 
 </script>

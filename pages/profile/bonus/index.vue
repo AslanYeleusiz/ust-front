@@ -1,6 +1,6 @@
 <template>
     <div>
-       <perevodPopup :perevodOpen='perevodOpen' @closePopup="perevodOpen=0" />
+        <perevodPopup :perevodOpen='perevodOpen' @closePopup="perevodOpen=0" />
         <headLink :head='head' active=2 />
         <section class="main">
             <div class="cst-ct">
@@ -59,11 +59,11 @@
                             <b>
                                 Бонусты қалай алуға болады?
                             </b>
-                            <p>Сайттағы кез-келген қызметке төлем жасаған соң автоматты түрде сізге бонус    беріледі.</p>
+                            <p>Сайттағы кез-келген қызметке төлем жасаған соң автоматты түрде сізге бонус беріледі.</p>
                         </li>
                         <li>
-                          <b>Бонусты қалай қолдануға болады?</b>
-                           <p>Бонусты қолданудың екі түрі бар.</p>
+                            <b>Бонусты қалай қолдануға болады?</b>
+                            <p>Бонусты қолданудың екі түрі бар.</p>
                             <ol>
                                 <li>
                                     Бонусты балансқа айналдыру арқылы сайттағы қызметтерге қолдана аласыз. Бонус автоматты түрде балансыңызға бірден аударылады.
@@ -82,17 +82,42 @@
                             <div class="head">Уақыты</div>
                             <div class="head">Сипаттама</div>
                             <div class="head">Сумма</div>
+
                             <div class="time">25.11.2020 / 13:18</div>
                             <div class="description">Банк картасы арқылы шығарылды</div>
-                            <div class="sum default">- 25 000 B</div>
+                            <div class="sum default">- 25 000 тг</div>
                             <div class="time">25.11.2020 / 13:06</div>
                             <div class="description">Банк картасы арқылы толтырылды</div>
-                            <div class="sum green">+ 25 000 B</div>
+                            <div class="sum green">+ 25 000 тг</div>
+                            <div class="time">25.11.2020 / 13:18</div>
+                            <div class="description">Банк картасы арқылы шығарылды</div>
+                            <div class="sum default">- 25 000 тг</div>
+                            <div class="time">25.11.2020 / 13:06</div>
+                            <div class="description">Банк картасы арқылы толтырылды</div>
+                            <div class="sum green">+ 25 000 тг</div>
+                            <div class="time">25.11.2020 / 13:06</div>
+                            <div class="description">Банк картасы арқылы толтырылды</div>
+                            <div class="sum green">+ 25 000 тг</div>
+
+<!--
+                            <template v-if="loading==0" v-for="bonus in bonuses">
+                                <div class="time">{{bonus.date}}</div>
+                                <div class="description">{{bonus.perevod_text}}</div>
+                                <div class="sum" :class="{green:bonus.plusOrMinus}">{{bonus.plusOrMinus ? '+' : '-'}} {{bonus.value}} B</div>
+                            </template>
+-->
+
                         </div>
+<!--
+                        <template v-if="loading==1">
+                            <div class="d-flex justify-content-center my-3">
+                                <div class="spinner-border" role="status"></div>
+                            </div>
+                        </template>
+-->
                     </div>
-                    <NuxtLink to='/profile/bonus/history' class="more">
-                        <glassBtn text='Толық ашу' />
-                    </NuxtLink>
+                    <glassBtn @click.native="$router.push('bonus/history')" text='Толық ашу' />
+<!--                    <glassBtn @click.native="showAll()" text='Толық ашу' />-->
                 </div>
             </div>
         </section>
@@ -127,8 +152,35 @@
                     name: 'Бонус',
                 }],
                 perevodOpen: 0,
+                bonuses: [],
+                loading: 1,
             }
         },
+        methods: {
+            getData() {
+                this.loading = 1;
+                this.$api.$get('/profile/perevod/history', {
+                    params: {perevod_type: 'bonus'}
+                }, {}).then((res) => {
+                    this.bonuses = res.history;
+                    this.loading = 0;
+                })
+            },
+            showAll() {
+                this.$api.$get('/profile/perevod/history', {
+                    params: {
+                        perevod_type: 'bonus',
+                        get: 20,
+                    }
+                }, {}).then((res) => {
+                    console.log(res)
+                    this.$router.push({name: "profile-bonus-history", params: { bonuses: res.history }});
+                })
+            }
+        },
+        mounted() {
+            this.getData();
+        }
 
     }
 
@@ -137,6 +189,7 @@
     .main {
         padding-bottom: 150px;
     }
+
     .balance_block {
         position: relative;
         margin-top: 50px;
@@ -262,6 +315,7 @@
             }
         }
     }
+
     .h2 {
         font-size: 36px;
         font-weight: 600;
@@ -290,6 +344,7 @@
         }
 
     }
+
     .cst_btn_size {
         max-width: 320px;
         width: 100%;
@@ -310,17 +365,21 @@
             font-weight: 600;
         }
     }
-    .wrap{
+
+    .wrap {
         display: flex;
         grid-gap: 20px;
-        @media all and (max-width: 767px){
+
+        @media all and (max-width: 767px) {
             display: block;
         }
 
     }
+
     .history {
         margin-top: 90px;
-        @media all and (max-width: 767px){
+
+        @media all and (max-width: 767px) {
             margin-top: 50px;
         }
 
@@ -389,63 +448,74 @@
             }
         }
     }
-    .consultant{
+
+    .consultant {
         margin-top: 80px;
         padding: 30px 80px;
         background: 50% 50% / 100% 100% url('@/assets/images/bg_bonus.jpg');
         display: flex;
         justify-content: space-between;
         color: #ffffff;
-        @media all and (max-width: 991px){
+
+        @media all and (max-width: 991px) {
             padding: 30px 48px;
         }
-        @media all and (max-width: 883px){
+
+        @media all and (max-width: 883px) {
             flex-direction: column;
         }
-        @media all and (max-width: 767px){
+
+        @media all and (max-width: 767px) {
             margin-top: 40px;
         }
-        @media all and (max-width: 429px){
+
+        @media all and (max-width: 429px) {
             padding: 30px 30px;
         }
 
 
-        .men{
+        .men {
             display: flex;
             align-items: center;
             grid-gap: 18px;
-            .avatar{
+
+            .avatar {
                 width: 80px;
                 height: 80px;
                 border-radius: 50%;
                 background: 50% 50% /100% no-repeat url('@/assets/images/dake.png');
             }
-            .body{
+
+            .body {
                 font-size: 14px;
                 font-weight: 400;
                 line-height: 17px;
 
-                b{
+                b {
                     font-size: 24px;
                     font-weight: 700;
                     line-height: 30px;
                     text-transform: uppercase;
-                    @media all and (max-width: 1099px){
+
+                    @media all and (max-width: 1099px) {
                         font-size: 22px;
                         line-height: 26px;
                     }
-                    @media all and (max-width: 452px){
+
+                    @media all and (max-width: 452px) {
                         font-size: 20px;
                         line-height: 24px;
                     }
-                    @media all and (max-width: 394px){
+
+                    @media all and (max-width: 394px) {
                         font-size: 18px;
                         line-height: 22px;
                     }
                 }
             }
         }
-        .whatsap{
+
+        .whatsap {
             text-align: center;
             display: flex;
             flex-direction: column;
@@ -454,64 +524,78 @@
             font-size: 18px;
             font-weight: 400;
             line-height: 22px;
-            @media all and (max-width: 1099px){
+
+            @media all and (max-width: 1099px) {
                 font-size: 20px;
                 line-height: 23px;
             }
-            @media all and (max-width: 883px){
+
+            @media all and (max-width: 883px) {
                 margin-top: 20px;
             }
-            @media all and (max-width: 438px){
+
+            @media all and (max-width: 438px) {
                 font-size: 18px;
                 line-height: 19px;
             }
 
-            b{
+            b {
                 font-weight: 700;
             }
-            .btn_size{
+
+            .btn_size {
                 width: 100%;
                 max-width: 225px;
 
             }
         }
     }
-    .warning{
+
+    .warning {
         margin-top: 40px;
         color: #808080;
         font-size: 18px;
         line-height: 21px;
-        @media all and (max-width: 767px){
+
+        @media all and (max-width: 767px) {
             font-size: 16px;
             line-height: 20px;
         }
-        @media all and (max-width: 500px){
+
+        @media all and (max-width: 500px) {
             font-size: 14px;
             line-height: 19px;
         }
-        .h{
+
+        .h {
             font-size: 24px;
             font-weight: 700;
             line-height: 28px;
             color: #000000;
-            @media all and (max-width: 767px){
+
+            @media all and (max-width: 767px) {
                 font-size: 22px;
                 line-height: 26px;
             }
-            @media all and (max-width: 500px){
+
+            @media all and (max-width: 500px) {
                 font-size: 20px;
                 line-height: 23px;
             }
 
         }
-        p{
+
+        p {
             margin-top: 20px;
         }
-        .body{
+
+        .body {
             margin-top: 30px;
-            p{
+
+            p {
                 margin-top: 10px;
             }
         }
     }
+
 </style>

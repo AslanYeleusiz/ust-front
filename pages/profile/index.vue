@@ -15,7 +15,7 @@
                         <div class="myBtn">
                             <glassBtn @click.native="()=>{$router.push('/profile/ozgertu')}" text='Өзгерту'/>
                         </div>
-                        <button class="btn exitBtn">
+                        <button @click='logout' class="btn exitBtn">
                             <img src="~assets/images/logout.svg" alt=""><span>Сайттан шығу</span>
                         </button>
                     </div>
@@ -176,6 +176,11 @@
                 console.log(images)
                 return images
             },
+            logout() {
+                this.$auth.logout().then(() => {
+                    this.router.push('/')
+                });
+            }
         },
         head() {
             return {
@@ -283,7 +288,7 @@
                     width: 150px;
                     height: 150px;
                     background-position: 50% 50%;
-                    background-size: 100%;
+                    background-size: cover;
                     margin: 0 auto;
                     border-radius: 50%;
                 }

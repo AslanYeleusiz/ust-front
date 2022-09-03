@@ -30,7 +30,7 @@
         },
         methods: {
             slideBarShow() {
-                this.slideActive ? this.slideActive = false : this.slideActive = true;
+                this.slideActive = this.slideActive ? false : true;
             },
         },
         mounted() {

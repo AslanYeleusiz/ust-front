@@ -70,6 +70,11 @@ export default {
             src: '@/plugins/route.js',
             mode: 'client',
         },
+        {
+            src: '@/plugins/modal.js',
+            mode: 'client',
+        },
+
 
   ],
 

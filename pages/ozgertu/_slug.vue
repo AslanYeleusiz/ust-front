@@ -111,13 +111,11 @@
 </template>
 
 <script>
-    import edit from '@/components/svg/edit.vue'
     import btnGroup from '@/components/forms/btnGroup.vue'
     import erezhe from '@/components/popups/erezhe.vue'
 
     export default {
         components: {
-            edit,
             btnGroup,
             erezhe
         },

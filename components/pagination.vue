@@ -3,7 +3,7 @@
         <div class="pagination">
 
 
-            <button v-if="currentPage < 1" @click="$emit('set-page',currentPage-1)" class="btn prev">
+            <button v-if="currentPage > 1" @click="$emit('set-page',currentPage-1)" class="btn prev">
                 <arrowLeft class="arrow"/>
                 <span>Артқа</span>
             </button>

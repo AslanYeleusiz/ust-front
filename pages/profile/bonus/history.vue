@@ -3,26 +3,43 @@
         <kroshki :header='kroshki' />
         <div class="cst-ct">
             <div class="history">
-            <h3>Бонус тарихы</h3>
-            <div class="overflow">
-                <div class="cst_table">
-                    <div class="head">Уақыты</div>
-                    <div class="head">Сипаттама</div>
-                    <div class="head">Сумма</div>
-                    <template v-for='n in 10'>
-                        <div class="time">25.11.2020 / 13:18</div>
-                        <div class="description">Банк картасы арқылы шығарылды</div>
-                        <div class="sum default">- 25 000 B</div>
-                        <div class="time">25.11.2020 / 13:06</div>
-                        <div class="description">Банк картасы арқылы толтырылды</div>
-                        <div class="sum green">+ 25 000 B</div>
+                <h3>Бонус тарихы</h3>
+                <div class="overflow">
+                    <div class="cst_table">
+                        <div class="head">Уақыты</div>
+                        <div class="head">Сипаттама</div>
+                        <div class="head">Сумма</div>
+
+                        <template v-for="n in 10">
+                            <div class="time">25.11.2020 / 13:18</div>
+                            <div class="description">Банк картасы арқылы шығарылды</div>
+                            <div class="sum default">- 25 000 тг</div>
+                            <div class="time">25.11.2020 / 13:06</div>
+                            <div class="description">Банк картасы арқылы толтырылды</div>
+                            <div class="sum green">+ 25 000 тг</div>
+                        </template>
+
+
+<!--
+                        <template v-if="loading==0" v-for="bonus in bonuses.data">
+                            <div class="time">{{bonus.date}}</div>
+                            <div class="description">{{bonus.perevod_text}}</div>
+                            <div class="sum" :class="{green:bonus.plusOrMinus}">{{bonus.plusOrMinus ? '+' : '-'}} {{bonus.value}} B</div>
+                        </template>
+-->
+                    </div>
+<!--
+                    <template v-if="loading==1">
+                        <div class="d-flex justify-content-center my-3">
+                            <div class="spinner-border" role="status"></div>
+                        </div>
                     </template>
+-->
+                </div>
+                <div class="paginator">
+                    <pagination :currentPage="bonuses.current_page" :lastPage="bonuses.last_page" @set-page="setPage" />
                 </div>
             </div>
-            <div class="paginator">
-                <pagination />
-            </div>
-        </div>
         </div>
     </div>
 </template>
@@ -42,12 +59,43 @@
                 kroshki: [{
                     name: 'Бонус',
                     link: '/profile/bonus'
-                    },{
+                }, {
                     name: 'Бонус тарихы'
-                }]
+                }],
+                bonuses: [],
+                loading: 1,
+                page: 1,
             }
         },
-
+        methods: {
+            getData() {
+                this.$api.$get('/profile/bonus', {
+                    params: {
+                        perevod_type: 2,
+                        get: 20,
+                        page: this.page
+                    }
+                }).then((res) => {
+                    this.bonuses = res.bonuses
+                    this.loading = 0
+                    console.log(res.bonuses)
+                }).catch((err) => {
+                    console.log(err);
+                    this.loading = 0
+                })
+            },
+            setPage(page) {
+                this.page = page
+                this.loading = 1
+                this.getData()
+            }
+        },
+        mounted() {
+            if (this.$route.params.bonuses != null) {
+                this.loading = 0
+                this.bonuses = this.$route.params.bonuses
+            } else this.getData();
+        }
     }
 
 </script>
@@ -125,7 +173,8 @@
                 font-weight: 600;
             }
         }
-        .paginator{
+
+        .paginator {
             margin-top: 20px;
             padding-bottom: 100px;
         }
