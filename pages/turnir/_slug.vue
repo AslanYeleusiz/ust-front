@@ -561,9 +561,9 @@
 
                 .addNewUser {
                     margin-top: 40px;
-                    display: flex;
+                    display: grid;
                     align-items: center;
-                    gap: 20px;
+                    grid-gap: 20px;
 
                     @media all and (max-width: 767px) {
                         flex-direction: column-reverse;

@@ -121,14 +121,18 @@
 
                 .body {
                     margin-top: 15px;
-                    display: flex;
+                    display: grid;
+                    grid-template-columns: auto 1fr;
                     align-items: center;
-                    gap: 10px 30px;
+                    grid-gap: 10px 30px;
                     flex-wrap: wrap;
                     font-family: Gilroy;
                     font-size: 14px;
                     font-weight: 600;
                     line-height: 17px;
+                    @media all and (max-width: 883px){
+                        grid-template-columns: 1fr;
+                    }
 
                     .clock {
                         color: #03B113;
@@ -136,13 +140,15 @@
 
                     .clock,
                     .tusers {
-                        display: flex;
+                        display: grid;
                         align-items: center;
-                        gap: 10px;
+                        grid-template-columns: auto auto 1fr;
+                        grid-gap: 10px;
                     }
 
                     .tusers {
                         color: #888888;
+                        grid-template-columns: auto 1fr;
                     }
                 }
             }
