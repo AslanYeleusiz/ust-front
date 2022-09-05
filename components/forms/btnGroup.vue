@@ -1,6 +1,6 @@
 <template>
-    <div class="btn-group">
-        <button type="button" class="btn myBtn" :class="{active: isOpen, soup: type==2}" data-bs-toggle="dropdown" aria-expanded="false" v-click-outside="hide" @click="openedMenu">
+    <div class="btn-group" v-click-outside="hide">
+        <button type="button" class="btn myBtn" :class="{active: isOpen, soup: type==2}" data-bs-toggle="dropdown" aria-expanded="false"  @click="openedMenu">
            <template v-if='isActive!=null'>
                {{category[isActive].name}}
            </template>
@@ -36,6 +36,9 @@
             sendRes(e) {
                 this.isActive = e;
                 this.$emit('entered-category', this.isActive);
+                setTimeout(()=>{
+                    this.hide()
+                },150)
             }
         },
         directives: {
