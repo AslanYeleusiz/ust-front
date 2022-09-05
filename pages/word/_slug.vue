@@ -1,6 +1,6 @@
 <template>
     <div>
-        <header_kroshki :header='header'/>
+        <header_kroshki :header='header' />
         <section class="main">
             <div class="cst-ct">
                 <div v-if="material.sell" class="private_head">
@@ -27,17 +27,19 @@
                                     <span>{{material.user.fio}}</span>
                                 </div>
                             </NuxtLink>
-                            <div class="date">
-                                <img src="~assets/images/note-text.svg" alt="">
-                                <span>{{material.date}}</span>
-                            </div>
-                            <div class="views">
-                                <img src="~assets/images/eye_materials.svg" alt="">
-                                <span>{{material.view}}</span>
-                            </div>
-                            <div class="downloads">
-                                <img src="~assets/images/import.svg" alt="">
-                                <span>{{material.download}}</span>
+                            <div class="div">
+                                <div class="date">
+                                    <img src="~assets/images/note-text.svg" alt="">
+                                    <span>{{material.date}}</span>
+                                </div>
+                                <div class="views">
+                                    <img src="~assets/images/eye_materials.svg" alt="">
+                                    <span>{{material.view}}</span>
+                                </div>
+                                <div class="downloads">
+                                    <img src="~assets/images/import.svg" alt="">
+                                    <span>{{material.download}}</span>
+                                </div>
                             </div>
                         </div>
                         <div class="desc">
@@ -141,11 +143,9 @@
         data() {
             return {
                 material: {
-                    user: {
-                    }
+                    user: {}
                 },
-                materials: [
-                    {
+                materials: [{
                     type: 2,
                     sell: 250,
                     title: 'Презентация Пісіру жіктерінің түрлері',
@@ -226,8 +226,7 @@
                     views: 135,
                     downloads: 3,
                 }, ],
-                authors_materials: [
-                    {
+                authors_materials: [{
                     type: 2,
                     sell: 250,
                     title: 'Презентация Пісіру жіктерінің түрлері',
@@ -256,20 +255,20 @@
                 header: [{
                     name: 'Материалдар',
                     link: '/material'
-                },{
+                }, {
                     name: '',
                 }],
 
 
             }
         },
-        head(){
+        head() {
             return {
                 title: this.material.title,
                 meta: [{
                     hid: 'description',
                     name: 'description',
-                    content: this.material.title+' атты Мақала   - ұстаз тілегі сайтынан тегін жүктеп алыңыз.',
+                    content: this.material.title + ' атты Мақала   - ұстаз тілегі сайтынан тегін жүктеп алыңыз.',
                 }],
             }
         },
@@ -294,17 +293,19 @@
                 alert('Сілтеме сәтті көшірілді!');
             },
             download() {
-                this.$axios.$get('/word/'+this.material.id+'/download',{responseType: 'blob'}).then((response)=>{
-                      const blob = new Blob([response]);
-                      const link = document.createElement('a');
-                      link.href = window.URL.createObjectURL(blob);
-                      link.download = this.material.filename;
-                      link.click();
+                this.$axios.$get('/word/' + this.material.id + '/download', {
+                    responseType: 'blob'
+                }).then((response) => {
+                    const blob = new Blob([response]);
+                    const link = document.createElement('a');
+                    link.href = window.URL.createObjectURL(blob);
+                    link.download = this.material.filename;
+                    link.click();
                 })
             },
         },
         async fetch() {
-            await this.$axios.$get('/word/'+this.$route.params.slug).then((res)=>{
+            await this.$axios.$get('/word/' + this.$route.params.slug).then((res) => {
                 this.material = res;
                 this.header[1].name = res.title
             });
@@ -315,8 +316,6 @@
 
 
 <style scoped lang="scss">
-
-
     .main {
         padding-top: 30px;
 
@@ -324,6 +323,7 @@
             display: flex;
             align-items: center;
             margin-bottom: 20px;
+
             .privateBlock {
                 display: flex;
                 align-items: center;
@@ -348,7 +348,8 @@
                     text-fill-color: transparent;
                 }
             }
-            .f{
+
+            .f {
                 background: linear-gradient(61.13deg, #9C1EE9 32.51%, #6398FF 91.27%);
                 -webkit-background-clip: text;
                 -webkit-text-fill-color: transparent;
@@ -385,23 +386,31 @@
             background: #F9F9F9;
             border-radius: 10px;
             padding: 30px;
-            display: flex;
+            display: grid;
+            grid-template-columns: auto 1fr;
+            grid-gap: 24px;
             flex-direction: row;
+            align-items: flex-start;
+            @media all and (max-width: 883px){
+                grid-template-columns: auto;
+                justify-items: center;
+            }
 
             .body {
-                padding-left: 24px;
-
                 .info {
                     display: flex;
                     font-size: 16px;
                     font-weight: 400;
                     line-height: 19px;
-
+                    gap: 20px 30px;
+                    flex-wrap: wrap;
                     div {
                         display: flex;
                         word-wrap: break-word;
-                        margin-left: 30px;
                         opacity: 0.7;
+                        &.div{
+                            gap: 30px;
+                        }
 
                         img {
                             width: 20px;
@@ -411,7 +420,6 @@
 
                         &:first-child {
                             opacity: 1;
-                            margin: 0;
                             color: #363636;
                         }
                     }
@@ -433,6 +441,12 @@
                     grid-template-columns: 1fr 1fr 1fr;
                     grid-gap: 30px;
 
+                    @media all and (max-width: 991px) {
+                        grid-template-columns: 1fr;
+                        grid-gap: 15px;
+                    }
+
+
                     .certBtn {
                         width: 100%;
                         border: 1px solid #1E63E9;
@@ -453,6 +467,10 @@
             background: #E2FFE2;
             border: 1px solid #03B113;
             border-radius: 4px;
+            margin-top: 30px;
+            @media all and (max-width: 883px){
+                margin-top: 50px;
+            }
 
             img {
                 margin-right: 5px;
@@ -494,6 +512,9 @@
                 grid-template-columns: 1fr 1fr 1fr 1fr;
                 grid-gap: 1px;
                 background: #D6D6D6;
+                @media all and (max-width: 883px){
+                    grid-template-columns: 1fr 1fr;
+                }
 
                 button {
                     background: #ffffff;

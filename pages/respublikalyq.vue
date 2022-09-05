@@ -236,11 +236,12 @@
         margin-top: 100px;
 
         @media all and (max-width: 991px) {
-            flex-direction: column;
+            grid-template-columns: 1fr;
         }
         .olimpBtn{
             max-width: 100%;
         }
+
         .download {
             @media all and (max-width: 991px) {
                 margin: 30px 0 0 0;
