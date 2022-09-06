@@ -1,7 +1,7 @@
 
 @media all and (max-width: 1450px){
     .main_ustazdar {
-    background: center/auto 100% url(/_nuxt/assets/images/main_ustazdar.jpg);
+    background: center/auto 100% url(images/main_ustazdar.jpg);
 }
 }
 @media all and (max-width: 1099px){
@@ -456,7 +456,10 @@
         line-height: 14px;
     }
     .block1 {
-        background-image: url(/_nuxt/assets/images/block1.png);
+        background-image: url(images/block1.png);
+    }
+    .ms_search input {
+        height: 55px;
     }
 }
 @media all and (max-width: 472px){

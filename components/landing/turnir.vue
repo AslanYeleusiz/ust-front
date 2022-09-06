@@ -174,8 +174,9 @@
         }
 
         .list_block {
-            display: flex;
-            gap: 20px;
+            display: grid;
+            grid-template-columns: auto 1fr;
+            grid-gap: 20px;
             align-items: center;
 
             .head {
@@ -195,10 +196,11 @@
         }
 
         .wraper {
-            display: flex;
+            display: grid;
+            grid-template-columns: 1fr;
             justify-content: center;
             flex-direction: column;
-            gap: 30px;
+            grid-gap: 30px;
             margin-top: 35px;
         }
     }
@@ -220,9 +222,9 @@
 
     .questions {
         margin-top: 50px;
-        display: flex;
-        flex-direction: column;
-        gap: 5px;
+        display: grid;
+        grid-template-columns: 1fr;
+        grid-gap: 5px;
         .question{
             text-align: left;
         }
@@ -316,7 +318,7 @@
             margin-top: 40px;
             display: flex;
             flex-direction: column-reverse;
-            grid-gap: 30px;
+            gap: 30px;
         }
 
         .wrap .video {

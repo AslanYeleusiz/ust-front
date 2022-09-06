@@ -25,7 +25,7 @@
                             <div class="htext">Жеке кабинет</div>
                             <div class="dtext">Сіздің барлық жетістіктеріңіз<br>осында</div>
                             <div class="cst_btn">
-                                <btn @click.native="gotoProfile" style="font-size: 18px" text='Кіру / Тіркелу' img="user.svg" />
+                                <cstBtn @click.native="gotoProfile" style="font-size: 18px" text='Кіру / Тіркелу' img="user.svg" />
                             </div>
                         </div>
                     </div>
@@ -34,7 +34,7 @@
                             <div class="htext">Айлықты есептеу калькуляторы</div>
                             <div class="dtext">тегін, әрі оңай</div>
                             <div class="cst_btn">
-                                <btn text='Есептеу' />
+                                <cstBtn text='Есептеу' />
                             </div>
                         </div>
                     </div>
@@ -43,7 +43,7 @@
                             <div class="htext">ҚМЖ</div>
                             <div class="dtext">Мұғалімге қажетті барлық құжаттарды жүктеу</div>
                             <div class="cst_btn">
-                                <btn text='Тізімді көру' />
+                                <cstBtn text='Тізімді көру' />
                             </div>
                         </div>
                     </div>
@@ -57,7 +57,7 @@
                                         <div class="htext">Жеке кабинет</div>
                                         <div class="dtext">Сіздің барлық жетістіктеріңіз<br>осында</div>
                                         <div class="cst_btn">
-                                            <btn @click.native="gotoProfile" style="font-size: 16px" text='Кіру / Тіркелу' img="user.svg" />
+                                            <cstBtn @click.native="gotoProfile" style="font-size: 16px" text='Кіру / Тіркелу' img="user.svg" />
                                         </div>
                                     </div>
                                 </div>
@@ -68,7 +68,7 @@
                                         <div class="htext">Айлықты есептеу калькуляторы</div>
                                         <div class="dtext">тегін, әрі оңай</div>
                                         <div class="cst_btn">
-                                            <btn text='Есептеу' />
+                                            <cstBtn text='Есептеу' />
                                         </div>
                                     </div>
                                 </div>
@@ -80,7 +80,7 @@
                                         <div class="htext">ҚМЖ</div>
                                         <div class="dtext">Мұғалімге қажетті барлық құжаттарды жүктеу</div>
                                         <div class="cst_btn">
-                                            <btn text="Тізімді көру" />
+                                            <cstBtn text="Тізімді көру" />
                                         </div>
                                     </div>
                                 </div>
@@ -200,10 +200,10 @@
                     </div>
                     <div class="calc_buttons">
                         <div class="calc_btn">
-                            <btn text='Жариялап, табыс табу' />
+                            <cstBtn text='Жариялап, табыс табу' />
                         </div>
                         <div class="calc_btn">
-                            <btn text='Материалдар үлгісін көру' />
+                            <cstBtn text='Материалдар үлгісін көру' />
                         </div>
                     </div>
                 </div>
@@ -234,7 +234,9 @@
                 </div>
                 <form action="" class="ms_search">
                     <input type="text" class="form-control" placeholder="Мысалы: KZ123456779">
-                    <btn square=1 text='Тексеру' />
+                    <div class="cst_size_btn">
+                        <cstBtn square=1 text='Тексеру' />
+                    </div>
 
                 </form>
                 <span>Ағылшын әріптерімен жазылады. Егер өз құжатыңызды таба алмасаңыз, 8-771-234-5599 номеріне ватсапқа жазыңыз</span>
@@ -256,7 +258,6 @@
                             </div>
                         </NuxtLink>
                     </template>
-
                 </div>
             </div>
         </section>
@@ -264,13 +265,13 @@
 </template>
 
 <script>
-    import btn from '@/components/forms/btn.vue'
+    import cstBtn from '@/components/forms/btn.vue'
     import certBtn from '@/components/forms/certBtn.vue'
     import notification from '@/components/svg/notification.vue'
 
     export default {
         components: {
-            btn,
+            cstBtn,
             certBtn,
             notification
         },
@@ -497,7 +498,16 @@
             display: none;
         }
     }
+    .cst_size_btn{
+        height: 55px;
+        @media all and (max-width: 767px){
+            height: 40px;
+        }
+        @media all and (max-width: 500px){
+            height: 55px;
+        }
 
+    }
     .otstup {
         padding-bottom: 66px;
     }

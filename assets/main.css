@@ -392,7 +392,7 @@ select:focus{
 .main_ustazdar{
     margin-top: 100px;
     padding: 100px 0 130px;
-    background: center/100% auto url(assets/images/main_ustazdar.jpg);
+    background: center/100% auto url(images/main_ustazdar.jpg);
     color: #FFFFFF;
 }
 .mu_h2{
@@ -698,7 +698,7 @@ input[type=range]::-webkit-slider-runnable-track  {
 .ms_search button, .ms_search input{
     height: 55px;
 }
-.main_search span{
+.main_search span:not(.main_search button span){
     display: block;
     color: #888888;
     margin-top: 20px;

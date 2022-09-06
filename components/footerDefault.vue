@@ -6,7 +6,7 @@
                     <div class="f-1">
                         <img src="~assets/images/mainLogoWhite.png" alt="">
                         <div class="span">Ғылыми-әдістемелік орталық</div>
-                        <div class="socseti d-flex j-b">
+                        <div class="socseti j-b">
                             <img src="~assets/images/vk.svg" alt="">
                             <img src="~assets/images/facebook.svg" alt="">
                             <img src="~assets/images/youtube.svg" alt="">
@@ -75,6 +75,7 @@
                 }
                 .socseti {
                     margin-top: 35px;
+                    display: flex;
                     @media all and (max-width: 991px){max-width: 272px;}
                     @media all and (max-width: 767px){margin-top: 20px;}
                     @media all and (max-width: 500px){

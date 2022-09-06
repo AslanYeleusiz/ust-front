@@ -5,6 +5,8 @@ export default ({ app }) => {
         'menin-materialdarym',
         'zharialau',
         'profile',
+        'turnir-slug',
+        'menin-turnirlerim',
     ]
     app.router.beforeEach((to, from, next) => {
         console.log(to.name)

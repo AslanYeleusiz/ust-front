@@ -567,6 +567,9 @@
 
                     @media all and (max-width: 767px) {
                         flex-direction: column-reverse;
+                        justify-content: center;
+                        padding: 0 20px;
+
                     }
 
                     .cst_size_btn {
@@ -576,6 +579,7 @@
                         @media all and (max-width: 767px) {
                             width: 100%;
                             max-width: 280px;
+
                         }
 
                     }
