@@ -316,13 +316,15 @@
 
         .wrap {
             margin-top: 40px;
-            display: flex;
-            flex-direction: column-reverse;
-            gap: 30px;
+            display: grid;
+            grid-gap: 30px;
+            grid-template-columns: 1fr;
+            grid-template-areas: 'a' 'b';
         }
 
         .wrap .video {
             height: 242px;
+            grid-area: a;
         }
 
         .block {
@@ -331,6 +333,14 @@
         .wrap_col:first-child {
             margin-top: 50px;
         }
+        ul{
+            grid-area: b;
+        }
+        .wrap_col{
+            &:first-child{grid-area: b;}
+            &:last-child{grid-area: a;}
+        }
+
     }
     @media all and (max-width: 500px){
         .h2[data-v-3ed23f4e] {

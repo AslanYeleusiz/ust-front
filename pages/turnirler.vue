@@ -4,7 +4,7 @@
         <div class="main">
             <div class="head">
                 <div class="cst-ct">
-                    <h2>Сәуір айының<br>блиц-турнирі</h2>
+                    <h2>{{month}} айының<br>блиц-турнирі</h2>
                     <div class="timer">
                         <div class="time">
                             <div class="value">{{cT.days}}</div>
@@ -96,12 +96,12 @@
                 category: 2,
                 turnirs: [],
                 loading: 1,
+                month: '',
             }
         },
         mounted() {
             this.startTimer()
             this.getData()
-
         },
         destroyed() {
             this.stopTimer()
@@ -115,7 +115,9 @@
                     }
                 }).then((res) => {
                     this.turnirs = res.data.turnirs
+                    this.cT.currentTime = res.data.time
                     this.loading = 0
+                    this.month = res.data.turnirs[0].month
                 }).catch((err) => {
                     console.log(err);
                 })
