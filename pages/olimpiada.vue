@@ -98,7 +98,7 @@
                 </div>
                 <div class="cst-ct">
                     <div class="list">
-                        <button v-for="n in 10" class="btn block_btn">
+                        <button @click="gotoOnline" v-for="n in 10" class="btn block_btn">
                             <daryn color="#1E63E9" />
                             Жас дарын
                         </button>
@@ -167,6 +167,9 @@
             },
             gotoOlimp(){
                 this.$router.push('/respublikalyq')
+            },
+            gotoOnline(){
+                this.$router.push('/onlineolimpiada')
             }
         },
         head(){

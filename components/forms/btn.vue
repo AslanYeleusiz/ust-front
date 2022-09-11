@@ -55,3 +55,8 @@ export default {
         }
     }
 </style>
+<style>
+    .cst_btn{
+        font-size: inherit;
+    }
+</style>

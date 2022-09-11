@@ -33,7 +33,8 @@
         border: 1px solid #C7C7C7;
         background: #FAFAFA;
         border-radius: 6px;
-        height: 50px;
+        height: 100%;
+        max-height: 50px;
         transition: 0.3s;
 
         &:placeholder {

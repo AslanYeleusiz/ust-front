@@ -109,7 +109,7 @@
         methods: {
             getData() {
                 this.loading = 1
-                this.$api.get('/turnirs', {
+                this.$axios.get('/turnirs', {
                     params: {
                         category: this.category
                     }
@@ -124,17 +124,20 @@
             },
             startTurnir(id) {
                 let slug = this.turnirs[id].lat_name + '-' + this.turnirs[id].id
-                this.$api.$get('/turnirs/' + slug).then((res) => {
-                    this.$router.push({
-                        name: 'turnir-slug',
-                        params: {
-                            slug: slug,
-                            turnir: res.turnir,
-                            turnir_users: res.turnir_users,
-                            zhetekshi: res.zhetekshi,
-                        }
+                if (this.$auth.strategy.token.get()) {
+                    this.$api.$get('/turnirs/' + slug).then((res) => {
+                        this.$router.push({
+                            name: 'turnir-slug',
+                            params: {
+                                slug: slug,
+                                turnir: res.turnir,
+                                turnir_users: res.turnir_users,
+                                zhetekshi: res.zhetekshi,
+                            }
+                        });
                     });
-                });
+                }else this.$bus.$emit('openLogin')
+
             },
             startTimer() {
                 this.timer = setInterval(() => {

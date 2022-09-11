@@ -70,7 +70,8 @@
         border: 1px solid #D6D6D6;
         border-radius: 6px !important;
         padding: 0 15px 0 20px;
-        height: 50px;
+        height: 100%;
+        max-height: 50px;
         &.soup{
             width: 160px;
             height: 40px;
