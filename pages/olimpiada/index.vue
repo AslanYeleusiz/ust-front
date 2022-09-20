@@ -111,7 +111,7 @@
 
 
 <script>
-    import daryn from '../components/svg/daryn.vue'
+    import daryn from '@/components/svg/daryn.vue'
     import bigBtn from '@/components/forms/bigBtn.vue'
     import headLink from '@/components/header.vue'
 

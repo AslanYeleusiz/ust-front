@@ -83,15 +83,18 @@
                         <div class="spinner-border" role="status"></div>
                     </div>
                     <div v-else class="list">
-                        <div v-for="(olimp, index) in olimps" class="block">
-                            <div class="wrap">
-                                <img src="~assets/images/olimpsvg.svg" alt="">
-                                <div class="title">{{olimp.o_bagyty}}</div>
+                        <template v-for="(olimp, index) in olimps">
+                            <div class="block">
+                                <div class="wrap">
+                                    <img src="~assets/images/olimpsvg.svg" alt="">
+                                    <div class="title">{{olimp.o_bagyty}}</div>
+                                </div>
+                                <div class="cst_size_btn">
+                                    <cstBtn @click.native="startOlimp(index)" text="Қатысушыны енгізу" />
+                                </div>
                             </div>
-                            <div class="cst_size_btn">
-                                <cstBtn @click.native="startOlimp(index)" text="Қатысушыны енгізу" />
-                            </div>
-                        </div>
+                        </template>
+
                     </div>
                 </div>
             </div>
@@ -140,17 +143,20 @@
                 })
             },
             startOlimp(index) {
-                let slug = this.olimps[index].lat_name + '-' + this.olimps[index].id
+                let slug = this.olimps[index].lat_name + '-' + this.olimps[index].idd
                 if (this.$auth.strategy.token.get()) {
-//                    this.$api.$get('olimpiada/qatysushylar').then((res) => {
-//                        console.log(res);
+                    this.$api.$get('olimpiada/' + slug).then((res) => {
+                        console.log(res);
                         this.$router.push({
-                            name: 'olimp-slug',
+                            name: 'olimpiada-slug',
                             params: {
                                 slug: slug,
+                                bagyt: res.bagyt,
+                                o_users: res.o_users,
+                                classes: res.classes,
                             }
                         });
-//                    })
+                    })
                 } else this.$bus.$emit('openLogin')
             },
             changeCategory(e) {

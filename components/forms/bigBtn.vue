@@ -1,13 +1,14 @@
 <template>
     <button class="btn cst_bigBtn">
-        {{text}}
+        <div v-if='loading' class="spinner-border" role="status"></div>
+        <span v-else>{{text}}</span>
     </button>
 </template>
 
 
 <script>
 export default {
-    props: ['text','img']
+    props: ['text','img','loading']
 }
 </script>
 
@@ -29,6 +30,11 @@ export default {
         &:active{
             background: #0037A1;
         }
+    }
+    .spinner-border{
+        font-size: 14px;
+        width: 20px;
+        height: 20px;
     }
     @keyframes anime {
         0% {background-position: 290% 50%;}

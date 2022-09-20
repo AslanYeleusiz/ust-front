@@ -1,7 +1,7 @@
 <template>
     <header>
-        <div class="otstup"></div>
-        <div class="main_header">
+        <div class="otstup" :class="{pd:pd}"></div>
+        <div class="main_header" :class="{pd:pd}">
             <div class="cst-ct d-flex a-c j-b">
                 <div class="d-flex a-c">
                     <button @click='gotoBack' class="btn back">
@@ -26,25 +26,33 @@
 
 <script>
     export default {
-        props: ['header'],
+        props: ['header', 'pd'],
         methods: {
             gotoBack() {
                 this.$router.go(-1);
             }
         }
     }
+
 </script>
 
 
 <style scoped lang="scss">
     .otstup {
         padding-bottom: 66px;
+
         @media all and (max-width: 767px) {
             padding-bottom: 132px;
+
+            &.pd {
+                padding-bottom: 66px;
+            }
         }
     }
+
     .main_header {
         background: #ffffff;
+
         .back {
             border: 1px solid #3E6CED;
             border-radius: 4px;
@@ -52,13 +60,15 @@
             line-height: 20px;
             color: #3E6CED;
         }
+
         .kroshki {
             margin-left: 15px;
             line-height: 20px;
             color: #888888;
         }
-        .backtext{
-            @media all and (max-width: 767px){
+
+        .backtext {
+            @media all and (max-width: 767px) {
                 display: none;
             }
 

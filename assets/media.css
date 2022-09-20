@@ -250,6 +250,9 @@
         position: fixed;
         top: 66px;
     }
+    .main_header.pd{
+        top: 0;
+    }
     .main_header .free-cert{
         display: none !important;
     }
