@@ -115,9 +115,9 @@
 
     .body {
         padding: 0 50px 20px;
-        font-size: 26px;
+        font-size: 21px;
         font-weight: 800;
-        line-height: 30px;
+        line-height: 26px;
         text-align: center;
     }
 

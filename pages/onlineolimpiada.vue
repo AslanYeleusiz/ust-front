@@ -3,7 +3,7 @@
         <headLink :head='head' active=0 />
         <div class="main">
             <div class="cst-ct">
-                <div class="head"><span class="orange">Мамыр</span> айының зияткерлік олимпиадасы</div>
+                <div class="head"><span class="orange">{{month ? month : 'Қаңтар'}}</span> айының зияткерлік олимпиадасы</div>
                 <div class="olivers">
                     <div class="block">
                         <img src="~assets/images/diploma.svg" alt="">
@@ -11,7 +11,7 @@
                     </div>
                     <div class="block">
                         <img src="~assets/images/watch.svg" alt="">
-                        <div class="info">Уақыты: <span class="b">1-31 қыркүйек аралығында</span></div>
+                        <div class="info">Уақыты: <span class="b">1-31 <span class="tt_underline">{{month ? month : 'Қаңтар'}}</span> аралығында</span></div>
                     </div>
                     <div class="block">
                         <img src="~assets/images/portmane.svg" alt="">
@@ -19,23 +19,23 @@
                     </div>
                 </div>
                 <div class="timerBlock">
-                    <div class="left">Мамыр айының олимпиадасының Бітуіне қалды</div>
+                    <div class="left">{{month ? month : 'Қаңтар'}} айының олимпиадасының Бітуіне қалды</div>
                     <div class="right">
                         <div class="time">
-                            <div class="block d-flex aj-c">06</div>
+                            <div class="block d-flex aj-c">{{cT.days}}</div>
                             <div class="info">күн</div>
                         </div>
                         <div class="time">
-                            <div class="block d-flex aj-c">06</div>
-                            <div class="info">күн</div>
+                            <div class="block d-flex aj-c">{{cT.hours}}</div>
+                            <div class="info">сағат</div>
                         </div>
                         <div class="time">
-                            <div class="block d-flex aj-c">06</div>
-                            <div class="info">күн</div>
+                            <div class="block d-flex aj-c">{{cT.minuts}}</div>
+                            <div class="info">минут</div>
                         </div>
                         <div class="time">
-                            <div class="block d-flex aj-c">06</div>
-                            <div class="info">күн</div>
+                            <div class="block d-flex aj-c">{{cT.seconds}}</div>
+                            <div class="info">секунд</div>
                         </div>
 
                     </div>
@@ -125,6 +125,15 @@
                 cat_category: 1,
                 olimps: [],
                 loading: 1,
+                cT: {
+                    currentTime: 164795,
+                    days: 30,
+                    hours: 23,
+                    minuts: 59,
+                    seconds: 59,
+                },
+                month: '',
+                timer: null,
             }
         },
         methods: {
@@ -135,11 +144,15 @@
                         type: this.category,
                     }
                 }).then((res) => {
-                    this.olimps = res.data.olimps;
-                    this.loading = 0;
-                    console.log(res);
+                    this.olimps = res.data.olimps
+                    this.loading = 0
+                    this.cT.currentTime = res.data.time
+                    this.month = res.data.month
+                    this.stopTimer()
+                    this.startTimer()
+                    console.log(res)
                 }).catch((err) => {
-                    console.log(err);
+                    console.log(err)
                 })
             },
             startOlimp(index) {
@@ -154,6 +167,7 @@
                                 bagyt: res.bagyt,
                                 o_users: res.o_users,
                                 classes: res.classes,
+                                zhetekshiler: res.zhetekshiler,
                             }
                         });
                     })
@@ -169,6 +183,20 @@
                 this.cat_category = e
                 this.getData()
             },
+            startTimer() {
+                this.timer = setInterval(() => {
+                    this.cT.currentTime--;
+                    let s = this.cT.currentTime;
+                    this.cT.days = Math.floor(s / 86400);
+                    this.cT.hours = Math.floor((s % 86400) / 3600);
+                    this.cT.minuts = Math.floor((s % 3600) / 60);
+                    this.cT.seconds = Math.floor(s % 60);
+                    if (s < 1) clearTimeout(this.timer);
+                }, 1000)
+            },
+            stopTimer() {
+                clearTimeout(this.timer)
+            }
 
         },
         mounted() {

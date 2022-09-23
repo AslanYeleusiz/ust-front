@@ -2,54 +2,55 @@
     <div>
         <kateSurakPopup :isOpen="appeals_active" @closePopup="appeals_active=0" />
         <div class="test">
-            <div class="cst-ct">
-                <div class="wrap">
-                    <div class="header">
+            <div class="wrap">
+                <div class="header">
+                    <div class="cst-ct">
+                        <button @click='gotoBack' class="btn back">
+                            <img src="~assets/images/arrow-left-blue.svg" alt="">
+                            <span class="backtext">Артқа қайту</span>
+                        </button>
                         <div class="title-wrap">
                             <img src="~assets/images/kitap.svg" alt="">
                             <div class="title">{{katysushy.o_tury.o_tury}}</div>
                         </div>
-                        <div class="header-timer-wrap">
-                            <div class="timer">{{cT.minuts}}:{{cT.seconds}}</div>
-                            <button @click="testFinish" class="btn cst_btn">Олимпиаданы аяқтау</button>
-                        </div>
                     </div>
-                    <div class="body">
-                        <div class="questions">
-                            <template v-for="n in suraktar.length">
-                                <qBtn
+                </div>
+                <div class="body cst-ct">
+                    <div class="questions">
+                        <template v-for="n in suraktar.length">
+                            <qBtn
                                    :mode="
                                     currentQuestion+1==n ? 3 :
-                                    suraktar[n-1].my_answer != 0 ? 1 : 0"
+                                    checVariant(suraktar[n-1].zhauap) ? 1 : 2"
                                     :num=n
                                     @click.native="setQuestion(n)" />
-                            </template>
-
+                        </template>
+                    </div>
+                    <div class="hr"></div>
+                    <div class="question">
+                        <div class="surak-wrap">
+                            <div class="num">Сұрақ №{{currentQuestion+1}}</div>
+                            <div @click="appeals_active=1" class="kate">Қате таптыңыз ба?</div>
                         </div>
-                        <div class="hr"></div>
-                        <div class="question">
-                            <div class="surak-wrap">
-                                <div class="num">Сұрақ №{{currentQuestion+1}}</div>
-                                <div @click="appeals_active=1" class="kate">Қате таптыңыз ба?</div>
-                            </div>
-                            <div class="question-title" v-html="suraktar[currentQuestion].surak"></div>
-                            <div class="answers">
-                                <label v-for="(zhauap, index) in suraktar[currentQuestion].zhauap" class="answer">
-                                    <input v-model="suraktar[currentQuestion].my_answer" :value="zhauap.id" type="radio"> <span v-html="zhauap.variant"></span>
+                        <div class="question-title">{{suraktar[currentQuestion].surak.surak}}</div>
+                        <div class="answers">
+                            <template v-for="zhauap in suraktar[currentQuestion].surak.zhauap">
+                                <label class="answer" :class="checThisAnswer(zhauap)">
+                                    <input type="radio"><span>{{zhauap.variant}}</span>
                                 </label>
-                            </div>
+                            </template>
                         </div>
-                        <div class="pagination">
-                            <div class="paginate">
-                                <button @click="prevTo" class="btn paginate-btn left"></button>
-                                <div class="str">{{currentQuestion+1}} / 20</div>
-                                <button @click="nextTo" class="btn paginate-btn right"></button>
-                            </div>
-
+                    </div>
+                    <div class="pagination">
+                        <div class="paginate">
+                            <button @click="prevTo" class="btn paginate-btn left"></button>
+                            <div class="str">{{currentQuestion+1}} / 20</div>
+                            <button @click="nextTo" class="btn paginate-btn right"></button>
                         </div>
                     </div>
                 </div>
             </div>
+
         </div>
     </div>
 </template>
@@ -67,23 +68,12 @@
         layout: 'second',
         data() {
             return {
-                question: {
-                    my_answer: null,
-                },
                 appeals_active: 0,
-                cT: {
-                    currentTime: 3600,
-                    minuts: '60',
-                    seconds: '00',
-                },
-                timer: null,
-                suraktar: [
-                    {
-                        my_answer: 0,
-                        surak: '',
-                        zhauap: [],
-                    }
-                ],
+                suraktar: [{
+                    my_answer: 0,
+                    surak: '',
+                    zhauap: [],
+                }],
                 katysushy: {
                     o_tury: {
                         o_tury: ''
@@ -93,125 +83,39 @@
             }
         },
         methods: {
-            startTimer() {
-                this.timer = setInterval(() => {
-                    this.cT.currentTime--;
-                    let s = this.cT.currentTime;
-                    this.cT.minuts = Math.floor(s / 60) / 10 < 1 ? '0'+Math.floor(s / 60) : Math.floor(s / 60);
-                    this.cT.seconds = Math.floor(s % 60) / 10 < 1 ? '0'+Math.floor(s % 60) : Math.floor(s % 60);
-                    if (s < 1) this.testFinish();
-                }, 1000)
+            nextTo() {
+                if (this.currentQuestion < 19) this.currentQuestion++
             },
-            stopTimer() {
-                clearTimeout(this.timer)
-            },
-            testFinish(){
-                if(this.suraktar[this.currentQuestion].my_answer != 0) {
-                    this.sendToSaveAnswer(this.currentQuestion)
-                }
-                if(this.checEnterAllVariants()){
-                    this.sendTestResult()
-                }else{
-                    this.confirmToContinueTest()
-                }
-            },
-            sendTestResult(){
-                this.stopTimer()
-                this.$api.$post('olimpiada/test/finish', {
-                    id: this.katysushy.idd
-                }).then((res)=>{
-                    this.$bus.$emit('successPopup');
-                    setTimeout(()=>{
-                        this.$router.push({
-                            name: 'olimpiada-test-enter-code',
-                            params: {
-                                status: res.status,
-                                katysushy: res.data.o_katysu,
-                            }
-                        })
-                    },1500)
-                })
-            },
-            checEnterAllVariants(){
-                let count = true
-                this.suraktar.forEach((e)=>{
-                    if(e.my_answer == 0) count=false
-                })
-                return count
-            },
-            confirmToContinueTest() {
-                this.$dialog.open({
-                    message: 'Кейбір сұрақтарға жауап берілмеді. Тестті аяқтауды растайсыз ба?',
-                    resolver: (async (result) => {
-                        try {
-                            const res = await result;
-                            this.sendTestResult()
-                        } catch (error) {
-                            console.warn(error);
-                        }
-                    }),
-                });
-            },
-            nextTo(){
-                if(this.suraktar[this.currentQuestion].my_answer != 0) {
-                    this.sendToSaveAnswer(this.currentQuestion)
-                }
-                if(this.currentQuestion < 19) this.currentQuestion++
-            },
-            prevTo(){
-                if(this.suraktar[this.currentQuestion].my_answer != 0) {
-                    this.sendToSaveAnswer(this.currentQuestion)
-                }
-                if(this.currentQuestion > 0) this.currentQuestion--
+            prevTo() {
+                if (this.currentQuestion > 0) this.currentQuestion--
             },
             setQuestion(e) {
-                if(this.suraktar[this.currentQuestion].my_answer != 0) {
-                    this.sendToSaveAnswer(this.currentQuestion)
+                this.currentQuestion = e - 1;
+            },
+            gotoBack() {
+                this.$router.go(-1);
+            },
+            checVariant(zhauap) {
+                if(zhauap == null) return 0
+                else if(zhauap.zhauap_id == 1) return 1
+                return 0
+            },
+            checThisAnswer(zhauap) {
+                if(zhauap.surak_id == this.suraktar[this.currentQuestion].surak_id){
+                    if(zhauap.zhauap_id == 1) return 'success'
+                    else if(zhauap.id == this.suraktar[this.currentQuestion].zhauap_id)
+                    return 'error'
                 }
-                this.currentQuestion = e-1;
-            },
-            sendToSaveAnswer(e) {
-                this.$api.$post('olimpiada/test/save/answer', {
-                    user_code: this.katysushy.o_tizim.code,
-                    surak_id: this.suraktar[e].id,
-                    zhauap_id: this.suraktar[e].my_answer
-                }).then(()=>{
-                    console.log('Успешно сохранен!')
-                })
-            },
-            dropToCurrentQuestion() {
-                var chec = true
-                this.suraktar.forEach((e, index)=>{
-                    if(e.my_answer == 0 && chec){
-                        this.currentQuestion = index
-                        chec = false
-                    }
-                })
-            }
-        },
-        created(){
-            if (this.$route.params.suraktar == undefined)
-                this.$router.push({
-                    name: 'olimpiada-test-enter-code'
-                })
-            else {
-                this.katysushy = this.$route.params.katysushy
-                this.suraktar = this.$route.params.suraktar
-                this.cT.currentTime = Number(this.$route.params.timer)
-                let s = Number(this.$route.params.timer)
-                this.cT.minuts = Math.floor(s / 60) / 10 < 1 ? '0'+Math.floor(s / 60) : Math.floor(s / 60);
-                this.cT.seconds = Math.floor(s % 60) / 10 < 1 ? '0'+Math.floor(s % 60) : Math.floor(s % 60);
-
+                return ''
             }
         },
         mounted() {
-            if (this.$route.params.suraktar == undefined)
-                this.$router.push({
-                    name: 'olimpiada-test-enter-code'
-                })
-            this.stopTimer()
-            this.startTimer()
-            this.dropToCurrentQuestion()
+            if (!this.$route.params.suraktar)
+                this.$router.go(-1);
+            else {
+                this.katysushy = this.$route.params.o_user
+                this.suraktar = this.$route.params.suraktar
+            }
         }
 
     }
@@ -230,15 +134,28 @@
             display: grid;
             grid-template-columns: 1fr;
             grid-template-rows: auto 1fr;
-            padding: 20px 0 40px;
+            padding: 0 0 40px;
             grid-gap: 20px;
         }
 
         .header {
-            display: grid;
-            grid-template-columns: 1fr auto;
-            grid-gap: 20px;
-            align-items: center;
+            .cst-ct{
+                display: grid;
+                grid-template-columns: auto 1fr;
+                grid-gap: 30px;
+                align-items: center;
+                min-height: 66px;
+            }
+            background: #ffffff;
+            border-bottom: 1px solid #D6D6D6;
+
+            .back {
+                border: 1px solid #3E6CED;
+                border-radius: 4px;
+                font-weight: 600;
+                line-height: 20px;
+                color: #3E6CED;
+            }
 
             .title-wrap {
                 display: grid;
@@ -411,10 +328,30 @@
                     border-radius: 50%;
                 }
 
+                &.success{
+                    span::before{
+                        background-image: url(~/assets/images/krestSuccess.svg);
+                        background-color: rgba(3, 177, 19, 0.4);
+                        border: 1px solid #03B113;
+                    }
+                    background: #EFFAF6;
+                }
+
+                &.error {
+                    span::before{
+                        background-image: url(~/assets/images/krest.svg);
+                        background-color: rgba(255, 0, 0, 0.4);
+                        border: 1px solid #FF0000;
+                    }
+                    background: #FFEFF0;
+                }
+
+/*
                 input:checked+span::before {
                     background-image: url(~/assets/images/nike.svg);
                     background-color: #1E63E9;
                 }
+*/
 
 
             }

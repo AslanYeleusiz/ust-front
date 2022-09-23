@@ -73,8 +73,10 @@
                 this.$axios.post('/auth/register', this.form).then((response) => {
                     if (typeof response.data.access_token !== 'underfined') {
                         this.$auth.setUserToken(response.data.access_token, true);
-//                        this.$emit('closePopup');
-//                        window.location.reload();
+                        this.$emit('closePopup');
+                        setTimeout(()=>{
+                            window.location.reload();
+                        },500)
                     }
                 }).catch((error) => {
                                         console.log(error);
@@ -82,12 +84,6 @@
                     for (let [key, value] of Object.entries(this.errors)) {
                          this.errors[key] = data[key] !== undefined ? data[key].join() : null;
                     }
-                    console.log(data);
-                    setTimeout(() => {
-                        for (let [key, value] of Object.entries(this.errors)) {
-                             this.errors[key] = null;
-                        }
-                    }, 3000);
                 });
             },
         }

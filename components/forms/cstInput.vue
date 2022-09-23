@@ -18,6 +18,12 @@
                 inputVal: this.value
             }
         },
+        methods: {
+            clearFeedBack(){
+                this.warning = null
+                this.warningText = ''
+            }
+        },
         watch: {
             inputVal(val) {
                 this.$emit('input', val);

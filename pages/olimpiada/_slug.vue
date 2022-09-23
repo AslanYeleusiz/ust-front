@@ -5,23 +5,28 @@
         <header_kroshki :header="header" />
         <div class="main">
             <div class="cst-ct">
-                <div class="header">
+                <div v-if="!bagyt.o_bagyty" class="header">
+                    <b-skeleton width="75%" height="25px"></b-skeleton>
+                </div>
+                <div v-else class="header">
                     {{bagyt.o_bagyty}}
                 </div>
                 <div class="userBlock">
                     <div class="prev">Қатысушылар</div>
                     <div class="users">
-                        <template v-for="(o_user, index) in o_users">
+                        <template v-if="preload">
+                            <div class="text-center">
+                                <b-spinner variant="primary" label="Text Centered"></b-spinner>
+                            </div>
+                        </template>
+                        <template v-else v-for="(o_user, index) in o_users">
                             <div v-if="o_user.edit" class="block edit">
                                 <div class="body">
                                     <div class="input-wrap">
-                                        <cstInput class="cst_input_40 cst_fix_span_input" stringPlaceholder="Қатыsсушының толық аты-жөні" @keyup.enter.native="editUser(index)" v-model="o_user.o_katysushy_fio" :danger="o_user.error" :dangerText="o_user.error" />
+                                        <cstInput class="cst_input_40 cst_fix_span_input" stringPlaceholder="Қатыsсушының толық аты-жөні" @keyup.enter.native="editUser(index)" v-model="o_user.o_katysushy_fio"
+                                        @click.native="o_user.error=''" :danger="o_user.error" :dangerText="o_user.error" />
                                         <div v-if="bagyt.o_katysushy_idd == 3" class="cst-size-btn">
-                                            <btnGroup
-                                                :category='classes'
-                                                :placeholder="o_user.o_tury.synyp+' сынып'"
-                                                @entered-category="(e)=>{enteredEditClass(index, e)}"
-                                            />
+                                            <btnGroup :category='classes' :placeholder="o_user.o_tury.synyp+' сынып'" @entered-category="(e)=>{enteredEditClass(index, e)}" />
                                         </div>
                                     </div>
                                     <div class="wrap">
@@ -96,46 +101,52 @@
                 <div class="userBlock zhetekshi">
                     <div class="prev">Жетекшілер</div>
                     <div class="users">
-
-                        <div v-if="zhetekshi.edit" class="block edit">
-                            <div class="body">
-                                <div class="solo-wrap">
-                                    <cstInput class="cst_input_40" stringPlaceholder="Қатысушының толық аты-жөні" />
-                                </div>
-                                <div class="wrap">
-                                    <saveBtn v-if="loading" loading=1 />
-                                    <saveBtn v-else text="Сақтау" />
-                                    <saveBtn @click.native="zhetekshi.edit=0" text="Болдырмау" red=1 />
-                                </div>
-                                <div class="numeric">
-                                    <div class="num">1</div>
-                                </div>
-                            </div>
-                        </div>
-                        <div v-else class="block">
-                            <div class="body">
-                                <div class="name">Сембиев Нартай Аманғалиұлы</div>
-                                <div class="wrap-zhetekshi">
-                                    <editBtn @click.native="zhetekshi.edit=1" text="Өзгерту" img='1' />
-                                    <editBtn text="Алғыс хатты жүктеу" img='3' />
-                                </div>
-                                <div class="numeric">
-                                    <div class="num">1</div>
+                        <template v-for="(zhetekshi, index) in zhetekshiler">
+                            <div v-if="zhetekshi.edit" class="block edit">
+                                <div class="body">
+                                    <div class="solo-wrap">
+                                        <cstInput class="cst_input_40" stringPlaceholder="Қатысушының толық аты-жөні" />
+                                    </div>
+                                    <div class="wrap">
+                                        <saveBtn v-if="zhetekshi.loading" loading=1 />
+                                        <saveBtn v-else text="Сақтау" />
+                                        <saveBtn @click.native="zhetekshi.edit=0" text="Болдырмау" red=1 />
+                                    </div>
+                                    <div class="numeric">
+                                        <div class="num">{{index+1}}</div>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+                            <div v-else class="block">
+                                <div class="body">
+                                    <div class="name">{{zhetekshi.name}}</div>
+                                    <div class="wrap-zhetekshi">
+                                        <editBtn @click.native="zhetekshi.edit=1" text="Өзгерту" img='1' />
+                                        <editBtn text="Алғыс хатты жүктеу" img='3' />
+                                    </div>
+                                    <div class="numeric">
+                                        <div class="num">{{index+1}}</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </template>
                         <div v-if="addNewZhetekshi" class="block edit">
                             <div class="body">
-                                <div class="solo-wrap">
-                                    <cstInput class="cst_input_40" stringPlaceholder="Қатысушының толық аты-жөні" />
+                                <div class="solo-wrap cst_fix_span_input">
+                                    <cstInput
+                                        @keyup.enter.native="setNewZhetekshi"
+                                        v-model="newZhetekshiName"
+                                        @click.native="errorNewZhetekshiName=''"
+                                        class="cst_input_40"
+                                        stringPlaceholder="Қатысушының толық аты-жөні" :danger="errorNewZhetekshiName" :dangerText="errorNewZhetekshiName" />
                                 </div>
                                 <div class="wrap">
                                     <saveBtn v-if="loading" loading=1 />
-                                    <saveBtn v-else text="Сақтау" />
+                                    <saveBtn v-else @click.native="setNewZhetekshi" text="Сақтау" />
                                     <saveBtn @click.native="addNewZhetekshi=0" text="Болдырмау" red=1 />
                                 </div>
                                 <div class="numeric">
-                                    <div class="num">1</div>
+                                    <div class="num">{{zhetekshiler.length + 1}}</div>
                                 </div>
                             </div>
                         </div>
@@ -185,10 +196,11 @@
                     name: 'Олимпиадалар',
                     link: '/onlineolimpiada'
                 }, {
-                    name: '',
+                    name: 'Жүктелуде...',
                 }],
                 classes: [],
                 loading: 0,
+                preload: 1,
                 go: 0,
                 addNewUser: 0,
                 newUserName: '',
@@ -197,6 +209,7 @@
                 newClassSet: null,
                 addNewZhetekshi: 0,
                 newZhetekshiName: '',
+                errorNewZhetekshiName: '',
                 active: 0,
                 o_user: {
 
@@ -208,9 +221,7 @@
                 form: {
                     edit: 0
                 },
-                zhetekshi: {
-                    edit: 0
-                },
+                zhetekshiler: [],
                 o_users: [],
             }
         },
@@ -268,6 +279,7 @@
                     this.o_users[index].loading = 0
                     if (res.data.success == true) {
                         this.o_users[index].success = 1
+                        this.o_users[index].o_tizim = res.data.o_tizim
                         this.active = 4
                         const userToUpdate = {
                             ...this.$auth.user
@@ -277,6 +289,7 @@
                     } else if (res.data.success == false) {
                         this.active = 5
                     }
+                    console.log(this.o_users)
                 }).catch((err) => {
                     this.o_users[index].loading = 0
                     console.log(err);
@@ -291,7 +304,9 @@
                     this.bagyt = res.bagyt
                     this.header[1].name = this.bagyt.o_bagyty
                     this.katysushy_type = res.bagyt
-                    res.classes.forEach((e)=>{
+                    this.zhetekshiler = res.zhetekshiler
+                    this.preload = 0
+                    res.classes.forEach((e) => {
                         let synyp = {
                             name: e + ' сынып',
                             value: e
@@ -306,7 +321,7 @@
             enteredClass(e) {
                 this.newClassSet = e + 1
             },
-            enteredEditClass(index, e){
+            enteredEditClass(index, e) {
                 this.o_users[index].o_tury.synyp = this.classes[e].value
             },
             saveNewUser() {
@@ -335,14 +350,56 @@
                 this.errorNewUserName = ''
                 this.addNewZhetekshi = 0
                 this.newZhetekshiName = ''
+                this.errorNewZhetekshiName = ''
             },
             openPopup(id) {
                 this.active = id
             },
-            moreResults(index){
+            moreResults(index) {
                 this.o_user = this.o_users[index];
                 this.active = 1;
-            }
+            },
+            setNewZhetekshi() {
+                if(this.oplataValidate()){
+                    this.loading = 1
+                    if(this.newZhetekshiName == ''){
+                        this.errorNewZhetekshiName = 'Аты жөні толық жазылуы керек'
+                    }else{
+                        this.$api.$post('/olimpiada/zhetekshi/create', {
+                            name: this.newZhetekshiName,
+                            bagyt_id: this.bagyt.idd
+                        }).then((res)=>{
+                            this.loading = 0
+                            var zhetekshi = res.data.zhetekshi
+                            zhetekshi.edit = 0
+                            zhetekshi.loading = 0
+                            this.zhetekshiler.push(zhetekshi)
+                            this.updateToAddZhetekshi(zhetekshi.id)
+                            this.clearFeedBack()
+                        }).catch((err)=>{
+                            this.loading = 0
+                            console.log(err)
+                        })
+                    }
+                }else{
+                    this.active = 2
+                }
+
+            },
+            oplataValidate() {
+                let val = 0
+                this.o_users.forEach((e)=>{
+                    if(e.success && e.o_zhetekshi_id == null) val++
+                })
+                return val >= 5 ? true : false
+            },
+            updateToAddZhetekshi(id) {
+                this.o_users.forEach((e)=>{
+                    if(e.success && e.o_zhetekshi_id == null) e.o_zhetekshi_id = id
+                })
+            },
+
+
 
         },
         mounted() {
@@ -352,8 +409,10 @@
                 this.o_users = this.$route.params.o_users
                 this.newUserNomer = this.o_users.length + 1
                 this.bagyt = this.$route.params.bagyt
+                this.zhetekshiler = this.$route.params.zhetekshiler
                 this.header[1].name = this.bagyt.o_bagyty
-                this.$route.params.classes.forEach((e)=>{
+                this.preload = 0
+                this.$route.params.classes.forEach((e) => {
                     let synyp = {
                         name: e + ' сынып',
                         value: e
@@ -369,9 +428,10 @@
 
 
 <style scoped lang="scss">
-    .main{
+    .main {
         padding-bottom: 100px;
     }
+
     .header {
         font-size: 24px;
         font-weight: 700;

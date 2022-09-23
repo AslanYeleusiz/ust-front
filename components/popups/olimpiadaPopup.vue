@@ -44,7 +44,7 @@
                             <cstBtn :text="marapat(tuser.o_tizim.result) + ' жүктеу'" />
                         </div>
                         <div class="cst_size_btn">
-                            <glassBtn text="Қатемен жұмыс" svg=1 radian=1 />
+                            <glassBtn @click.native="katemenJumys" text="Қатемен жұмыс" svg=1 radian=1 />
                         </div>
                     </div>
                 </div>
@@ -133,6 +133,21 @@
                 else if(value >= 13) return '3 дәрежелі дипломды'
                 else  return 'Сертификатты'
             },
+            katemenJumys() {
+                this.$api.get('/olimpiada/test/katemen-zhumys', {
+                    params: {
+                        user_code: this.tuser.o_tizim.code
+                    }
+                }).then((res)=>{
+                    this.$router.push({
+                        name: 'olimpiada-test-katemen-jumys',
+                        params: {
+                            suraktar: res.data.data.test,
+                            o_user: this.tuser,
+                        }
+                    });
+                })
+            }
 
         }
     }
