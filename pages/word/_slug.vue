@@ -24,7 +24,7 @@
                             <NuxtLink to="/profile-id-2">
                                 <div class="name">
                                     <img src="~assets/images/user-black.svg" alt="">
-                                    <span>{{material.user.fio}}</span>
+                                    <span>{{material.author}}</span>
                                 </div>
                             </NuxtLink>
                             <div class="div">
@@ -46,9 +46,9 @@
                             Бұл сертификат «Ustaz tilegi» Республикалық ғылыми – әдістемелік журналының желілік басылымына өз авторлық жұмысын жарияланғанын растайды. Журнал Қазақстан Республикасы Ақпарат және Қоғамдық даму министрлігінің №KZ09VPY00029937 куәлігін алған. Сондықтан аттестацияға жарамды.
                         </div>
                         <div class="certBtns">
-                            <button class="btn certBtn">Сертификатты жүктеу</button>
-                            <button class="btn certBtn">Материалды жүктеу</button>
-                            <button class="btn certBtn">Сертификат алу</button>
+                            <emptyBtn text="Сертификатты жүктеу" />
+                            <emptyBtn text="Материалды жүктеу" />
+                            <emptyBtn text="Сертификат алу" />
                         </div>
                     </div>
                 </div>
@@ -64,10 +64,7 @@
                 <template v-if="material.raw=='pdf'">
                     <iframe id="iframepdf" width='100%' height='720px' src="files/example.pdf" frameborder='0'></iframe>
                 </template>
-                <button @click="download()" class="btn btn-primary downloadBtn">
-                    <download color="#ffffff" />
-                    Материалды жүктеу
-                </button>
+               <bigBtn @click.native="download()" class="downloadBtn" text="Материалды жүктеу" img="importwhite.svg" />
                 <div class="share">
                     Материал ұнаса әріптестеріңізбен бөлісіңіз
                     <div class="seti">
@@ -95,10 +92,14 @@
                         БАҚ тіркелгендігі туралы куәлік: 15685-ИА. Материалдарды қайта басуға және де басқа түрде қолдануға, сонымен қоса электрондық БАҚ-да тек қана сайттың әкімшілігінің жазбаша рұқсатымен ғана жүзеге асырылады. Сонымен қатар сайқа сілтеме міндетті түрде болу керек. Егер Сіз біздің сайтта заңсыз түрде материалдар қолданғанын көрсеңіз, сайт әкімшілігіне жеткізіңіз - материалдар жойылады. Редакцияның көзқарасы автордың көзқарасымен сәйкес келмеуі мүмкін.
                     </div>
                 </div>
+
+<!--
                 <button class="btn btn-danger report">
                     <img src="~assets/images/flag.svg" alt="">
                     Шағымдану
                 </button>
+-->
+                <reportBtn text="Шағымдану" class="report" />
             </div>
         </section>
         <section class="others">
@@ -109,16 +110,11 @@
                         <template v-for='material_item in authors_materials'>
                             <block :material="material_item" />
                         </template>
-                        <NuxtLink to='/other'>
-                            <button class="btn authorBtn">
-                                Автордың барлық материалдары
-                                <img src="~assets/images/arrow-left-blue.svg" alt="">
-                            </button>
-                        </NuxtLink>
+                        <glassBtn v-if="authors_materials.length == 3" @click.native="more" text="Автордың барлық материалдары" class="authorBtn" radian=1 />
                     </div>
                     <div class="list second">
                         <div class="head">Ұқсас материалдар</div>
-                        <template v-for='material_item in materials'>
+                        <template v-for='material_item in others'>
                             <block :material="material_item" />
                         </template>
                     </div>
@@ -133,19 +129,28 @@
     import download from '@/components/svg/download.vue'
     import block from '@/components/materials/forms/block.vue'
     import header_kroshki from '@/components/header_kroshki.vue'
+    import emptyBtn from '@/components/forms/emptyBtn.vue'
+    import bigBtn from '@/components/forms/bigBtn.vue'
+    import reportBtn from '@/components/forms/reportBtn.vue'
+    import glassBtn from '@/components/forms/glassBtn.vue'
 
     export default {
         components: {
             download,
             block,
-            header_kroshki
+            header_kroshki,
+            emptyBtn,
+            bigBtn,
+            reportBtn,
+            glassBtn
         },
         data() {
             return {
                 material: {
                     user: {}
                 },
-                materials: [{
+                materials: [
+                    {
                     type: 2,
                     sell: 250,
                     title: 'Презентация Пісіру жіктерінің түрлері',
@@ -226,31 +231,7 @@
                     views: 135,
                     downloads: 3,
                 }, ],
-                authors_materials: [{
-                    type: 2,
-                    sell: 250,
-                    title: 'Презентация Пісіру жіктерінің түрлері',
-                    author: 'Қабыл Ақылжан Ғалымжанұлы',
-                    date: '03 Шілде 2020',
-                    views: 135,
-                    downloads: 3,
-                }, {
-                    type: 1,
-                    sell: 250,
-                    title: 'Презентация Пісіру жіктерінің түрлері',
-                    author: 'Қабыл Ақылжан Ғалымжанұлы',
-                    date: '03 Шілде 2020',
-                    views: 135,
-                    downloads: 3,
-                }, {
-                    type: 1,
-                    sell: 250,
-                    title: 'Презентация Пісіру жіктерінің түрлері',
-                    author: 'Қабыл Ақылжан Ғалымжанұлы',
-                    date: '03 Шілде 2020',
-                    views: 135,
-                    downloads: 3,
-                }, ],
+                authors_materials: [],
                 title: '',
                 header: [{
                     name: 'Материалдар',
@@ -258,6 +239,7 @@
                 }, {
                     name: '',
                 }],
+                others: [],
 
 
             }
@@ -303,11 +285,20 @@
                     link.click();
                 })
             },
+            more() {
+//                this.$axios.$get('/word/'+this.material.user.id+'/materials').then((res)=>{
+//                    console.log(res)
+//                })
+                this.$router.push('/word/'+this.material.user.id+'/materials')
+            }
         },
         async fetch() {
             await this.$axios.$get('/word/' + this.$route.params.slug).then((res) => {
-                this.material = res;
-                this.header[1].name = res.title
+                this.material = res.material
+                this.header[1].name = res.material.title
+                this.authors_materials = res.authors_materials
+                this.others = res.others
+                console.log(res)
             });
         }
     }
@@ -445,15 +436,6 @@
                         grid-template-columns: 1fr;
                         grid-gap: 15px;
                     }
-
-
-                    .certBtn {
-                        width: 100%;
-                        border: 1px solid #1E63E9;
-                        border-radius: 6px;
-                        padding: 10px 0;
-                        color: #1E63E9;
-                    }
                 }
             }
         }
@@ -488,15 +470,8 @@
         .downloadBtn {
             width: 288px;
             height: 50px;
-            background: #1E63E9;
-            border-radius: 30px;
             display: block;
             margin: 30px auto 0;
-
-            svg {
-                margin-right: 10px;
-                width: 24px;
-            }
         }
 
         .share {
@@ -532,19 +507,31 @@
                 }
 
                 .whatsapp {
-                    color: #03B113
+                    color: #03B113;
+                    &:hover{
+                        background: #EAFFEA;
+                    }
                 }
 
                 .telegram {
-                    color: #039BE5
+                    color: #039BE5;
+                    &:hover{
+                        background: #CAEDFE;
+                    }
                 }
 
                 .facebook {
-                    color: #1976D2
+                    color: #1976D2;
+                    &:hover{
+                        background: #BEDFFF;
+                    }
                 }
 
                 .sharer {
-                    color: #1C77FD
+                    color: #1C77FD;
+                    &:hover{
+                        background: #C7DDFF;
+                    }
                 }
 
 
@@ -570,15 +557,9 @@
         }
 
         .report {
-            background: #FF0000;
             margin-top: 20px;
-            border-radius: 30px;
             width: 201px;
             height: 50px;
-
-            img {
-                margin-right: 10px;
-            }
         }
     }
 
@@ -600,16 +581,8 @@
                 }
 
                 .authorBtn {
-                    display: block;
-                    width: 100%;
                     height: 50px;
-                    font-size: 14px;
-                    font-weight: 600;
-                    color: #1E63E9;
-                    background: #EFF3FF;
-                    border-radius: 36px;
                     margin-top: 20px;
-
                     img {
                         transform: rotate(180deg);
                     }

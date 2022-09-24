@@ -4,10 +4,7 @@
         <div class="main_header" :class="{pd:pd}">
             <div class="cst-ct d-flex a-c j-b">
                 <div class="d-flex a-c">
-                    <button @click='gotoBack' class="btn back">
-                        <img src="~assets/images/arrow-left-blue.svg" alt="">
-                        <span class="backtext">Артқа қайту</span>
-                    </button>
+                    <gotoBackBtn @click.native="gotoBack" />
                     <div class="kroshki">
                         <template v-for='(head, index) in header'>
                             <span v-if='index>0'> / </span>
@@ -25,7 +22,12 @@
 
 
 <script>
+    import gotoBackBtn from '@/components/forms/gotoBackBtn.vue'
+
     export default {
+        components: {
+            gotoBackBtn
+        },
         props: ['header', 'pd'],
         methods: {
             gotoBack() {
@@ -52,26 +54,10 @@
 
     .main_header {
         background: #ffffff;
-
-        .back {
-            border: 1px solid #3E6CED;
-            border-radius: 4px;
-            font-weight: 600;
-            line-height: 20px;
-            color: #3E6CED;
-        }
-
         .kroshki {
             margin-left: 15px;
             line-height: 20px;
             color: #888888;
-        }
-
-        .backtext {
-            @media all and (max-width: 767px) {
-                display: none;
-            }
-
         }
     }
 

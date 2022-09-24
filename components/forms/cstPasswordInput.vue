@@ -38,6 +38,9 @@
 
 
 <style scoped lang="scss">
+    .mb{
+        margin-bottom: 15px;
+    }
     input {
         border: 1px solid #C7C7C7;
         background: #FAFAFA;

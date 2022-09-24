@@ -1,5 +1,5 @@
 <template>
-    <a target="_blank" :href="'word/'+material.lat_title+'-'+material.id+'.html'" class="block" :class='{green: material.sell>0}'>
+    <a target="_blank" :href="'/word/'+material.lat_title+'-'+material.id+'.html'" class="block" :class='{green: material.sell>0}'>
         <div class="h2">
             <div class="title">
                 <img v-if='material.sell>0' src="~assets/images/shield-tick.svg" alt="">

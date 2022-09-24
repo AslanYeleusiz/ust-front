@@ -195,9 +195,10 @@
                 .registerForm {
                     display: grid;
                     grid-template-columns: 1fr 1fr;
-                    grid-gap: 0 50px;
+                    grid-gap: 50px;
                     @media all and (max-width: 767px){
                         grid-template-columns: 1fr;
+                        grid-gap: 15px;
                     }
 
                 }

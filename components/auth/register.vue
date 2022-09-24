@@ -1,14 +1,18 @@
 <template>
     <form action="" class="loginForm">
         <div class="registerForm">
-            <cstInput v-model="form.email" type-name="Email" name-wrap="email" string-name="Email Почтаңыз" string-placeholder="Почтаңызды енгізіңіз" :danger="errors.email" :danger-text="errors.email" />
-            <cstInput v-model="form.tel_num" type-name="text" name-wrap="tel_num" string-name="Телефон:" string-placeholder="+7 (7__) ___-__-__" :danger="errors.tel_num" :danger-text="errors.tel_num" />
-            <cstPasswordInput v-model="form.password" type-name="password" name-wrap="password" string-name="Құпиясөз:" string-placeholder="Құпия сөзді енгізіңіз" :danger="errors.password" :danger-text="errors.password" />
-            <cstInput v-model="form.username" type-name="text" name-wrap="username" string-name="Фамилия" string-placeholder="Фамилияңызды енгізіңіз" :danger="errors.username" :danger-text="errors.username" />
-            <cstPasswordInput v-model="form.password_confirm" type-name="password" name-wrap="password_confirm" string-name="Құпия сөзді қайта енгізіңіз" :danger="errors.password_confirm" :danger-text="errors.password_confirm" string-placeholder="Құпия сөзді қайта енгізіңіз" />
-            <cstInput v-model="form.l_name" type-name="text" name-wrap="l_name" :danger="errors.l_name" :danger-text="errors.l_name" string-name="Есіміңіз" string-placeholder="Есіміңізді енгізіңіз" />
-            <div></div>
-            <cstInput v-model="form.s_name" type-name="text" :danger="errors.s_name" :danger-text="errors.s_name" name-wrap="s_name" string-name="Әкеңіздің есімі" string-placeholder="Әкеңіздік есімін енгізіңіз" />
+            <div>
+                <cstInput v-model="form.email" type-name="Email" name-wrap="email" string-name="Email Почтаңыз" string-placeholder="Почтаңызды енгізіңіз" :danger="errors.email" :danger-text="errors.email" />
+                <cstPasswordInput v-model="form.password" type-name="password" name-wrap="password" string-name="Құпиясөз:" string-placeholder="Құпия сөзді енгізіңіз" :danger="errors.password" :danger-text="errors.password" class="mb" />
+                <cstPasswordInput v-model="form.password_confirm" type-name="password" name-wrap="password_confirm" string-name="Құпия сөзді қайта енгізіңіз" :danger="errors.password_confirm" :danger-text="errors.password_confirm" string-placeholder="Құпия сөзді қайта енгізіңіз" />
+                <div></div>
+            </div>
+            <div>
+                <cstInput v-model="form.tel_num" type-name="text" name-wrap="tel_num" string-name="Телефон:" string-placeholder="+7 (7__) ___-__-__" :danger="errors.tel_num" :danger-text="errors.tel_num" />
+                <cstInput v-model="form.username" type-name="text" name-wrap="username" string-name="Фамилия" string-placeholder="Фамилияңызды енгізіңіз" :danger="errors.username" :danger-text="errors.username" />
+                <cstInput v-model="form.s_name" type-name="text" :danger="errors.s_name" :danger-text="errors.s_name" name-wrap="s_name" string-name="Әкеңіздің есімі" string-placeholder="Әкеңіздік есімін енгізіңіз" />
+                <cstInput v-model="form.l_name" type-name="text" name-wrap="l_name" :danger="errors.l_name" :danger-text="errors.l_name" string-name="Есіміңіз" string-placeholder="Есіміңізді енгізіңіз" />
+            </div>
         </div>
         <hr>
         <div class="radio">
@@ -84,6 +88,11 @@
                     for (let [key, value] of Object.entries(this.errors)) {
                          this.errors[key] = data[key] !== undefined ? data[key].join() : null;
                     }
+                    setTimeout(()=>{
+                        for (let [key, value] of Object.entries(this.errors)) {
+                             this.errors[key] = null;
+                        }
+                    },2000)
                 });
             },
         }
@@ -92,7 +101,7 @@
 </script>
 
 
-<style scoped>
+<style scoped lang="scss">
     .danger_message {
         position: absolute;
         font-size: 11px;

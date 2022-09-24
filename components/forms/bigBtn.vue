@@ -1,14 +1,23 @@
 <template>
     <button class="btn cst_bigBtn">
         <div v-if='loading' class="spinner-border" role="status"></div>
-        <span v-else>{{text}}</span>
+        <div class="content aj-c" v-else>
+            <img v-if="img" :src="getImgUrl(img)" alt="">
+            {{text}}
+        </div>
     </button>
 </template>
 
 
 <script>
 export default {
-    props: ['text','img','loading']
+    props: ['text','img','loading'],
+    methods: {
+        getImgUrl(pet) {
+            var images = require.context('@/assets/images/', false)
+            return images('./' + pet)
+        },
+    }
 }
 </script>
 
@@ -29,6 +38,11 @@ export default {
         }
         &:active{
             background: #0037A1;
+        }
+        .content{
+            display: flex;
+            flex-wrap: nowrap;
+            gap: 10px;
         }
     }
     .spinner-border{
