@@ -1,6 +1,6 @@
 <template>
     <div>
-        <kateSurakPopup :isOpen="appeals_active" @closePopup="appeals_active=0" />
+        <kateSurakPopup :isOpen="appeals_active" @closePopup="appeals_active=0" :surak="suraktar[currentQuestion]" :katysushyCode="katysushy.o_tizim.code" />
         <div class="test">
             <div class="cst-ct">
                 <div class="wrap">
@@ -24,7 +24,6 @@
                                     :num=n
                                     @click.native="setQuestion(n)" />
                             </template>
-
                         </div>
                         <div class="hr"></div>
                         <div class="question">
@@ -45,7 +44,6 @@
                                 <div class="str">{{currentQuestion+1}} / 20</div>
                                 <button @click="nextTo" class="btn paginate-btn right"></button>
                             </div>
-
                         </div>
                     </div>
                 </div>
@@ -212,6 +210,7 @@
             this.stopTimer()
             this.startTimer()
             this.dropToCurrentQuestion()
+            console.log(this.suraktar)
         }
 
     }
@@ -481,6 +480,15 @@
 
         .test .body .paginate[data-v-279a75d1] {
             padding: 20px 0 40px;
+        }
+    }
+
+    @media all and (max-width: 500px){
+        .cst-ct{
+            padding: 0;
+            .header{
+                padding: 0 10px;
+            }
         }
     }
 

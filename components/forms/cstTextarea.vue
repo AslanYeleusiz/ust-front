@@ -1,11 +1,22 @@
 <template>
-    <textarea placeholder="Егер сіздің қатеңіз тізімде жоқ болса, қатеңізді осы жерге толығырақ жазып беруіңізді сұраймыз..."></textarea>
+    <textarea placeholder="Егер сіздің қатеңіз тізімде жоқ болса, қатеңізді осы жерге толығырақ жазып беруіңізді сұраймыз..." v-model="inputVal">{{inputVal}}</textarea>
 </template>
 
 
 <script>
     export default {
+        props: ['value'],
+        data() {
+            return {
+                inputVal: this.value
+            }
+        },
 
+        watch: {
+            inputVal(val) {
+                this.$emit('input', val);
+            }
+        }
     }
 
 </script>

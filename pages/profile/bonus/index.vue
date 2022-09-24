@@ -83,41 +83,20 @@
                             <div class="head">Сипаттама</div>
                             <div class="head">Сумма</div>
 
-                            <div class="time">25.11.2020 / 13:18</div>
-                            <div class="description">Банк картасы арқылы шығарылды</div>
-                            <div class="sum default">- 25 000 тг</div>
-                            <div class="time">25.11.2020 / 13:06</div>
-                            <div class="description">Банк картасы арқылы толтырылды</div>
-                            <div class="sum green">+ 25 000 тг</div>
-                            <div class="time">25.11.2020 / 13:18</div>
-                            <div class="description">Банк картасы арқылы шығарылды</div>
-                            <div class="sum default">- 25 000 тг</div>
-                            <div class="time">25.11.2020 / 13:06</div>
-                            <div class="description">Банк картасы арқылы толтырылды</div>
-                            <div class="sum green">+ 25 000 тг</div>
-                            <div class="time">25.11.2020 / 13:06</div>
-                            <div class="description">Банк картасы арқылы толтырылды</div>
-                            <div class="sum green">+ 25 000 тг</div>
-
-<!--
-                            <template v-if="loading==0" v-for="bonus in bonuses">
+                            <template v-if="!loading" v-for="bonus in bonuses">
                                 <div class="time">{{bonus.date}}</div>
                                 <div class="description">{{bonus.perevod_text}}</div>
                                 <div class="sum" :class="{green:bonus.plusOrMinus}">{{bonus.plusOrMinus ? '+' : '-'}} {{bonus.value}} B</div>
                             </template>
--->
 
                         </div>
-<!--
-                        <template v-if="loading==1">
-                            <div class="d-flex justify-content-center my-3">
-                                <div class="spinner-border" role="status"></div>
-                            </div>
-                        </template>
--->
+                        <div v-if="loading" class="text-center mt-3">
+                            <b-spinner variant="primary" label="Text Centered"></b-spinner>
+                        </div>
                     </div>
-                    <glassBtn @click.native="$router.push('bonus/history')" text='Толық ашу' />
-<!--                    <glassBtn @click.native="showAll()" text='Толық ашу' />-->
+                    <div v-if="bonuses.length" class="more">
+                        <glassBtn @click.native="showAll" text='Толық ашу' />
+                    </div>
                 </div>
             </div>
         </section>
@@ -160,7 +139,9 @@
             getData() {
                 this.loading = 1;
                 this.$api.$get('/profile/perevod/history', {
-                    params: {perevod_type: 'bonus'}
+                    params: {
+                        perevod_type: 'bonus'
+                    }
                 }, {}).then((res) => {
                     this.bonuses = res.history;
                     this.loading = 0;
@@ -174,7 +155,12 @@
                     }
                 }, {}).then((res) => {
                     console.log(res)
-                    this.$router.push({name: "profile-bonus-history", params: { bonuses: res.history }});
+                    this.$router.push({
+                        name: "profile-bonus-history",
+                        params: {
+                            bonuses: res.history
+                        }
+                    });
                 })
             }
         },

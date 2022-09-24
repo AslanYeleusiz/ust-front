@@ -10,31 +10,13 @@
                         <div class="head">Сипаттама</div>
                         <div class="head">Сумма</div>
 
-                        <template v-for="n in 10">
-                            <div class="time">25.11.2020 / 13:18</div>
-                            <div class="description">Банк картасы арқылы шығарылды</div>
-                            <div class="sum default">- 25 000 тг</div>
-                            <div class="time">25.11.2020 / 13:06</div>
-                            <div class="description">Банк картасы арқылы толтырылды</div>
-                            <div class="sum green">+ 25 000 тг</div>
-                        </template>
-
-
-<!--
-                        <template v-if="loading==0" v-for="bonus in bonuses.data">
+                        <template v-if="!loading" v-for="bonus in bonuses.data">
                             <div class="time">{{bonus.date}}</div>
                             <div class="description">{{bonus.perevod_text}}</div>
                             <div class="sum" :class="{green:bonus.plusOrMinus}">{{bonus.plusOrMinus ? '+' : '-'}} {{bonus.value}} B</div>
                         </template>
--->
                     </div>
-<!--
-                    <template v-if="loading==1">
-                        <div class="d-flex justify-content-center my-3">
-                            <div class="spinner-border" role="status"></div>
-                        </div>
-                    </template>
--->
+
                 </div>
                 <div class="paginator">
                     <pagination :currentPage="bonuses.current_page" :lastPage="bonuses.last_page" @set-page="setPage" />

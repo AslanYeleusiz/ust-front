@@ -10,25 +10,25 @@
                         <div class="h2">Қате түрін таңдаңыз</div>
                         <div class="types">
                             <label class="answer">
-                                <input v-model="appeals.variable" value="1" type="radio"> <span>Сұрақта грамматикалық қате бар</span>
+                                <input v-model="appeals.variable" value="Сұрақта грамматикалық қате бар" type="radio"> <span>Сұрақта грамматикалық қате бар</span>
                             </label>
                             <label class="answer">
-                                <input v-model="appeals.variable" value="2" type="radio"> <span>Жауабы қате</span>
+                                <input v-model="appeals.variable" value="Жауабы қате" type="radio"> <span>Жауабы қате</span>
                             </label>
                             <label class="answer">
-                                <input v-model="appeals.variable" value="3" type="radio"> <span>Сұрақтың мазмұнында қателік бар</span>
+                                <input v-model="appeals.variable" value="Сұрақтың мазмұнында қателік бар" type="radio"> <span>Сұрақтың мазмұнында қателік бар</span>
                             </label>
                             <label class="answer">
-                                <input v-model="appeals.variable" value="4" type="radio"> <span>Жауап нұсқалары бірдей</span>
+                                <input v-model="appeals.variable" value="Жауап нұсқалары бірдей" type="radio"> <span>Жауап нұсқалары бірдей</span>
                             </label>
                             <label class="answer">
-                                <input v-model="appeals.variable" value="5" type="radio"> <span>Басқа қателер</span>
+                                <input v-model="appeals.variable" value="Басқа қателер" type="radio"> <span>Басқа қателер</span>
                             </label>
                         </div>
                         <transition name="fadeGrade">
-                            <cstTextarea v-show="appeals.variable == 5" class="textarea" v-model="appeals.text" />
+                            <cstTextarea v-show="appeals.variable == 'Басқа қателер'" class="textarea" v-model="appeals.text" />
                         </transition>
-                        <cstBtn text="Жіберу" class="cst_btn" />
+                        <cstBtn @click.native="sendAppeals" text="Жіберу" class="cst_btn" />
                     </div>
                 </div>
             </transition>
@@ -48,7 +48,7 @@
             cstBtn,
             cstTextarea
         },
-        props: ['isOpen'],
+        props: ['isOpen', 'surak', 'katysushyCode'],
         data() {
             return {
                 appeals: {
@@ -57,6 +57,24 @@
                 }
             }
         },
+        methods: {
+            sendAppeals() {
+                this.$api.post('/olimpiada/appeals/create', {
+                    variable: this.appeals.variable,
+                    text: this.appeals.text,
+                    code: this.katysushyCode,
+                    surak: this.surak
+                }).then((res)=>{
+                    if(res.data.status == true){
+                        console.log(res)
+                        this.$bus.$emit('successPopup')
+                        this.$emit('closePopup')
+                    }
+                }).catch((err)=>{
+                    console.log(err)
+                })
+            }
+        }
 
     }
 

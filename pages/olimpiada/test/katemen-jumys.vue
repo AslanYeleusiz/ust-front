@@ -1,6 +1,6 @@
 <template>
     <div>
-        <kateSurakPopup :isOpen="appeals_active" @closePopup="appeals_active=0" />
+        <kateSurakPopup :isOpen="appeals_active" @closePopup="appeals_active=0" :surak="suraktar[currentQuestion]" />
         <div class="test">
             <div class="wrap">
                 <div class="header">
@@ -116,6 +116,7 @@
                 this.katysushy = this.$route.params.o_user
                 this.suraktar = this.$route.params.suraktar
             }
+            console.log(this.suraktar)
         }
 
     }

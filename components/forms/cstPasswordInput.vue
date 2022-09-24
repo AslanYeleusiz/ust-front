@@ -4,7 +4,8 @@
         <div class="input">
             <input v-model="inputVal" :type="passwordFieldType" :id="nameWrap" :name="nameWrap" class="form-control" :placeholder="stringPlaceholder">
             <div @click.prevent="openPassword" class="btn visibleBtn">
-                <img src="~assets/images/eye-slash.png" alt="">
+                <img v-show="passwordFieldType=='password'" src="~assets/images/eye-slash.png" alt="">
+                <img v-show="passwordFieldType=='text'" src="~assets/images/eye_materials.svg" alt="">
             </div>
         </div>
         <span v-if="danger" class="danger_message">{{dangerText}}</span>
@@ -71,6 +72,10 @@
     }
     .visibleBtn {
         position: absolute;
+        img{
+            width: 24px;
+            height: 24px;
+        }
     }
 
     .input {

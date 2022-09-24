@@ -436,12 +436,13 @@
             padding: 40px 35px 50px;
         }
 
-        .main .welcome_block .wrap[data-v-279a75d1] {
+        .main .welcome_block .wrap {
             margin-top: 40px;
             display: grid;
             grid-gap: 30px;
             grid-template-columns: 1fr;
-            grid-template-areas: 'a''b';
+            grid-template-areas: 'b' 'a';
+            grid-gap: 50px;
         }
 
 
@@ -450,7 +451,7 @@
         }
 
         .wrap_col:first-child {
-            margin-top: 50px;
+            margin-top: 0px;
         }
 
         .wrap_col {

@@ -1,6 +1,6 @@
 <template>
     <div>
-       <oplataPopup :oplataOpen="oplataPopup" @closePopup="oplataPopup=0" @next="oplataPopup++" />
+        <oplataPopup :oplataOpen="oplataPopup" @closePopup="oplataPopup=0" @next="oplataPopup++" />
         <headLink :head='head' active=1 />
         <section class="main">
             <div class="cst-ct">
@@ -33,42 +33,22 @@
                             <div class="head">Сипаттама</div>
                             <div class="head">Сумма</div>
 
-                            <div class="time">25.11.2020 / 13:18</div>
-                            <div class="description">Банк картасы арқылы шығарылды</div>
-                            <div class="sum default">- 25 000 тг</div>
-                            <div class="time">25.11.2020 / 13:06</div>
-                            <div class="description">Банк картасы арқылы толтырылды</div>
-                            <div class="sum green">+ 25 000 тг</div>
-                            <div class="time">25.11.2020 / 13:18</div>
-                            <div class="description">Банк картасы арқылы шығарылды</div>
-                            <div class="sum default">- 25 000 тг</div>
-                            <div class="time">25.11.2020 / 13:06</div>
-                            <div class="description">Банк картасы арқылы толтырылды</div>
-                            <div class="sum green">+ 25 000 тг</div>
-                            <div class="time">25.11.2020 / 13:06</div>
-                            <div class="description">Банк картасы арқылы толтырылды</div>
-                            <div class="sum green">+ 25 000 тг</div>
-
-<!--
                             <template v-if="loading==0" v-for="balance in balances">
                                 <div class="time">{{balance.date}}</div>
                                 <div class="description">{{balance.perevod_text}}</div>
-                                <div class="sum" :class="{green:balance.plusOrMinus}">{{balance.plusOrMinus ? '+' : '-'}} {{balance.value}} B</div>
+                                <div class="sum" :class="{green:balance.plusOrMinus}">{{balance.plusOrMinus ? '+' : '-'}} {{balance.value}} тг</div>
                             </template>
--->
 
                         </div>
-<!--
-                        <template v-if="loading==1">
-                            <div class="d-flex justify-content-center my-3">
-                                <div class="spinner-border" role="status"></div>
-                            </div>
-                        </template>
--->
+
+                        <div v-if="loading==1" class="text-center mt-3">
+                            <b-spinner variant="primary" label="Text Centered"></b-spinner>
+                        </div>
+
                     </div>
-                    <NuxtLink to='/profile/balance/history' class="more">
-                        <glassBtn text='Толық ашу' />
-                    </NuxtLink>
+                    <div v-if="balances.length == 5" class="more">
+                        <glassBtn @click.native="showAll" text='Толық ашу' />
+                    </div>
                 </div>
             </div>
         </section>
@@ -109,7 +89,9 @@
             getData() {
                 this.loading = 1;
                 this.$api.$get('/profile/perevod/history', {
-                    params: {perevod_type: 'balance'}
+                    params: {
+                        perevod_type: 'balance'
+                    }
                 }).then((res) => {
                     this.balances = res.history;
                     this.loading = 0;
@@ -123,7 +105,12 @@
                     }
                 }).then((res) => {
                     console.log(res)
-                    this.$router.push({name: "profile-balance-history", params: { balances: res.history }});
+                    this.$router.push({
+                        name: "profile-balance-history",
+                        params: {
+                            balances: res.history
+                        }
+                    });
                 })
             }
         },
@@ -215,11 +202,12 @@
             @media all and (max-width: 767px) {
                 transform: translate(-40px, -24px);
             }
-            @media all and (max-width: 438px){
+
+            @media all and (max-width: 438px) {
                 transform: translate(-19px, -24px);
             }
 
-            @media all and (max-width: 372px){
+            @media all and (max-width: 372px) {
                 transform: translate(-12px, -24px);
             }
 
@@ -284,7 +272,8 @@
             font-size: 24px;
             line-height: 34px;
         }
-        @media all and (max-width: 500px){
+
+        @media all and (max-width: 500px) {
             font-size: 20px;
             line-height: 31px;
         }
@@ -296,7 +285,8 @@
         width: 100%;
         height: 50px;
         margin-top: 30px;
-        @media all and (max-width: 767px){
+
+        @media all and (max-width: 767px) {
             margin-top: 20px;
         }
 
@@ -313,24 +303,29 @@
 
     .history {
         margin-top: 90px;
+
         h3 {
             font-size: 20px;
             font-weight: 700;
             line-height: 23px;
         }
-        .overflow{
+
+        .overflow {
             max-width: 100%;
             overflow: scroll;
-            &::-webkit-scrollbar{
+
+            &::-webkit-scrollbar {
                 display: none;
             }
         }
+
         .cst_table {
             width: 100%;
             display: grid;
             grid-template-columns: auto 1fr auto;
             border: 1px solid #EFEFEF;
-            @media all and (max-width: 500px){
+
+            @media all and (max-width: 500px) {
                 width: 680px;
             }
 

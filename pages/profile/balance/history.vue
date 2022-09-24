@@ -3,26 +3,26 @@
         <kroshki :header='kroshki' />
         <div class="cst-ct">
             <div class="history">
-            <h3>Баланс тарихы</h3>
-            <div class="overflow">
-                <div class="cst_table">
-                    <div class="head">Уақыты</div>
-                    <div class="head">Сипаттама</div>
-                    <div class="head">Сумма</div>
-                    <template v-for='n in 10'>
-                        <div class="time">25.11.2020 / 13:18</div>
-                        <div class="description">Банк картасы арқылы шығарылды</div>
-                        <div class="sum default">- 25 000 тг</div>
-                        <div class="time">25.11.2020 / 13:06</div>
-                        <div class="description">Банк картасы арқылы толтырылды</div>
-                        <div class="sum green">+ 25 000 тг</div>
-                    </template>
+                <h3>Баланс тарихы</h3>
+                <div class="overflow">
+                    <div class="cst_table">
+                        <div class="head">Уақыты</div>
+                        <div class="head">Сипаттама</div>
+                        <div class="head">Сумма</div>
+                        <template v-if="!loading" v-for="balance in balances.data">
+                            <div class="time">{{balance.date}}</div>
+                            <div class="description">{{balance.perevod_text}}</div>
+                            <div class="sum" :class="{green:balance.plusOrMinus}">{{balance.plusOrMinus ? '+' : '-'}} {{balance.value}} тг</div>
+                        </template>
+                    </div>
+                </div>
+                <div v-if="loading" class="text-center mt-3">
+                    <b-spinner variant="primary" label="Text Centered"></b-spinner>
+                </div>
+                <div class="paginator">
+                    <pagination :currentPage="bonuses.current_page" :lastPage="bonuses.last_page" @set-page="setPage" />
                 </div>
             </div>
-            <div class="paginator">
-                <pagination />
-            </div>
-        </div>
         </div>
     </div>
 </template>
@@ -42,11 +42,41 @@
                 kroshki: [{
                     name: 'Баланс',
                     link: '/profile/balance'
-                    },{
+                }, {
                     name: 'Баланс тарихы'
-                }]
+                }],
+                balances: [],
+                currentPage: 1,
+                loading: 1,
             }
         },
+        methods: {
+            getData() {
+                this.$api.$get('/profile/perevod/history', {
+                    params: {
+                        perevod_type: 'balance',
+                        get: 20,
+                        page: this.currentPage
+                    }
+                }).then((res) => {
+                    this.balances = res.history
+                    this.loading = 0
+                })
+            },
+            setPage(page) {
+                this.page = page
+                this.loading = 1
+                this.getData()
+            }
+        },
+        mounted() {
+            if (!this.$route.params.balances) {
+                this.getData()
+            } else {
+                this.balances = this.$route.params.balances
+                this.loading = 0
+            }
+        }
 
     }
 
@@ -125,7 +155,8 @@
                 font-weight: 600;
             }
         }
-        .paginator{
+
+        .paginator {
             margin-top: 20px;
             padding-bottom: 100px;
         }
