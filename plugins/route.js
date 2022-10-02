@@ -7,6 +7,7 @@ export default ({ app }) => {
         'profile',
         'turnir-slug',
         'menin-turnirlerim',
+        'qmg-slug',
     ]
     app.router.beforeEach((to, from, next) => {
         console.log(to.name)

@@ -7,15 +7,16 @@
             <btnGroup :category='filter' placeholder='Барлығы' type='2' />
         </div>
         <hr>
-        <div class="loading" v-show="loading">
-            <div class="spinner-border" role="status"></div>
+        <not_found v-if="loading == 2" text="Материалдар тізімі бос." desc="Материал жариялау үшін 'Метериалды жариялау' бастырмасын басыныз" btnText="Метериалды жариялау" link="/zharialau" />
+        <div v-show="loading == 1" class="text-center mt-3">
+            <b-spinner variant="primary" label="Text Centered"></b-spinner>
         </div>
         <template v-for="material in materials">
             <div v-if="material.purchased">
                 <block :material="material" />
             </div>
             <div v-else>
-                <myBlock :material="material" @certificate="getCertificate(material.id)"/>
+                <myBlock :material="material" @certificate="getCertificate(material.id)" />
             </div>
         </template>
         <div class="paginate">
@@ -30,12 +31,14 @@
     import myBlock from '@/components/materials/forms/myBlock.vue'
     import block from '@/components/materials/forms/block.vue'
     import pagination from '@/components/pagination.vue'
+    import not_found from '@/components/landing/not_found.vue'
 
     export default {
         components: {
             myBlock,
             block,
-            btnGroup
+            btnGroup,
+            not_found
         },
         data() {
             return {
@@ -57,22 +60,24 @@
         methods: {
             async getData() {
                 this.loading = true;
-                await this.$api.$get('/menin-materialdarym',{
+                await this.$api.$get('/menin-materialdarym', {
                     params: {
                         page: this.currentPage
                     }
                 }).then(res => {
-                    console.log('then: '+res);
+                    console.log('then: ' + res);
                     let posts = res.data;
                     this.materials_count = posts.count_materials;
                     this.COUNT = posts.COUNT;
                     this.currentPage = posts.materials.current_page;
                     this.lastPage = posts.materials.last_page;
                     this.materials = posts.materials.data;
+                    if (posts.count_materials == 0) this.loading = 2;
+                    else this.loading = false;
                 }).catch(error => {
-                    console.log('error: '+error);
+                    console.log('error: ' + error);
                 });
-                this.loading = false;
+
             },
             getCertificate(id) {
                 this.$axios.$get('/menin-materialdarym/' + id + '/certificate', {
@@ -85,14 +90,14 @@
                     link.click();
                 })
             },
-            Pageload(e){
+            Pageload(e) {
                 this.currentPage = e;
                 this.getData();
-            }
+            },
         },
         mounted() {
             this.getData();
-            this.$bus.$on('refreshMyMaterials', ()=>{
+            this.$bus.$on('refreshMyMaterials', () => {
                 this.getData()
             });
         }
@@ -108,7 +113,9 @@
         margin-top: 30px;
         padding-bottom: 70vh;
     }
+
     .paginate {
         margin-top: 50px;
     }
+
 </style>

@@ -295,7 +295,11 @@
                 options: {
                     perPage: 1,
                     paginationEnabled: false,
-                    spacePadding: 30,
+                    spacePadding: 15,
+                    autoplay: true,
+                    autoplayTimeout: 4000,
+                    autoplayHoverPause: true,
+                    paginationEnable: false,
                 },
                 calcMaterialsValue: 15,
                 calclDownloads: 15,

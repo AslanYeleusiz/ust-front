@@ -6,7 +6,7 @@
                 <div class="statistic">
                     <div class="h2">{{COUNT}} материал жарияланған</div>
                     <div class="dbody">Өз тәжірибеңізбен бөлісіп, мыңдаған педагогтың алғысы мен аттестацияға жарамды сертификат алыңыз!</div>
-                    <NuxtLink to="/zharialau"><button class="btn btn-primary zharialauBtn">Материал жариялау</button></NuxtLink>
+                    <NuxtLink to="/zharialau"><cstBtn class="zharialauBtn" text="Материал жариялау" /></NuxtLink>
                 </div>
                 <div class="algysKhat">
                     <img src="~assets/images/algysKhat.jpg" alt="">
@@ -17,12 +17,12 @@
                 <form action="" class="adisteme">
                     <div class="h2">Оқу әдістемелік материалдар</div>
                     <form @submit.prevent class="searchBlock">
-                        <button @click.prevent="getData()" class="btn btn-primary searchBtn">Іздеу</button>
+                        <cstBtn @click.native.prevent="getData()" class="searchBtn" text="Іздеу" />
                         <input v-model='search' type="text" class="form-control searchInput" placeholder="Зат есім сабақ жоспары" v-on:keyup.enter="getData()">
                         <div @click="clearSearchRes()" class="d-flex aj-c clearInput">&#10006;</div>
                     </form>
                     <transition name="categories">
-                        <div v-show="searchCategoryShow" class="category">
+                        <div v-show="searchCategoryShow && categoryIsActive<4" class="category">
                             <btnGroup :category='subjects' :placeholder='cat_text[0]' @entered-category='subjectsSearch($event)' />
 
                             <btnGroup :category='directions' :placeholder='cat_text[1]' @entered-category='directionsSearch($event)' />
@@ -30,14 +30,16 @@
                             <btnGroup :category='classes' :placeholder='cat_text[2]' @entered-category='classesSearch($event)' />
                         </div>
                     </transition>
-                    <div class="hider_block">
-                        <button type="button" @click="openCategory" class="btn hider" :class="{active: searchCategoryShow}">
-                            <span>Пән / Бағыт / Сынып</span>
-                            <svg width="16" height="9" viewBox="0 0 16 9" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M14.5984 1.45825L9.1651 6.89159C8.52344 7.53325 7.47344 7.53325 6.83177 6.89159L1.39844 1.45825" stroke="#363636" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" />
-                            </svg>
-                        </button>
-                    </div>
+                    <transition name="categories">
+                        <div v-show="categoryIsActive < 4" class="hider_block">
+                            <button type="button" @click="openCategory" class="btn hider" :class="{active: searchCategoryShow}">
+                                <span>Пән / Бағыт / Сынып</span>
+                                <svg width="16" height="9" viewBox="0 0 16 9" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M14.5984 1.45825L9.1651 6.89159C8.52344 7.53325 7.47344 7.53325 6.83177 6.89159L1.39844 1.45825" stroke="#363636" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" />
+                                </svg>
+                            </button>
+                        </div>
+                    </transition>
                 </form>
             </div>
             <div class="advice">
@@ -52,7 +54,7 @@
             <div class="materials-list">
                 <div class="cst-ct">
                     <transition name='categories'>
-                        <div v-if='categoryIsActive==3'>
+                        <div v-if='categoryIsActive==3 && waitAnimate'>
                             <div class="folder1">
                                 <div class="fbody">
                                     <div class="body">
@@ -65,12 +67,25 @@
                             <qualik />
                         </div>
                     </transition>
-                    <span class="value">Барлығы: <b>{{materials_count}}</b> материал</span>
+
+                    <transition name='categories'>
+                        <div v-if='categoryIsActive==4 && waitAnimate'>
+                            <zhenildik :materials='materials' :loading='loading' />
+                        </div>
+                    </transition>
+
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="value">{{categoryIsActive < 3 ? 'Барлығы' : categoryIsActive == 3 ? 'Жинақтар' : 'ҚМЖ саны'}}: <b>{{materials_count}}</b> {{categoryIsActive < 4 ? 'материал' : ''}}</span>
+                        <btnGroup v-if="categoryIsActive==4" :category='qmgCat' placeholder='Пән: таңдау' type=2 @entered-category='qmgSearch($event)' />
+                    </div>
                     <div v-if='categoryIsActive<3'>
-                        <list :popular_materials='popular_materials' :materials='materials' :loading='loading' :categoryIsActive='categoryIsActive' :currentPage="currentPage"/>
+                        <list :popular_materials='popular_materials' :materials='materials' :loading='loading' :categoryIsActive='categoryIsActive' :currentPage="currentPage" />
                     </div>
                     <div v-if='categoryIsActive==3'>
                         <zhinak_list :materials='materials' :loading='loading' />
+                    </div>
+                    <div v-if='categoryIsActive==4'>
+                        <qmj_list :materials='materials' :loading='loading' />
                     </div>
                     <div class="paginate">
                         <pagination :currentPage="currentPage" :lastPage="lastPage" @set-page="Pageload" />
@@ -88,23 +103,27 @@
     import pagination from '@/components/pagination.vue'
     import btnGroup from '@/components/forms/btnGroup.vue'
     import list from '@/components/materials/list.vue'
+    import qmj_list from '@/components/materials/qmj_list.vue'
     import zhinak_list from '@/components/materials/zhinak_list.vue'
     import qualik from '@/components/materials/my_materials/forms/qualik.vue'
+    import zhenildik from '@/components/materials/my_materials/forms/zhenildik.vue'
     import headLink from '@/components/header.vue'
+    import cstBtn from '@/components/forms/btn.vue'
+
 
     export default {
-        head(){
+        head() {
             return {
                 title: 'Ұстаздарға материалдар, ашық сабақтар, сабақ жоспарлары',
                 meta: [{
                     hid: 'description',
                     name: 'description',
                     content: 'Мұғалімдерге ашық сабақтар, сабақ жоспарлары, тәрбие сағаттары, омж, қмж құжаттарды тегін жүктеп сабақта қолдануға болады. Ашық сабақтар сайты'
-                },{
+                }, {
                     hid: 'keywords',
                     name: 'keywords',
                     content: 'ашық сабақтар, сабақ жоспарлары, тәрбие сағаттары, қысқа мерзімді жоспар, орта мерзімді жоспар, олимпиада сұрақтар, қмж, омж, сабақтар'
-                },],
+                }, ],
 
             }
         },
@@ -117,7 +136,10 @@
             list,
             zhinak_list,
             qualik,
-            headLink
+            headLink,
+            qmj_list,
+            zhenildik,
+            cstBtn
         },
         data() {
             return {
@@ -143,6 +165,8 @@
                 directionsInner: null,
                 classes: [],
                 classesInner: null,
+                qmgCat: [],
+                qmgCatInner: null,
                 materials: [],
                 materials_count: null,
                 COUNT: null,
@@ -150,7 +174,8 @@
                 lastPage: null,
                 loading: true,
                 cat_text: ['Пәнді таңдаңыз', 'Бағытын таңдаңыз', 'Сыныбын таңдаңыз'],
-                popular_materials: null
+                popular_materials: null,
+                waitAnimate: 1,
             }
         },
         methods: {
@@ -162,7 +187,7 @@
             },
             async Pageload(n) {
                 this.currentPage = n;
-                this.getData();
+                this.categoryIsActive < 4 ? this.getData(): this.getQmg();
             },
             async getCategory() {
                 let cats = await this.$axios
@@ -175,7 +200,7 @@
             async getData() {
                 this.loading = true;
                 this.popular_materials = null;
-                await this.$axios.$get('/word',{
+                await this.$axios.$get('/word', {
                     params: {
                         title: this.search,
                         subject: this.subjectsInner,
@@ -184,13 +209,13 @@
                         page: this.currentPage,
                         sell: this.categoryIsActive,
                     }
-                }).then((res)=>{
+                }).then((res) => {
                     this.materials_count = res.count_materials;
                     this.COUNT = res.COUNT;
                     this.currentPage = res.materials.current_page;
                     this.lastPage = res.materials.last_page;
                     this.materials = res.materials.data;
-                }).catch((err)=>{
+                }).catch((err) => {
                     console.log(err.response);
                 })
                 this.loading = false;
@@ -211,11 +236,48 @@
                 this.currentPage = 1;
                 this.getData();
             },
-            teginWordSearch(e) {
-                this.categoryIsActive = e;
+            qmgSearch(e) {
+                this.qmgCatInner = this.qmgCat[e].id;
                 this.currentPage = 1;
-                e < 4 ? this.getData() : this.getZhinaq;
+                this.getQmg();
+            },
+            teginWordSearch(e) {
+                if (this.categoryIsActive != e) {
+                    this.waitAnimate = 0
+                    this.categoryIsActive = e;
+                    this.currentPage = 1;
+                    e < 4 ? this.getData() : this.getQmg();
+                    setTimeout(() => {
+                        this.waitAnimate = 1
+                    }, 300)
+                }
+
+            },
+
+            getQmg() {
+                this.loading = true;
+                this.$axios.$get('/word/qmg/bolimder', {
+                    params: {
+                        page: this.currentPage,
+                        category: this.qmgCatInner,
+                        title: this.search,
+                    }
+                }).then((res)=>{
+                    console.log(res.data)
+                    this.materials = res.data.bolimder.data
+                    this.currentPage = res.data.bolimder.current_page
+                    this.lastPage = res.data.bolimder.last_page
+                    this.materials_count = res.data.bolimder.total
+                    this.loading = false;
+                    this.qmgCat = res.data.subjects
+                    var fit = {
+                        id: null,
+                        name: 'Барлық пән'
+                    }
+                    this.qmgCat.unshift(fit)
+                })
             }
+
 
         },
         async fetch() {
@@ -257,6 +319,7 @@
         background: #ffffff;
 
         .cst-ct {
+            position: relative;
             height: 100%;
 
             .d-flex {
@@ -283,6 +346,7 @@
             height: 100%;
             margin-right: 40px;
             padding: 0;
+
             &:hover {
                 text-decoration: none;
             }
@@ -338,8 +402,6 @@
                     margin-top: 20px;
                     width: 250px;
                     height: 50px;
-                    background: #1E63E9;
-                    border-radius: 36px;
 
                     @media all and (max-width: 991px) {
                         width: 215px;
@@ -423,6 +485,7 @@
                     padding: 6px 12px;
                     margin-right: 130px;
                     cursor: pointer;
+
                     @media all and (max-width: 767px) {
                         height: 40px;
                         margin: 0;
@@ -462,8 +525,6 @@
                     position: absolute;
                     width: 120px;
                     height: 40px;
-                    background: #1E63E9;
-                    border-radius: 26px;
                     margin-right: 5px;
 
                     @media all and (max-width: 767px) {
@@ -481,10 +542,12 @@
                 grid-template-columns: 1fr 1fr 1fr;
                 grid-gap: 10px;
                 margin-top: 40px;
+                grid-template-rows: 40px;
 
                 @media all and (max-width: 767px) {
                     margin-top: 20px;
                     grid-template-columns: 1fr;
+                    grid-template-rows: 40px 40px 40px;
                 }
 
                 select {
@@ -650,15 +713,18 @@
                     position: absolute;
                     right: 0;
                     transform: translate(-37px, -164px);
-                    @media all and (max-width: 883px){
+
+                    @media all and (max-width: 883px) {
                         transform: translate(-11px, -176px);
                     }
-                    @media all and (max-width: 500px){
+
+                    @media all and (max-width: 500px) {
                         width: 125px;
                         height: 125px;
                         transform: translate(-27px, -141px);
                     }
-                    @media all and (max-width: 422px){
+
+                    @media all and (max-width: 422px) {
                         width: 100px;
                         height: 100px;
                         transform: translate(-13px, -112px);
@@ -675,24 +741,29 @@
                     filter: blur(18px);
                     transform: translate(-54px, -21px);
                     right: 0;
-                    @media all and (max-width: 1099px){
+
+                    @media all and (max-width: 1099px) {
                         transform: translate(-54px, -14px);
 
                     }
-                    @media all and (max-width: 991px){
+
+                    @media all and (max-width: 991px) {
                         transform: translate(-54px, -1px);
                     }
 
-                    @media all and (max-width: 883px){
+                    @media all and (max-width: 883px) {
                         transform: translate(-19px, 30px);
                     }
-                    @media all and (max-width: 767px){
+
+                    @media all and (max-width: 767px) {
                         transform: translate(-21px, -24px);
                     }
-                    @media all and (max-width: 500px){
+
+                    @media all and (max-width: 500px) {
                         filter: blur(23px);
                     }
-                    @media all and (max-width: 422px){
+
+                    @media all and (max-width: 422px) {
                         width: 100px;
                         height: 100px;
                         transform: translate(-32px, 5px);
@@ -715,12 +786,14 @@
                     font-weight: 600;
                     line-height: 19px;
                     color: #363636;
-                    @media all and (max-width: 767px){
+
+                    @media all and (max-width: 767px) {
                         font-size: 14px;
                         line-height: 17px;
                         padding: 25px 30px;
                     }
-                    @media all and (max-width: 500px){
+
+                    @media all and (max-width: 500px) {
                         font-size: 12px;
                         line-height: 15px;
                         padding: 20px;

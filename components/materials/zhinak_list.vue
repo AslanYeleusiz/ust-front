@@ -1,7 +1,7 @@
 <template>
     <div class="list">
-        <div class="loading" v-show="loading">
-            <div class="spinner-border" role="status"></div>
+        <div v-show="loading" class="text-center mt-3">
+            <b-spinner variant="primary" label="Text Centered"></b-spinner>
         </div>
         <div class="zhinaktar">
             <template v-if="!loading" v-for='material_item in materials'>
@@ -32,21 +32,20 @@
             margin-top: 30px;
         }
     }
-    .loading {
-        display: flex;
-        justify-content: center;
-        margin-top: 30px;
-    }
-    .zhinaktar{
+
+    .zhinaktar {
         display: grid;
         grid-template-columns: 1fr 1fr 1fr;
         grid-gap: 20px;
-        @media all and (max-width: 883px){
+
+        @media all and (max-width: 883px) {
             grid-template-columns: 1fr 1fr;
         }
-        @media all and (max-width: 500px){
+
+        @media all and (max-width: 500px) {
             grid-template-columns: 1fr;
         }
 
     }
+
 </style>

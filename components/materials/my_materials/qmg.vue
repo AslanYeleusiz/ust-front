@@ -2,14 +2,20 @@
     <div>
         <div class="d-flex j-b a-c">
             <div class="batlygy">
-                Барлығы: 35
+                Барлығы: {{count}}
             </div>
             <div></div>
         </div>
         <hr>
-        <div class="zhinaktar">
-            <template v-for="material in materials">
-                <zhinakBlock :material="material" />
+        <not_found v-if="loading == 2" text="ҚМЖ тізімі бос." desc="Басқа ҚМЖ-ларды көру үшін 'Материалдар' бөліміне өтіңіз" btnText="Материалдарға өту" link="/material" />
+        <div v-show="loading == 1">
+            <div v-show="loading" class="text-center mt-3 pb-5">
+                <b-spinner variant="primary" label="Text Centered"></b-spinner>
+            </div>
+        </div>
+        <div v-show="loading == 0" class="zhinaktar">
+            <template v-for="(material,index) in materials">
+                <qmjBlock @click.native="gotoQmg(index)" :material="material.bolim" />
             </template>
         </div>
     </div>
@@ -17,11 +23,15 @@
 
 
 <script>
+    import not_found from '@/components/landing/not_found.vue'
     import zhinakBlock from '@/components/materials/forms/zhinakBlock.vue'
+    import qmjBlock from '@/components/materials/forms/qmjBlock.vue'
 
     export default {
         components: {
-            zhinakBlock
+            zhinakBlock,
+            qmjBlock,
+            not_found
         },
         data() {
             return {
@@ -32,65 +42,55 @@
                 }, {
                     name: 'Ақылы материалдарым'
                 }],
-                materials: [
-                    {
-                        "id": 306946,
-                        "title": "Журналистика үшін жаралғанмын!",
-                        "description": "Журналист – халық  қорғаушысы,қамқоршысы.Қоғам мен жоғары билік арасындағы байланыстырушы.Бір және бірнеше саланы бойына жиа білетін адам.",
-                        "zhanr": "Басқа  ",
-                        "zhanr2": "Эссе, шығарма, мазмұндама ",
-                        "zhanr3": "11 сынып",
-                        "date": "2022-07-11",
-                        "sell": 250,
-                        "purchased": 0,
-                        "chec": 1,
-                        "author": "Омарова Ақбота",
-                        "work": "М.Дулатұлы атындағы 68 мектеп-гимназия",
-                        "view": 9,
-                        "download": 0,
-                        "likes": 0,
-                        "zhinak": 0,
-                        "lat_title": "jyrnalistika_usin_jaralganmyn",
-                    },
-                    {
-                        "id": 306944,
-                        "title": "Оңтүстік Кореяның білім саласы",
-                        "description": "Оңтүстік Кореяда жақсы білім алу кез-келген корейліктің мансабыың қалыптасуында шешуші болып табылады, сондықтан ең жоғары басымдығы міндетті түрде түсетін беделді оқу орнына беріледі, ал түсу емтихандарын тапсыру үрдісі айтарлықтай қиын сипатта болуы мүмкін. Корей мемлекеттік әкімшілік органдары нақты бүкіл білім беру процесін ерте жастан бастап баланың және оның соңғы жылы жоғары сыныптарда бақылайды. Ең көп артықшылық математика, корей және ағылшын тілдері, нақты ғылымдар және қоғам туралы ғылымдарға бойынша беріледі. Дене шынықтыру маңызды емес, оған аз көңіл бөлінеді, өйткені ол білім беру пәні емес деп саналады, оның салдары ретінде көптеген мектептерде тиісті спорттық құрал-саймандар жоқ. Оңтүстік Корея барлық білім беру мекемелерінде, бастауыш мектеп жоғары оқу орындарында жоғары жылдамдықты Интернетке қол жеткізуді қамтамасыз еткен алғашқы ел.",
-                        "zhanr": "Барлық пәндер ",
-                        "zhanr2": "Мақала  ",
-                        "zhanr3": "11 сынып",
-                        "date": "2022-07-10",
-                        "sell": 0,
-                        "purchased": 0,
-                        "chec": 0,
-                        "author": "Акималиева Асель Нурланкызы",
-                        "work": "Хромтау қаласы 5 мектеп",
-                        "view": 17,
-                        "download": 0,
-                        "likes": 0,
-                        "zhinak": 0,
-                        "lat_title": "ongtustik_koreyanyng_bilim_salasy",
-                    }
-                ],
+                materials: [],
+                loading: 1,
+                count: 0,
             }
         },
-
+        mounted() {
+            this.$api.$get('/word/qmg/my_qmg').then((res) => {
+                console.log(res)
+                this.materials = res.data.qmgs.data
+                if (res.data.qmgs.total == 0) this.loading = 2
+                else this.loading = 0
+            })
+        },
+        methods: {
+            gotoQmg(e) {
+                var slug = this.materials[e].bolim.lat_title + '-' + this.materials[e].bolim.id + '.html'
+                this.$axios.$get('/word/qmg/' + slug).then((res) => {
+                    console.log(res.data)
+                    this.$router.push({
+                        name: 'qmg-slug',
+                        params: {
+                            slug: slug,
+                            bolim: res.data.bolim,
+                            qmg: res.data.qmg,
+                            qmgOrders: res.data.qmgOrder
+                        }
+                    })
+                })
+            },
+        }
     }
 
 </script>
 
 
 <style scoped lang="scss">
-.zhinaktar{
+    .zhinaktar {
         display: grid;
         grid-template-columns: 1fr 1fr 1fr;
         grid-gap: 20px;
-        @media all and (max-width: 883px){
+
+        @media all and (max-width: 883px) {
             grid-template-columns: 1fr 1fr;
         }
-        @media all and (max-width: 500px){
+
+        @media all and (max-width: 500px) {
             grid-template-columns: 1fr;
         }
 
     }
+
 </style>

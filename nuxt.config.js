@@ -75,6 +75,10 @@ export default {
             src: '@/plugins/modal.js',
             mode: 'client',
         },
+        {
+            src: '@/plugins/vue-plyr.js',
+            mode: 'client'
+        }
 
 
   ],

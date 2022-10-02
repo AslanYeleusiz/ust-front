@@ -18,8 +18,8 @@
             </div>
             <div class="col-md">
                 <div class="btnMinGroup">
-                    <button class="btn myBtnMini">Жинаққа жариялау</button>
-                    <button class="btn myBtnMini">Шыққан жинақтарды көру</button>
+                   <cstBtn class="myBtnMini" text='Жинаққа жариялау' />
+                   <cstBtn class="myBtnMini" text='Шыққан жинақтарды көру' />
                 </div>
             </div>
         </div>
@@ -28,8 +28,12 @@
 
 
 <script>
-    export default {
+    import cstBtn from '@/components/forms/btn.vue'
 
+    export default {
+        components: {
+            cstBtn
+        }
     }
 
 </script>
@@ -57,12 +61,8 @@
         }
 
         .myBtnMini {
-            background: #1E63E9;
-            border-radius: 26px;
-            width: 100%;
             max-width: 220px;
             height: 40px;
-            color: #ffffff;
             margin-top: 18px;
         }
 

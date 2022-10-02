@@ -5,10 +5,7 @@
                 <div class="photo"></div>
                 <div class="title">{{material.title}}</div>
             </div>
-            <button class="btn myBtn">
-                <download color='#ffffff' w='20' h='20' />
-                Жүктеу
-            </button>
+            <cstBtn text="Жүктеу" img="importwhite.svg" class="myBtn" />
         </div>
     </div>
 </template>
@@ -16,10 +13,12 @@
 
 <script>
     import download from '@/components/svg/download.vue'
+    import cstBtn from '@/components/forms/btn.vue'
 
     export default {
         components: {
-            download
+            download,
+            cstBtn
         },
         props: ['material']
     }
@@ -83,15 +82,7 @@
         }
 
         .myBtn {
-            width: 100%;
             height: 40px;
-            background: #1E63E9;
-            border-radius: 26px;
-            color: #ffffff;
-
-            svg {
-                margin-right: 10px;
-            }
         }
     }
 

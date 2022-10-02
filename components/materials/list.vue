@@ -8,8 +8,8 @@
                 </template>
             </div>
         </transition>
-        <div class="loading" v-show="loading">
-            <div class="spinner-border" role="status"></div>
+        <div v-show="loading" class="text-center mt-3">
+            <b-spinner variant="primary" label="Text Centered"></b-spinner>
         </div>
         <template v-if="!loading" v-for='material_item in materials'>
             <block :material="material_item" />

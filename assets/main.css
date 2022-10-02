@@ -363,12 +363,21 @@ select:focus{
 .mobile_main_slider .block1{
     height: 100%;
     background-position: center;
-    background-size: 100%;
+    background-size: cover;
     background-repeat: no-repeat;
 }
-.mobile_main_slider .block1,
-.mobile_main_slider .block2{
-    border-right: 10px solid #ffffff;
+.mobile_main_slider .block1
+{
+    border-right: 5px solid #ffffff;
+}
+.mobile_main_slider .block2
+{
+    border-right: 5px solid #ffffff;
+    border-left: 5px solid #ffffff;
+}
+.mobile_main_slider .block3
+{
+    border-left: 5px solid #ffffff;
 }
 .mobile_main_slider .block2{
     padding: 30px 79px 25px 30px;
