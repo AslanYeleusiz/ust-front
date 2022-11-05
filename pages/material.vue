@@ -222,17 +222,17 @@
             },
 
             subjectsSearch(e) {
-                this.subjectsInner = this.subjects[e].lat_name;
+                this.subjectsInner = this.subjects[e].name;
                 this.currentPage = 1;
                 this.getData();
             },
             directionsSearch(e) {
-                this.directionsInner = this.directions[e].lat_name;
+                this.directionsInner = this.directions[e].name;
                 this.currentPage = 1;
                 this.getData();
             },
             classesSearch(e) {
-                this.classesInner = this.classes[e].lat_name;
+                this.classesInner = this.classes[e].name;
                 this.currentPage = 1;
                 this.getData();
             },
@@ -282,8 +282,8 @@
         },
         async fetch() {
             await this.getData();
-            this.popular_materials = await this.$axios.$get('/word/popular');
             await this.getCategory();
+            this.popular_materials = await this.$axios.$get('/word/popular');
         },
     }
 

@@ -22,10 +22,10 @@
         data() {
             return {
                 isOpen: false,
-                isActive: null
+                isActive: this.active,
             }
         },
-        props: ['category', 'placeholder', 'type'],
+        props: ['category', 'placeholder', 'type', 'active'],
         methods: {
             openedMenu() {
                 this.isOpen ? this.isOpen = false : this.isOpen = true
