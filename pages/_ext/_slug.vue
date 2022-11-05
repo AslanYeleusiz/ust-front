@@ -58,11 +58,11 @@
                         <span>Материалдың толық нұсқасын жүктеп алып, көруге болады</span>
                     </div>
                 </div>
-                <template v-if="material.raw=='docx'||material.raw=='doc'">
-                    <iframe :src="'https://view.officeapps.live.com/op/embed.aspx?src=ust.kz/frontend/web/'+material.file_doc" width='100%' height='720px' frameborder='0'></iframe>
-                </template>
                 <template v-if="material.raw=='pdf'">
-                    <iframe id="iframepdf" width='100%' height='720px' src="files/example.pdf" frameborder='0'></iframe>
+                    <iframe id="iframepdf" width='100%' height='720px' :src="'https://ust.kz/frontend/web/'+material.file_doc" frameborder='0'></iframe>
+                </template>
+                <template v-else>
+                    <iframe :src="'https://view.officeapps.live.com/op/embed.aspx?src=https://ust.kz/frontend/web/'+material.file_doc" width='100%' height='720px' frameborder='0'></iframe>
                 </template>
                <bigBtn @click.native="download()" class="downloadBtn" text="Материалды жүктеу" img="importwhite.svg" />
                 <div class="share">

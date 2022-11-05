@@ -11,7 +11,7 @@ export default ({ app }) => {
     ]
     app.router.beforeEach((to, from, next) => {
         console.log(to.name)
-        app.$bus.$emit('closeMenu')
+//        app.$bus.$emit('closeMenu')  закрывается при переходе по ссылкам
         var res = false
         const accessToken = app.$auth.strategy.token.get()
         if(!accessToken){

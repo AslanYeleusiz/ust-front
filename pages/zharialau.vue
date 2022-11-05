@@ -83,9 +83,9 @@
                         </div>
                         <div class="block">
                             <div class="category">
-                                <btnGroup :category='subjects' placeholder='Пәнді таңдаңыз' @entered-category='form.zhanr=$event+1' />
-                                <btnGroup :category='directions' placeholder='Бағытын таңдаңыз' @entered-category='form.zhanr2=$event+1' />
-                                <btnGroup :category='classes' placeholder='Сыныбын таңдаңыз' @entered-category='form.zhanr3=$event+1' />
+                                <btnGroup :category='subjects' placeholder='Пәнді таңдаңыз' @entered-category='form.zhanr=subjects[$event+1].name' />
+                                <btnGroup :category='directions' placeholder='Бағытын таңдаңыз' @entered-category='form.zhanr2=directions[$event+1].name' />
+                                <btnGroup :category='classes' placeholder='Сыныбын таңдаңыз' @entered-category='form.zhanr3=classes[$event+1].name' />
                             </div>
                             <div class="info">
                                 <img src="~assets/images/message-question-yellow.svg" alt="">
@@ -190,9 +190,9 @@
                 form: {
                     title: '',
                     description: '',
-                    zhanr: 1,
-                    zhanr2: 1,
-                    zhanr3: 1,
+                    zhanr: null,
+                    zhanr2: null,
+                    zhanr3: null,
                     author: '',
                     work: '',
                     sell: 0,
@@ -592,6 +592,7 @@
                 display: grid;
                 grid-template-columns: 1fr 1fr 1fr;
                 grid-gap: 10px;
+                height: 40px;
 
                 @media all and (max-width: 883px) {
                     grid-template-columns: 1fr;

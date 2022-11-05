@@ -4,7 +4,7 @@
            <a target="_blank" :href="'word/'+material.lat_title+'-'+material.id+'.html'">
         <div class="h2">
             <div class="title">
-               <div v-if="material.deleteorder" class="d-flex aj-c">
+               <div v-if="material.deleteorder == 1" class="d-flex aj-c">
                    <Lottie :width="34" :height="34" :options="defaultOptions" v-on:animCreated="handleAnimation" />
                    <span class="light-green">Тексерілуде...</span>
                </div>

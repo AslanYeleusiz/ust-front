@@ -48,9 +48,9 @@
                         </div>
                         <div class="block">
                             <div class="category">
-                                <btnGroup :category='subjects' :placeholder='subjectsInner' @entered-category="(e)=>{material.zhanr = e}"/>
-                                <btnGroup :category='directions' :placeholder='directionsInner' @entered-category="(e)=>{material.zhanr2 = e}"/>
-                                <btnGroup :category='classes' :placeholder='classesInner' @entered-category="(e)=>{material.zhanr3 = e}"/>
+                                <btnGroup :category='subjects' :placeholder='material.zhanr' @entered-category="(e)=>{material.zhanr = subjects[e].name}"/>
+                                <btnGroup :category='directions' :placeholder='material.zhanr2' @entered-category="(e)=>{material.zhanr2 = directions[e].name}"/>
+                                <btnGroup :category='classes' :placeholder='material.zhanr3' @entered-category="(e)=>{material.zhanr3 = classes[e].name}"/>
                             </div>
                         </div>
                     </div>
@@ -293,6 +293,7 @@
                 display: grid;
                 grid-template-columns: 1fr 1fr 1fr;
                 grid-gap: 10px;
+                height: 40px;
                 @media all and (max-width: 883px){
                     grid-template-columns: 1fr;
                 }

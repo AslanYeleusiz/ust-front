@@ -20,7 +20,7 @@
         },
         data() {
             return {
-                slideActive: true,
+                slideActive: false,
                 loginPopup: 0,
             }
         },

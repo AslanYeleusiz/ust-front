@@ -40,7 +40,7 @@
         data() {
             return {
                 category: 1,
-                message: '',
+                message: null,
             }
         },
         methods: {
