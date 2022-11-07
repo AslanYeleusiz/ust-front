@@ -233,22 +233,22 @@
             subjectsSearch(e) {
                 this.subjectsInner = this.subjects[e];
                 this.currentPage = 1;
-                this.changeUrlState();
+                this.changeUrlState('/materialdar');
                 this.getData();
             },
             directionsSearch(e) {
                 this.directionsInner = this.directions[e];
                 this.currentPage = 1;
-                this.changeUrlState();
+                this.changeUrlState('/materialdar');
                 this.getData();
             },
             classesSearch(e) {
                 this.classesInner = this.classes[e];
                 this.currentPage = 1;
-                this.changeUrlState();
+                this.changeUrlState('/materialdar');
                 this.getData();
             },
-            changeUrlState() {
+            changeUrlState(prefix) {
                 var s = null
                 var d = null
                 var c = null
@@ -258,7 +258,7 @@
                 s = this.subjectsInner ? this.subjectsInner.lat_name :
                     (d ? 'barlyk_pander' : (c ? 'barlyk_pander' : null))
                 this.addHashToLocation(
-                    'materialdar/' + s + (d ? '/' + d : '') + (c ? '/' + c : '') + '.html'
+                    prefix + '/' + s + (d ? '/' + d : '') + (c ? '/' + c : '') + '.html'
                 )
                 s = null
                 d = null
@@ -285,28 +285,28 @@
                             this.headTitle = 'Ұстаздарға материалдар, ашық сабақтар, сабақ жоспарлары'
                             this.headKeyword = 'ашық сабақтар, сабақ жоспарлары, тәрбие сағаттары, қысқа мерзімді жоспар, орта мерзімді жоспар, олимпиада сұрақтар, қмж, омж, сабақтар'
                             this.headDescription = 'Мұғалімдерге ашық сабақтар, сабақ жоспарлары, тәрбие сағаттары, омж, қмж құжаттарды тегін жүктеп сабақта қолдануға болады. Ашық сабақтар сайты'
-                            this.addHashToLocation('/material')
+                            this.changeUrlState('/material');
                             break;
                         }
                         case 1: {
                             this.headTitle = 'Тегін ашық сабақтар, сабақ жоспарлары, қысқа мерзімді жоспарлар'
                             this.headKeyword = 'ашық сабақ, сабақ жоспарлар, жоспар, сабақтар, қмж, омж, ұжм, олимпиада жауаптары, тест сұрақтары, аттестация, мұғалімге'
                             this.headDescription = 'Мұғалімдерге ашық сабақтар, сабақ жоспарлары, қысқа мерзімді жоспарлар, тест сұрақтары, қмж, омж, сабақ жоспарларының үлгілерін тегін жүктеп алыңыз'
-                            this.addHashToLocation('/material/tegin')
+                            this.changeUrlState('/material/tegin');
                             break;
                         }
                         case 2: {
                             this.headTitle = 'Педагогтарға арналған сабақтар мен жоспарлар, қысқа мерзімді жоспарлар'
                             this.headKeyword = 'педагогтарға, тест жауаптары ашық сабақ, сабақ жоспарлар, жоспар, сабақтар, қмж, омж, ұжм, олимпиада жауаптары, тест сұрақтары, аттестация, мұғалімге'
                             this.headDescription = 'Педагогтарға арналған ашық сабақтар мен жоспарлар жинаған ұстаз тілегі сайтынан жүктеп алып, өз сабағыңызда қолданыңыз. Сайтта 300 000 астам ашық сабақтар жарияланған'
-                            this.addHashToLocation('/material/payd')
+                            this.changeUrlState('/material/payd');
                             break;
                         }
                         case 3: {
                             this.headTitle = '«Ustaz tilegi» Республикалық ғылыми – әдістемелік журналы'
                             this.headKeyword = 'журнал, жинақ, жинаққа материал жариялау, тегін сертификат, жинақтарды көру, ұстаз тілегі журналы, журналға жазылу, журнал сертификаты'
                             this.headDescription = '«Ustaz tilegi» Республикалық ғылыми – әдістемелік журналы министірліктің №KZ09VPY00029937 куәлігімен ресми тіркелген. Журнал министірлікте тіркелгендіктен сертификат аттестацияға жарамды'
-                            this.addHashToLocation('/zhurnal')
+                            this.changeUrlState('/zhurnal');
                             break;
                         }
                         case 4: {
