@@ -90,7 +90,7 @@
                         <qmj_list :materials='materials' :loading='loading' />
                     </div>
                     <div class="paginate">
-                        <pagination :currentPage="currentPage" :lastPage="lastPage" @set-page="Pageload" />
+                        <pagination :currentPage="currentPage" :lastPage="lastPage" @set-page="Pageload" :loading="loading" />
                     </div>
                 </div>
             </div>

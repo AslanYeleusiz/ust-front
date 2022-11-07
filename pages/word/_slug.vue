@@ -1,6 +1,6 @@
 <template>
     <div>
-        <header_kroshki :header='header' />
+        <header_kroshki :header='header' gotoUrl='/material' />
         <section class="main">
             <div class="cst-ct">
                 <div v-if="material.sell" class="private_head">

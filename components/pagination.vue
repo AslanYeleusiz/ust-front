@@ -3,7 +3,7 @@
         <div class="pagination">
 
 
-            <button v-if="currentPage > 1" @click="$emit('set-page',currentPage-1)" class="btn prev">
+            <button v-if="currentPage > 1" @click="setPage(currentPage-1)" class="btn prev">
                 <arrowLeft class="arrow"/>
                 <span>Артқа</span>
             </button>
@@ -17,19 +17,19 @@
 
 
                 <div v-if="currentPage>2" class="d-flex">
-                    <div class="page_item">1</div>
+                    <div @click="setPage(1)" class="page_item">1</div>
                     <div v-if="currentPage>3" class="page_disabled">...</div>
                 </div>
 
 
-                <div v-if="currentPage>1" class="page_item">{{currentPage-1}}</div>
-                <div class="page_item active">{{currentPage}}</div>
-                <div v-if="currentPage<lastPage" class="page_item">{{currentPage+1}}</div>
+                <div @click="setPage(currentPage-1)" v-if="currentPage>1" class="page_item">{{currentPage-1}}</div>
+                <div @click="setPage(currentPage)" class="page_item active">{{currentPage}}</div>
+                <div @click="setPage(currentPage+1)" v-if="currentPage<lastPage" class="page_item">{{currentPage+1}}</div>
 
 
                 <div v-if="lastPage-2>=currentPage" class="d-flex">
                     <div v-if="lastPage-3>=currentPage" class="page_disabled">...</div>
-                    <div @click="$emit('set-page',lastPage)" class="page_item">{{lastPage}}</div>
+                    <div @click="setPage(lastPage)" class="page_item">{{lastPage}}</div>
                 </div>
 
 
@@ -37,7 +37,7 @@
             </div>
 
 
-            <button v-if="currentPage!=lastPage" @click="$emit('set-page',currentPage+1)" class="btn next">
+            <button v-if="currentPage!=lastPage" @click="setPage(currentPage+1)" class="btn next">
                 <arrowLeft class="arrow"/>
                 <span>Келесі</span>
             </button>
@@ -57,7 +57,18 @@
 
     export default {
         components: {arrowLeft},
-        props: ['currentPage', 'lastPage']
+        props: ['currentPage', 'lastPage', 'loading'],
+        data() {
+            return {
+                loading: this.loading
+            }
+        },
+
+        methods: {
+            setPage(e){
+                if(!this.loading) this.$emit('set-page',e)
+            }
+        }
     }
 
 </script>
@@ -149,11 +160,20 @@
             display: flex;
             align-items: center;
             flex-direction: row;
+            .page_disabled{
+                cursor: default;
+            }
             .page_item {
                 margin: 0 7px;
+                cursor: pointer;
+                &:hover{
+                    color: #7fa3e7;
+                }
                 &.active {
                     color: #1E63E9;
+                    cursor: default;
                 }
+
             }
 
         }

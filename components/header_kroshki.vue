@@ -28,10 +28,10 @@
         components: {
             gotoBackBtn
         },
-        props: ['header', 'pd'],
+        props: ['header', 'pd', 'gotoUrl'],
         methods: {
             gotoBack() {
-                this.$router.go(-1);
+                this.gotoUrl ? this.$router.push(this.gotoUrl) : this.$router.go(-1);
             }
         }
     }
