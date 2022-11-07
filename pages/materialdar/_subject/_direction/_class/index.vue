@@ -6,9 +6,7 @@
                 <div class="statistic">
                     <div class="h2">{{COUNT}} материал жарияланған</div>
                     <div class="dbody">Өз тәжірибеңізбен бөлісіп, мыңдаған педагогтың алғысы мен аттестацияға жарамды сертификат алыңыз!</div>
-                    <NuxtLink to="/zharialau">
-                        <cstBtn class="zharialauBtn" text="Материал жариялау" />
-                    </NuxtLink>
+                    <NuxtLink to="/zharialau"><cstBtn class="zharialauBtn" text="Материал жариялау" /></NuxtLink>
                 </div>
                 <div class="algysKhat">
                     <img src="~assets/images/algysKhat.jpg" alt="">
@@ -116,20 +114,16 @@
     export default {
         head() {
             return {
-                title: this.headTitle,
+                title: 'Ұстаздарға материалдар, ашық сабақтар, сабақ жоспарлары',
                 meta: [{
                     hid: 'description',
                     name: 'description',
-                    content: this.headDescription
+                    content: 'Мұғалімдерге ашық сабақтар, сабақ жоспарлары, тәрбие сағаттары, омж, қмж құжаттарды тегін жүктеп сабақта қолдануға болады. Ашық сабақтар сайты'
                 }, {
                     hid: 'keywords',
                     name: 'keywords',
-                    content: this.headKeyword
+                    content: 'ашық сабақтар, сабақ жоспарлары, тәрбие сағаттары, қысқа мерзімді жоспар, орта мерзімді жоспар, олимпиада сұрақтар, қмж, омж, сабақтар'
                 }, ],
-                link: [{
-                    rel: 'canonical',
-                    href: this.$store.state.appUrl + this.$route.path
-                }]
 
             }
         },
@@ -149,9 +143,6 @@
         },
         data() {
             return {
-                headTitle: 'Ұстаздарға материалдар, ашық сабақтар, сабақ жоспарлары',
-                headDescription: 'Мұғалімдерге ашық сабақтар, сабақ жоспарлары, тәрбие сағаттары, омж, қмж құжаттарды тегін жүктеп сабақта қолдануға болады. Ашық сабақтар сайты',
-                headKeyword: 'ашық сабақтар, сабақ жоспарлары, тәрбие сағаттары, қысқа мерзімді жоспар, орта мерзімді жоспар, олимпиада сұрақтар, қмж, омж, сабақтар',
                 head: [{
                     link: '/material',
                     name: 'Материалдар',
@@ -194,27 +185,27 @@
             clearSearchRes() {
                 this.search = '';
             },
-            async Pageload(n) {
+            Pageload(n) {
                 this.currentPage = n;
-                this.categoryIsActive < 4 ? this.getData() : this.getQmg();
+                this.categoryIsActive < 4 ? this.getData(): this.getQmg();
             },
-            async getCategory() {
-                let cats = await this.$axios
+            getCategory() {
+                let cats = this.$axios
                     .$get("/word/getCategories")
                     .then((response) => (
                         this.subjects = response.subjects,
                         this.directions = response.directions,
                         this.classes = response.classes));
             },
-            async getData() {
+            getData() {
                 this.loading = true;
                 this.popular_materials = null;
-                await this.$axios.$get('/word', {
+                this.$axios.$get('/word', {
                     params: {
                         title: this.search,
-                        subject: this.subjectsInner ? this.subjectsInner.lat_name : null,
-                        direction: this.directionsInner ? this.directionsInner.lat_name : null,
-                        class: this.classesInner ? this.classesInner.lat_name : null,
+                        subject: this.subjectsInner,
+                        direction: this.directionsInner,
+                        class: this.classesInner,
                         page: this.currentPage,
                         sell: this.categoryIsActive,
                     }
@@ -231,44 +222,32 @@
             },
 
             subjectsSearch(e) {
-                this.subjectsInner = this.subjects[e];
+                this.subjectsInner = this.subjects[e].lat_name;
                 this.currentPage = 1;
-                this.changeUrlState();
-                this.getData();
+
+//                this.changeUrlState();
+//                this.getData();
             },
             directionsSearch(e) {
-                this.directionsInner = this.directions[e];
+                this.directionsInner = this.directions[e].lar_name;
                 this.currentPage = 1;
-                this.changeUrlState();
-                this.getData();
+//                this.changeUrlState();
+//                this.getData();
             },
             classesSearch(e) {
-                this.classesInner = this.classes[e];
+                this.classesInner = this.classes[e].lat_name;
                 this.currentPage = 1;
-                this.changeUrlState();
-                this.getData();
+//                this.changeUrlState();
+//                this.getData();
             },
             changeUrlState() {
-                var s = null
-                var d = null
-                var c = null
-                c = this.classesInner ? this.classesInner.lat_name : null
-                d = this.directionsInner ? this.directionsInner.lat_name :
-                    (c ? 'barlik_materialdar' : null)
-                s = this.subjectsInner ? this.subjectsInner.lat_name :
-                    (d ? 'barlyk_pander' : (c ? 'barlyk_pander' : null))
+                var s = this.subjectsInner
+                var d = this.directionsInner
+                var c = this.classesInner
+
                 this.addHashToLocation(
-                    'materialdar/' + s + (d ? '/' + d : '') + (c ? '/' + c : '') + '.html'
+                    s + '/' + d + '/' + c
                 )
-                s = null
-                d = null
-                c = null
-                c = this.classesInner ? this.classesInner.name : null
-                d = this.directionsInner ? this.directionsInner.name :
-                    (c ? 'Барлық материалдар' : null)
-                s = this.subjectsInner ? this.subjectsInner.name :
-                    (d ? 'Барлық пәндер' : (c ? 'Барлық пәндер' : null))
-                this.headTitle = s + (d ? ' -' + d : '') + (c ? ' -' + c : '')
             },
             qmgSearch(e) {
                 this.qmgCatInner = this.qmgCat[e].id;
@@ -280,43 +259,6 @@
                     this.waitAnimate = 0
                     this.categoryIsActive = e;
                     this.currentPage = 1;
-                    switch(e){
-                        case 0: {
-                            this.headTitle = 'Ұстаздарға материалдар, ашық сабақтар, сабақ жоспарлары'
-                            this.headKeyword = 'ашық сабақтар, сабақ жоспарлары, тәрбие сағаттары, қысқа мерзімді жоспар, орта мерзімді жоспар, олимпиада сұрақтар, қмж, омж, сабақтар'
-                            this.headDescription = 'Мұғалімдерге ашық сабақтар, сабақ жоспарлары, тәрбие сағаттары, омж, қмж құжаттарды тегін жүктеп сабақта қолдануға болады. Ашық сабақтар сайты'
-                            this.addHashToLocation('/material')
-                            break;
-                        }
-                        case 1: {
-                            this.headTitle = 'Тегін ашық сабақтар, сабақ жоспарлары, қысқа мерзімді жоспарлар'
-                            this.headKeyword = 'ашық сабақ, сабақ жоспарлар, жоспар, сабақтар, қмж, омж, ұжм, олимпиада жауаптары, тест сұрақтары, аттестация, мұғалімге'
-                            this.headDescription = 'Мұғалімдерге ашық сабақтар, сабақ жоспарлары, қысқа мерзімді жоспарлар, тест сұрақтары, қмж, омж, сабақ жоспарларының үлгілерін тегін жүктеп алыңыз'
-                            this.addHashToLocation('/material/tegin')
-                            break;
-                        }
-                        case 2: {
-                            this.headTitle = 'Педагогтарға арналған сабақтар мен жоспарлар, қысқа мерзімді жоспарлар'
-                            this.headKeyword = 'педагогтарға, тест жауаптары ашық сабақ, сабақ жоспарлар, жоспар, сабақтар, қмж, омж, ұжм, олимпиада жауаптары, тест сұрақтары, аттестация, мұғалімге'
-                            this.headDescription = 'Педагогтарға арналған ашық сабақтар мен жоспарлар жинаған ұстаз тілегі сайтынан жүктеп алып, өз сабағыңызда қолданыңыз. Сайтта 300 000 астам ашық сабақтар жарияланған'
-                            this.addHashToLocation('/material/payd')
-                            break;
-                        }
-                        case 3: {
-                            this.headTitle = '«Ustaz tilegi» Республикалық ғылыми – әдістемелік журналы'
-                            this.headKeyword = 'журнал, жинақ, жинаққа материал жариялау, тегін сертификат, жинақтарды көру, ұстаз тілегі журналы, журналға жазылу, журнал сертификаты'
-                            this.headDescription = '«Ustaz tilegi» Республикалық ғылыми – әдістемелік журналы министірліктің №KZ09VPY00029937 куәлігімен ресми тіркелген. Журнал министірлікте тіркелгендіктен сертификат аттестацияға жарамды'
-                            this.addHashToLocation('/zhurnal')
-                            break;
-                        }
-                        case 4: {
-                            this.headTitle = 'ҚМЖ, қысқа мерзімді сабақ жоспарлары'
-                            this.headKeyword = 'қмж, қысқа мерзімді сабақ жоспарлары, 472 бұйрықпен жазылған қмж, қысқа мерзімді жоспар, 472 бұйрық үлгісі, қмж үлгісі, қмж жүктеу, краткосрочный план урока, Поурочные планы, қмж тегін жүктеу'
-                            this.headDescription = 'ҚМЖ, 472 бұйрық бойынша жазылған дайын Қысқа мерзімді сабақ жоспарларын осы беттен жүктеп алып сабақ барысында қолдана аласыз. ҚР білім және Ғылым министірлігінің стандарты бойынша жазылған'
-                            this.addHashToLocation('/qmg')
-                            break;
-                        }
-                    }
                     e < 4 ? this.getData() : this.getQmg();
                     setTimeout(() => {
                         this.waitAnimate = 1
@@ -324,12 +266,12 @@
                 }
             },
             addHashToLocation(params) {
-                history.pushState({},
+                history.pushState(
+                    {},
                     null,
-                    this.$store.state.appUrl + params
+                    this.$route.path + '/' + params + '.html'
                 )
             },
-
 
             getQmg() {
                 this.loading = true;
@@ -339,7 +281,7 @@
                         category: this.qmgCatInner,
                         title: this.search,
                     }
-                }).then((res) => {
+                }).then((res)=>{
                     console.log(res.data)
                     this.materials = res.data.bolimder.data
                     this.currentPage = res.data.bolimder.current_page
@@ -357,10 +299,11 @@
 
 
         },
-        async fetch() {
-            await this.getData();
-            await this.getCategory();
-            this.popular_materials = await this.$axios.$get('/word/popular');
+        mounted() {
+            console.log(this.$route.params)
+//            this.getData();
+//            this.getCategory();
+//            this.popular_materials = this.$axios.$get('/word/popular');
         },
     }
 
@@ -814,7 +757,7 @@
                     position: absolute;
                     width: 132px;
                     height: 137px;
-                    background: url(../assets/images/Empty-Files.svg) no-repeat;
+                    background: url(assets/images/Empty-Files.svg) no-repeat;
                     filter: blur(18px);
                     transform: translate(-54px, -21px);
                     right: 0;

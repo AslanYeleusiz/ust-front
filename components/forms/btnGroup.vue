@@ -2,7 +2,7 @@
     <div class="btn-group" v-click-outside="hide">
         <button type="button" class="btn myBtn" :class="{active: isOpen, soup: type==2}" data-bs-toggle="dropdown" aria-expanded="false"  @click="openedMenu">
            <template v-if='isActive!=null'>
-               {{category[isActive].name}}
+               {{category[isActive] ? category[isActive].name : 'Жүктелуде...'}}
            </template>
            <template v-else>
                {{placeholder}}
@@ -22,7 +22,7 @@
         data() {
             return {
                 isOpen: false,
-                isActive: this.active,
+                isActive: this.active ?? null,
             }
         },
         props: ['category', 'placeholder', 'type', 'active'],

@@ -15,6 +15,14 @@
     import successPopup from '@/components/popups/successPopup.vue'
 
     export default {
+        head() {
+            return {
+                link: [{
+                    rel: 'canonical',
+                    href: this.$store.state.appUrl + this.$route.path
+                }]
+            }
+        },
         components: {
             successPopup
         },
@@ -45,7 +53,6 @@
     }
 
 </script>
-
 
 <style scoped>
 
