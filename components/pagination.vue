@@ -60,7 +60,7 @@
         props: ['currentPage', 'lastPage', 'loading'],
         data() {
             return {
-                loading: this.loading
+                loading: this.loading ?? false
             }
         },
 

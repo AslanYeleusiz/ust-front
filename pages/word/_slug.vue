@@ -1,70 +1,92 @@
 <template>
     <div>
+        <oplataPopup :oplataOpen="oplataPopup" @closePopup="oplataPopup=0" @next="oplataPopup++" />
         <header_kroshki :header='header' gotoUrl='/material' />
         <section class="main">
             <div class="cst-ct">
-                <div v-if="material.sell" class="private_head">
-                    <div class="privateBG">
-                        <div class="privateBlock">
-                            <img src="~assets/images/shield-tick.svg" alt="">
-                            <div>Ақылы материал</div>
-                        </div>
-                    </div>
-                    <div class="f">Автор материалды ақылы түрде жариялады</div>
-                </div>
                 <div class="head">{{material.title}}</div>
                 <div class="desc">
                     <div class="prefix">Материал туралы қысқаша түсінік</div>
                     {{material.description}}
                 </div>
-                <div class="sertificate">
-                    <img src="~assets/images/green-certificate.svg" alt="">
-                    <div class="body">
-                        <div class="info">
-                            <NuxtLink to="/profile-id-2">
-                                <div class="name">
-                                    <img src="~assets/images/user-black.svg" alt="">
-                                    <span>{{material.author}}</span>
-                                </div>
-                            </NuxtLink>
-                            <div class="div">
-                                <div class="date">
-                                    <img src="~assets/images/note-text.svg" alt="">
-                                    <span>{{material.date}}</span>
-                                </div>
-                                <div class="views">
-                                    <img src="~assets/images/eye_materials.svg" alt="">
-                                    <span>{{material.view}}</span>
-                                </div>
-                                <div class="downloads">
-                                    <img src="~assets/images/import.svg" alt="">
-                                    <span>{{material.download}}</span>
-                                </div>
+                <div class="materialBlock" :class="{payed:material.sell > 0}">
+                    <div class="left">
+                        <div class="header">Авторы:</div>
+                        <div class="autor">
+                            <div class="avatar"></div>
+                            <NuxtLink to="#" class="name">{{material.author}}</NuxtLink>
+                        </div>
+                        <div v-if="material.sell > 0" class="autor payed">
+                            <div class="guard"></div>
+                            <div class="pay_info">
+                                <span class="gradient">Автор материалды ақылы түрде жариялады.</span><br>
+                                Сатылымнан түскен қаражат авторға автоматты түрде аударылады. <a href="#">Толығырақ</a>
                             </div>
                         </div>
-                        <div class="desc">
-                            Бұл сертификат «Ustaz tilegi» Республикалық ғылыми – әдістемелік журналының желілік басылымына өз авторлық жұмысын жарияланғанын растайды. Журнал Қазақстан Республикасы Ақпарат және Қоғамдық даму министрлігінің №KZ09VPY00029937 куәлігін алған. Сондықтан аттестацияға жарамды.
+                        <div class="material_info">
+                            <div>
+                                <img src="~assets/images/note-text.svg" alt="">
+                                <span>{{material.date}}</span>
+                            </div>
+                            <div>
+                                <img src="~assets/images/eye_materials.svg" alt="">
+                                <span>{{material.view}}</span>
+                            </div>
+                            <div>
+                                <img src="~assets/images/import.svg" alt="">
+                                <span>{{material.download}} рет жүктелген</span>
+                            </div>
                         </div>
-                        <div class="certBtns">
-                            <emptyBtn text="Сертификатты жүктеу" />
-                            <emptyBtn text="Материалды жүктеу" />
-                            <emptyBtn text="Сертификат алу" />
+                    </div>
+                    <div class="right">
+                        <div class="payment">
+                            <template v-if="!isPurchased">
+                                <div class="free">
+                                    <template v-if="material.sell>0">
+                                        Бүгін алсаңыз
+                                        <span class="skidka">
+                                            30% жеңілдік
+                                        </span><br>
+                                        беріледі
+                                    </template>
+                                    <template v-else>
+                                        Материал тегін
+                                    </template>
+                                </div>
+                                <div v-if="material.sell>0" class="text-center mt-10">
+                                    <span class="old">{{material.sell}} тг</span> <span class="new">{{calcPercent(material.sell)}} тг</span>
+                                </div>
+                                <cstBtn v-if="!loading && material.sell>0" @click.native="buyThisMaterial()" :text="calcPercent(material.sell) + 'тг - Сатып алу'" img="importwhite.svg" class="cst_size" />
+                                <cstBtn v-else-if="loading" loading=1 class="cst_size" />
+                                <cstBtn v-else @click.native="download()" text="Тегін жүктеу" img="importwhite.svg" class="cst_size" />
+                            </template>
+                            <template v-else>
+                                <img src="~assets/images/wallet-check.png" alt="">
+                                <div class="free">
+                                    <span class="gradient">
+                                        Материал сатып<br>алынған
+                                    </span>
+                                </div>
+                                <cstBtn @click.native="download()" text="Жүктеп алу" img="importwhite.svg" class="cst_size" />
+                            </template>
+
                         </div>
                     </div>
                 </div>
                 <div class="padDocAccess">
                     <div class="docAccess">
-                        <img src="~assets/images/access.svg" alt="">
-                        <span>Материалдың толық нұсқасын жүктеп алып, көруге болады</span>
+                        <img src="~assets/images/message-question-yellow.svg" alt="">
+                        <div>Бұл бетте материалдың қысқаша нұсқасы ұсынылған. Материалдың толық нұсқасын жүктеп алып, көруге болады</div>
                     </div>
                 </div>
                 <template v-if="material.raw=='pdf'">
-                    <iframe id="iframepdf" width='100%' height='720px' :src="'https://ust.kz/frontend/web/'+material.file_doc" frameborder='0'></iframe>
+                    <iframe id="iframepdf" width='100%' height='600px' :src="'https://ust.kz/frontend/web/'+material.file_doc" frameborder='0'></iframe>
                 </template>
                 <template v-else>
-                    <iframe :src="'https://view.officeapps.live.com/op/embed.aspx?src=https://ust.kz/frontend/web/'+material.file_doc" width='100%' height='720px' frameborder='0'></iframe>
+                    <iframe :src="'https://view.officeapps.live.com/op/embed.aspx?src=https://ust.kz/frontend/web/'+material.file_doc" width='100%' height='600px' frameborder='0'></iframe>
                 </template>
-                <bigBtn @click.native="download()" class="downloadBtn" text="Материалды жүктеу" img="importwhite.svg" />
+                <bigBtn v-if="!isPurchased" @click.native="buyThisMaterial()" class="downloadBtn" :text="calcPercent(material.sell) + 'тг - Сатып алу'" img="importwhite.svg" />
+                <bigBtn v-else @click.native="download()" class="downloadBtn" text="Материалды жүктеу" img="importwhite.svg" />
                 <div class="share">
                     Материал ұнаса әріптестеріңізбен бөлісіңіз
                     <div class="seti">
@@ -86,10 +108,19 @@
                         </button>
                     </div>
                 </div>
-                <div class="informer">
-                    <img src="~assets/images/info-circle.svg" alt="">
+                <div class="sertificate">
+                    <img src="~assets/images/green-certificate.svg" alt="">
                     <div class="body">
-                        БАҚ тіркелгендігі туралы куәлік: 15685-ИА. Материалдарды қайта басуға және де басқа түрде қолдануға, сонымен қоса электрондық БАҚ-да тек қана сайттың әкімшілігінің жазбаша рұқсатымен ғана жүзеге асырылады. Сонымен қатар сайқа сілтеме міндетті түрде болу керек. Егер Сіз біздің сайтта заңсыз түрде материалдар қолданғанын көрсеңіз, сайт әкімшілігіне жеткізіңіз - материалдар жойылады. Редакцияның көзқарасы автордың көзқарасымен сәйкес келмеуі мүмкін.
+                        <div class="info">
+                            «Ustaz tilegi» Республикалық ғылыми – әдістемелік журналы министірліктің №KZ09VPY00029937 куәлігімен ресми тіркелген.
+                        </div>
+                        <div class="desc">
+                            Бұл сертификат «Ustaz tilegi» Республикалық ғылыми – әдістемелік журналының желілік басылымына өз авторлық жұмысын жарияланғанын растайды. Журнал Қазақстан Республикасы Ақпарат және Қоғамдық даму министрлігінің №KZ09VPY00029937 куәлігін алған. Сондықтан аттестацияға жарамды.
+                        </div>
+                        <div class="certBtns">
+                            <emptyBtn text="Сертификатты көру" />
+                            <emptyBtn text="Осындай сертификат алу" />
+                        </div>
                     </div>
                 </div>
 
@@ -133,6 +164,8 @@
     import bigBtn from '@/components/forms/bigBtn.vue'
     import reportBtn from '@/components/forms/reportBtn.vue'
     import glassBtn from '@/components/forms/glassBtn.vue'
+    import oplataPopup from '@/components/popups/oplataPopup.vue'
+    import cstBtn from '@/components/forms/btn.vue'
 
     export default {
         components: {
@@ -142,95 +175,15 @@
             emptyBtn,
             bigBtn,
             reportBtn,
-            glassBtn
+            glassBtn,
+            oplataPopup,
+            cstBtn
         },
         data() {
             return {
                 material: {
                     user: {}
                 },
-                materials: [
-                    {
-                    type: 2,
-                    sell: 250,
-                    title: 'Презентация Пісіру жіктерінің түрлері',
-                    author: 'Қабыл Ақылжан Ғалымжанұлы',
-                    date: '03 Шілде 2020',
-                    views: 135,
-                    downloads: 3,
-                }, {
-                    type: 2,
-                    sell: 250,
-                    title: 'Презентация Пісіру жіктерінің түрлері',
-                    author: 'Қабыл Ақылжан Ғалымжанұлы',
-                    date: '03 Шілде 2020',
-                    views: 135,
-                    downloads: 3,
-                }, {
-                    type: 2,
-                    sell: 250,
-                    title: 'Презентация Пісіру жіктерінің түрлері',
-                    author: 'Қабыл Ақылжан Ғалымжанұлы',
-                    date: '03 Шілде 2020',
-                    views: 135,
-                    downloads: 3,
-                }, {
-                    type: 2,
-                    sell: 250,
-                    title: 'Презентация Пісіру жіктерінің түрлері',
-                    author: 'Қабыл Ақылжан Ғалымжанұлы',
-                    date: '03 Шілде 2020',
-                    views: 135,
-                    downloads: 3,
-                }, {
-                    type: 2,
-                    sell: 250,
-                    title: 'Презентация Пісіру жіктерінің түрлері',
-                    author: 'Қабыл Ақылжан Ғалымжанұлы',
-                    date: '03 Шілде 2020',
-                    views: 135,
-                    downloads: 3,
-                }, {
-                    type: 1,
-                    sell: 250,
-                    title: 'Презентация Пісіру жіктерінің түрлері',
-                    author: 'Қабыл Ақылжан Ғалымжанұлы',
-                    date: '03 Шілде 2020',
-                    views: 135,
-                    downloads: 3,
-                }, {
-                    type: 1,
-                    sell: 250,
-                    title: 'Презентация Пісіру жіктерінің түрлері',
-                    author: 'Қабыл Ақылжан Ғалымжанұлы',
-                    date: '03 Шілде 2020',
-                    views: 135,
-                    downloads: 3,
-                }, {
-                    type: 1,
-                    sell: 250,
-                    title: 'Презентация Пісіру жіктерінің түрлері',
-                    author: 'Қабыл Ақылжан Ғалымжанұлы',
-                    date: '03 Шілде 2020',
-                    views: 135,
-                    downloads: 3,
-                }, {
-                    type: 1,
-                    sell: 250,
-                    title: 'Презентация Пісіру жіктерінің түрлері',
-                    author: 'Қабыл Ақылжан Ғалымжанұлы',
-                    date: '03 Шілде 2020',
-                    views: 135,
-                    downloads: 3,
-                }, {
-                    type: 1,
-                    sell: 250,
-                    title: 'Презентация Пісіру жіктерінің түрлері',
-                    author: 'Қабыл Ақылжан Ғалымжанұлы',
-                    date: '03 Шілде 2020',
-                    views: 135,
-                    downloads: 3,
-                }, ],
                 authors_materials: [],
                 title: '',
                 header: [{
@@ -240,6 +193,9 @@
                     name: '',
                 }],
                 others: [],
+                oplataPopup: 0,
+                isPurchased: 0,
+                loading: 0,
             }
         },
         head() {
@@ -258,6 +214,28 @@
         },
 
         methods: {
+            buyThisMaterial() {
+                if (this.$loginOrRoute()) {
+                    this.oplataPopup = 6
+                    this.loading = 1
+                    this.$api.post('/word/' + this.material.id + '/purchase', {
+                        sell: this.calcPercent(this.material.sell),
+                    }).then((res) => {
+                        console.log(res);
+                        if (res.data.purchase) {
+                            this.oplataPopup = 7
+                            this.isPurchased = 1
+                        } else this.oplataPopup = 5
+                        this.loading = 0
+                    }).catch((err) => {
+                        console.log(err);
+                        this.loading = 0
+                    })
+                }
+            },
+            calcPercent(e) {
+                return e * 0.7;
+            },
             copyUrl() {
                 let tempInput = document.createElement('textarea');
                 let copyUrlBtn = document.querySelector('.sharer');
@@ -300,7 +278,8 @@
                 this.header[1].name = res.material.title
                 this.authors_materials = res.authors_materials
                 this.others = res.others
-                console.log(res)
+                this.isPurchased = res.isPurchased
+                console.log(res.material)
             });
         }
     }
@@ -311,6 +290,12 @@
 <style scoped lang="scss">
     .main {
         padding-top: 30px;
+
+        iframe {
+            border: 1px solid #363636;
+            border-radius: 4px;
+            background: #FFFFFF;
+        }
 
         .private_head {
             display: flex;
@@ -374,6 +359,166 @@
             }
         }
 
+        .materialBlock {
+            margin-top: 30px;
+            padding: 30px;
+            background: #F9F9F9;
+            border-radius: 10px;
+            display: grid;
+            grid-template-columns: 1fr auto;
+            grid-gap: 40px;
+
+            @media all and (max-width: 883px) {
+                grid-template-columns: 1fr;
+                grid-gap: 20px;
+            }
+
+            span.gradient {
+                background: linear-gradient(61.13deg, #9C1EE9 32.51%, #6398FF 91.27%);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                background-clip: text;
+                text-fill-color: transparent;
+            }
+
+            .left {
+                font-weight: 400;
+                line-height: 19px;
+                color: #888888;
+
+                .header {
+                    font-size: 16px;
+                }
+
+                .autor {
+                    display: grid;
+                    grid-template-columns: auto 1fr;
+                    align-items: center;
+                    margin-top: 10px;
+                    grid-gap: 10px;
+
+                    &.payed {
+                        margin-top: 20px;
+                    }
+
+                    .avatar,
+                    .guard {
+                        width: 24px;
+                        height: 24px;
+
+                    }
+
+                    .avatar {
+                        background-size: cover;
+                        border-radius: 50%;
+                        background-image: url(assets/images/dake.png);
+                    }
+
+                    .guard {
+                        background-size: contain;
+                        background-image: url(assets/images/shield-tick.svg);
+                    }
+
+                    .name {
+                        font-size: 18px;
+                        font-weight: 600;
+                        line-height: 21px;
+                        color: #363636;
+
+                        &:hover {
+                            text-decoration: underline;
+                        }
+                    }
+                }
+
+                .material_info {
+                    margin-top: 20px;
+                    display: flex;
+                    align-items: center;
+                    flex-wrap: wrap;
+                    grid-gap: 10px 20px;
+                    font-size: 18px;
+                    line-height: 21px;
+
+                    div {
+                        display: flex;
+                        align-items: center;
+
+                        img {
+                            width: 20px;
+                            height: 20px;
+                            margin-right: 4px;
+                        }
+                    }
+                }
+
+            }
+
+            .right {
+                .payment {
+                    background: #FFFFFF;
+                    /* Line 2 */
+
+                    border: 1px solid #F0F0F0;
+                    border-radius: 10px;
+                    padding: 30px 20px;
+                    font-size: 18px;
+                    font-weight: 500;
+                    line-height: 21px;
+                    text-align: center;
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+
+                    .free {
+                        color: #363636;
+                        font-size: 16px;
+                        font-weight: 400;
+                        line-height: 19px;
+
+                        .gradient {
+                            margin-top: 5px;
+                        }
+
+                        .skidka {
+                            color: #03B113;
+                            font-weight: 600;
+                        }
+                    }
+
+                    .mt-10 {
+                        font-size: 16px;
+                        margin-top: 10px;
+                        font-family: 'Lato-Regular';
+
+                        .old {
+                            text-decoration-line: line-through;
+                            color: #888888;
+                            font-weight: 500;
+                        }
+
+                        .new {
+                            color: #03B113;
+                            padding-left: 5px;
+                            font-weight: 700;
+                            font-size: 22px;
+                        }
+                    }
+
+                    .cst_size {
+                        margin-top: 20px;
+                        width: 230px;
+                        height: 50px;
+                    }
+
+                }
+            }
+
+            &.payed {
+                background: #FFFDF2;
+            }
+        }
+
         .sertificate {
             margin-top: 30px;
             background: #F9F9F9;
@@ -392,37 +537,10 @@
 
             .body {
                 .info {
-                    display: flex;
-                    font-size: 16px;
-                    font-weight: 400;
-                    line-height: 19px;
-                    gap: 20px 30px;
-                    flex-wrap: wrap;
-
-                    div {
-                        display: flex;
-                        word-wrap: break-word;
-                        opacity: 0.7;
-
-                        &.div {
-                            gap: 30px;
-                        }
-
-                        img {
-                            width: 20px;
-                            height: 20px;
-                            margin-right: 5px;
-                        }
-
-                        &:first-child {
-                            opacity: 1;
-                            color: #363636;
-                        }
-                    }
-
-                    span {
-                        display: block;
-                    }
+                    font-size: 14px;
+                    font-weight: 600;
+                    line-height: 16px;
+                    color: #363636;
                 }
 
                 .desc {
@@ -434,8 +552,8 @@
 
                 .certBtns {
                     display: grid;
-                    grid-template-columns: 1fr 1fr 1fr;
-                    grid-gap: 30px;
+                    grid-template-columns: auto auto 1fr;
+                    grid-gap: 20px;
 
                     @media all and (max-width: 991px) {
                         grid-template-columns: 1fr;
@@ -445,16 +563,15 @@
             }
         }
 
-        .padDocAccess {
-            padding: 0 10px;
-        }
-
         .docAccess {
-            padding: 15px 25px;
-            background: #E2FFE2;
-            border: 1px solid #03B113;
+            padding: 20px;
+            background: #F9F9F9;
             border-radius: 4px;
             margin-top: 30px;
+            display: grid;
+            grid-template-columns: auto 1fr;
+            grid-gap: 10px;
+            align-items: center;
 
             @media all and (max-width: 883px) {
                 margin-top: 50px;
@@ -464,11 +581,11 @@
                 margin-right: 5px;
             }
 
-            span {
+            div {
                 font-size: 16px;
-                font-weight: 500;
+                font-weight: 400;
                 line-height: 19px;
-                color: #03B113;
+                color: #888888;
             }
 
         }
@@ -544,26 +661,6 @@
                         background: #C7DDFF;
                     }
                 }
-
-
-
-
-            }
-        }
-
-        .informer {
-            padding: 30px;
-            margin-top: 40px;
-            background: #F9F9F9;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-
-            .body {
-                margin-left: 25px;
-                font-size: 14px;
-                font-weight: 400;
-                line-height: 16px;
             }
         }
 
@@ -613,6 +710,13 @@
                 padding: 20px 20px;
             }
         }
+    }
+
+</style>
+<style lang="scss">
+    .main .sertificate .body .certBtns button {
+        width: auto;
+        padding: 10px 18px;
     }
 
 </style>

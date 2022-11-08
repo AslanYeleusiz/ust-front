@@ -11,8 +11,8 @@
                         <div class="head">Сумма</div>
                         <template v-if="!loading" v-for="balance in balances.data">
                             <div class="time">{{balance.date}}</div>
-                            <div class="description">{{balance.perevod_text}}</div>
-                            <div class="sum" :class="{green:balance.plusOrMinus}">{{balance.plusOrMinus ? '+' : '-'}} {{balance.value}} тг</div>
+                            <div class="description">{{balance.type}}</div>
+                            <div class="sum" :class="{green: !balance.minus}">{{balance.minus ? '-' : '+'}} {{balance.sum}} тг</div>
                         </template>
                     </div>
                 </div>
@@ -20,7 +20,7 @@
                     <b-spinner variant="primary" label="Text Centered"></b-spinner>
                 </div>
                 <div class="paginator">
-                    <pagination :currentPage="bonuses.current_page" :lastPage="bonuses.last_page" @set-page="setPage" />
+                    <pagination :currentPage="balances.current_page" :lastPage="balances.last_page" @set-page="setPage" />
                 </div>
             </div>
         </div>
@@ -64,7 +64,7 @@
                 })
             },
             setPage(page) {
-                this.page = page
+                this.currentPage = page
                 this.loading = 1
                 this.getData()
             }

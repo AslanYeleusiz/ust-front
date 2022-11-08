@@ -43,6 +43,7 @@ export default {
       '@/assets/fonts/Gilroy/gilroy.css',
       '@/assets/fonts/PF_Display/font.css',
       '@/assets/fonts/Exo2/Exo2.css',
+      '@/assets/fonts/Lato/Lato.css',
   ],
 
     // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins

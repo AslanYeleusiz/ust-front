@@ -5,9 +5,7 @@
                 <div v-show="oplataOpen==1" class="block">
                     <div class="header d-flex a-c j-b">
                         <div></div>
-                        <button class="btn exitBtn" @click="$emit('closePopup')">
-                            <img src="~assets/images/exitBtn.svg" alt="">
-                        </button>
+                        <exitBtn @click.native="$emit('closePopup')" />
                     </div>
                     <div class="body pd_bottom">
                         <div class="h">Төлем сомасын енгізіңіз:</div>
@@ -23,9 +21,7 @@
                             <img src="~assets/images/arrow-left-blue.svg" alt="">
                             Артқа
                         </button>
-                        <button @click="$emit('closePopup')" class="btn exitBtn">
-                            <img src="~assets/images/exitBtn.svg" alt="">
-                        </button>
+                        <exitBtn @click.native="$emit('closePopup')" />
                     </div>
                     <div class="body mt-20">
                         <div class="h">Өзіңізге ыңғайлы төлем жасау түрін таңдаңыз!</div>
@@ -53,9 +49,7 @@
                             <img src="~assets/images/arrow-left-blue.svg" alt="">
                             Артқа
                         </button>
-                        <button @click="$emit('closePopup')" class="btn exitBtn">
-                            <img src="~assets/images/exitBtn.svg" alt="">
-                        </button>
+                        <exitBtn @click.native="$emit('closePopup')" />
                     </div>
                     <div class="body mt-20">
                         <div class="h">Kaspi.kz арқылы төлем жасау нұсқаулығы</div>
@@ -95,9 +89,7 @@
                             <img src="~assets/images/arrow-left-blue.svg" alt="">
                             Артқа
                         </button>
-                        <button @click="$emit('closePopup')" class="btn exitBtn">
-                            <img src="~assets/images/exitBtn.svg" alt="">
-                        </button>
+                        <exitBtn @click.native="$emit('closePopup')" />
                     </div>
                     <div class="body mt-20">
                         <div class="h">Терминалдар арқылы төлем жасау нұсқаулығы</div>
@@ -119,22 +111,100 @@
                     </div>
                 </div>
             </transition>
+            <transition name="fade">
+                <div v-show="oplataOpen==5" class="block">
+                    <div class="header d-flex a-c j-b pb-0">
+                        <div></div>
+                        <exitBtn @click.native="$emit('closePopup')" />
+                    </div>
+                    <div class="body error mt-0">
+                        <div class="error-card">
+                            <img src="~assets/images/empty-wallet-remove.png" alt="">
+                        </div>
+                        <div class="h">Сіздің қаражатыңыз жеткіліксіз!</div>
+                        <div class="desc">Сіздің қаражатыңыз жеткіліксіз!</div>
+                    </div>
+                    <div class="variable error">
+                        <button @click="oplataOpen=3" class="btn variants">
+                            <img src="~assets/images/kaspi.png" alt="">
+                            <span>Kaspi.kz арқылы</span>
+                        </button>
+                        <button class="btn variants">
+                            <img src="~assets/images/card.png" alt="">
+                            <span>Банк картасы арқылы</span>
+                        </button>
+                        <button @click="oplataOpen=4" class="btn variants">
+                            <img src="~assets/images/terminal.png" alt="">
+                            <span>Терминалмен төлеу</span>
+                        </button>
+                    </div>
+                </div>
+            </transition>
+            <transition name="fade">
+                <div v-show="oplataOpen>=6" class="block isPayed">
+                    <div class="header d-flex a-c j-b">
+                        <div></div>
+                        <exitBtn @click.native="$emit('closePopup')" />
+                    </div>
+                    <div class="body error">
+                        <div class="error-card">
+                            <img src="~assets/images/wallet-check.png" alt="">
+                        </div>
+                        <div class="h">{{ oplataOpen==6 ? 'Материал төленуде...' : 'Материал сәтті сатып алынды!' }}</div>
+                            <div v-show="oplataOpen==6 || oplataOpen==5" class="lottie" :class="{border:oplataOpen==6}">
+                                <Lottie v-if="oplataOpen==6 || oplataOpen==5" :width="80" :height="80" :options="waitOptions" v-on:animCreated="handleAnimation" />
+                            </div>
+                        <div v-show="oplataOpen==7" class="lottie2" :class="{border:oplataOpen==6}">
+                            <Lottie v-if="oplataOpen==7" :width="120" :height="120" :options="doneOptions" v-on:animCreated="handleAnimation" />
+                        </div>
+                    </div>
+                </div>
+            </transition>
         </div>
     </transition>
-
 </template>
 
 
 <script>
+    import Lottie from 'vue-lottie/src/lottie.vue'
+    import * as animationData from "~/assets/lottie_files/upload_materials/96551-hourglass.json"
+    import * as animationData2 from "~/assets/lottie_files/done/lf30_editor_baziyhkx.json"
     import cstInput from '@/components/forms/cstInput.vue'
     import cstBtn from '@/components/forms/btn.vue'
+    import exitBtn from '@/components/forms/exitBtn.vue'
 
     export default {
         components: {
             cstInput,
-            cstBtn
+            cstBtn,
+            exitBtn,
+            Lottie,
         },
-        props: ['oplataOpen']
+        props: ['oplataOpen'],
+        data() {
+            return {
+                anim: false,
+                waitOptions: {
+                    animationData: animationData,
+                },
+                doneOptions: {
+                    animationData: animationData2,
+                    loop: false
+                },
+                animationSpeed: 1,
+            }
+        },
+        methods: {
+            handleAnimation: function(anim) {
+                this.anim = anim;
+            },
+            successNext() {
+                this.anim.play()
+                this.oplataOpen = 7
+            }
+        },
+
+
     }
 
 </script>
@@ -188,6 +258,25 @@
             background: #ffffff;
             border-radius: 6px;
 
+            .lottie,
+            .lottie2 {
+                display: block;
+                margin: 30px auto 50px;
+                width: 80px;
+                height: 80px;
+
+                &.border {
+                    border-radius: 50%;
+                    outline: 2px solid #03B113;
+                }
+            }
+
+            .lottie2 {
+                width: 140px;
+                height: 140px;
+                margin: 0px auto 20px;
+            }
+
             .header {
                 padding: 20px;
 
@@ -202,9 +291,7 @@
                     border-bottom: 1px solid #D6D6D6;
                     background: #F5F5F5;
 
-                    .exitBtn {
-                        transform: translate(15px, -15px);
-                    }
+                    .exitBtn {}
                 }
             }
 
@@ -221,10 +308,38 @@
                     line-height: 21px;
                     text-align: center;
                 }
+
+                .error-card {
+                    display: flex;
+                    justify-content: center;
+                }
+
+                &.error {
+                    .h {
+                        margin-top: 10px;
+                        font-size: 18px;
+                        font-weight: 600;
+                        line-height: 21px;
+                        text-align: center;
+                    }
+
+                    .desc {
+                        margin-top: 6px;
+                        font-size: 16px;
+                        font-weight: 400;
+                        text-align: center;
+                        color: #888888;
+
+                    }
+                }
             }
 
             .variable {
                 margin-top: 20px;
+
+                &.error {
+                    margin-top: 30px;
+                }
 
                 .variants {
                     width: 100%;
@@ -295,7 +410,8 @@
                 display: flex;
                 justify-content: center;
                 margin-top: 30px;
-                .or_block{
+
+                .or_block {
                     background: #ffffff;
                     width: 120px;
                     font-size: 16px;
@@ -305,7 +421,8 @@
                     transform: translateY(50%);
                 }
             }
-            .qr{
+
+            .qr {
                 margin-top: 50px;
             }
         }

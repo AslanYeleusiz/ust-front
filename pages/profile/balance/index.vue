@@ -35,8 +35,8 @@
 
                             <template v-if="loading==0" v-for="balance in balances">
                                 <div class="time">{{balance.date}}</div>
-                                <div class="description">{{balance.perevod_text}}</div>
-                                <div class="sum" :class="{green:balance.plusOrMinus}">{{balance.plusOrMinus ? '+' : '-'}} {{balance.value}} тг</div>
+                                <div class="description">{{balance.type}}</div>
+                                <div class="sum" :class="{green: !balance.minus}">{{balance.minus ? '-' : '+'}} {{balance.sum}} тг</div>
                             </template>
 
                         </div>

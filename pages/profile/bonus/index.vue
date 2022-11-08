@@ -85,8 +85,8 @@
 
                             <template v-if="!loading" v-for="bonus in bonuses">
                                 <div class="time">{{bonus.date}}</div>
-                                <div class="description">{{bonus.perevod_text}}</div>
-                                <div class="sum" :class="{green:bonus.plusOrMinus}">{{bonus.plusOrMinus ? '+' : '-'}} {{bonus.value}} B</div>
+                                <div class="description">{{bonus.type}}</div>
+                                <div class="sum" :class="{green: !bonus.minus}">{{bonus.minus ? '-' : '+'}} {{bonus.sum}} B</div>
                             </template>
 
                         </div>
