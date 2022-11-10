@@ -58,11 +58,6 @@
     export default {
         components: {arrowLeft},
         props: ['currentPage', 'lastPage', 'loading'],
-        data() {
-            return {
-                loading: this.loading ?? false
-            }
-        },
 
         methods: {
             setPage(e){

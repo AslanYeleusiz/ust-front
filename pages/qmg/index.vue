@@ -19,8 +19,8 @@
                 <form action="" class="adisteme">
                     <div class="h2">Оқу әдістемелік материалдар</div>
                     <form @submit.prevent class="searchBlock">
-                        <cstBtn @click.native.prevent="getData()" class="searchBtn" text="Іздеу" />
-                        <input v-model='search' type="text" class="form-control searchInput" placeholder="Зат есім сабақ жоспары" v-on:keyup.enter="getData()">
+                        <cstBtn @click.native.prevent="searchData()" class="searchBtn" text="Іздеу" />
+                        <input v-model='search' type="text" class="form-control searchInput" placeholder="Зат есім сабақ жоспары" v-on:keyup.enter="searchData()">
                         <div @click="clearSearchRes()" class="d-flex aj-c clearInput">&#10006;</div>
                     </form>
                     <transition name="categories">
@@ -198,6 +198,9 @@
                 this.currentPage = n;
                 this.categoryIsActive < 4 ? this.getData() : this.getQmg();
             },
+            searchData(){
+                this.categoryIsActive != 4 ? this.getData() : this.getQmg()
+            },
             async getCategory() {
                 let cats = await this.$axios
                     .$get("/word/getCategories")
@@ -331,7 +334,7 @@
             },
 
 
-            getQmg() {
+            async getQmg() {
                 this.loading = true;
                 this.$axios.$get('/word/qmg/bolimder', {
                     params: {
@@ -358,9 +361,8 @@
 
         },
         async fetch() {
-            await this.getData();
-            await this.getCategory();
-            this.popular_materials = await this.$axios.$get('/word/popular');
+            this.teginWordSearch(4)
+            await this.getQmg();
         },
     }
 
@@ -814,7 +816,7 @@
                     position: absolute;
                     width: 132px;
                     height: 137px;
-                    background: url(../assets/images/Empty-Files.svg) no-repeat;
+                    background: url(assets/images/Empty-Files.svg) no-repeat;
                     filter: blur(18px);
                     transform: translate(-54px, -21px);
                     right: 0;

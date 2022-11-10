@@ -19,8 +19,8 @@
                 <form action="" class="adisteme">
                     <div class="h2">Оқу әдістемелік материалдар</div>
                     <form @submit.prevent class="searchBlock">
-                        <cstBtn @click.native.prevent="getData()" class="searchBtn" text="Іздеу" />
-                        <input v-model='search' type="text" class="form-control searchInput" placeholder="Зат есім сабақ жоспары" v-on:keyup.enter="getData()">
+                        <cstBtn @click.native.prevent="searchData()" class="searchBtn" text="Іздеу" />
+                        <input v-model='search' type="text" class="form-control searchInput" placeholder="Зат есім сабақ жоспары" v-on:keyup.enter="searchData()">
                         <div @click="clearSearchRes()" class="d-flex aj-c clearInput">&#10006;</div>
                     </form>
                     <transition name="categories">
@@ -163,7 +163,7 @@
                     animationData: animationData
                 },
                 animationSpeed: 1,
-                searchCategoryShow: true,
+                searchCategoryShow: false,
                 category: ['Барлығы', 'Тегін', 'Ақылы', 'Жинақ', 'Дайын ҚМЖ'],
                 categoryIsActive: 0,
                 search: '',
@@ -189,7 +189,7 @@
         },
         methods: {
             openCategory() {
-                this.searchCategoryShow = this.searchCategoryShow ? false : true;
+                this.searchCategoryShow ? this.searchCategoryShow = false : this.searchCategoryShow = true;
             },
             clearSearchRes() {
                 this.search = '';
@@ -198,22 +198,16 @@
                 this.currentPage = n;
                 this.categoryIsActive < 4 ? this.getData() : this.getQmg();
             },
+            searchData(){
+                this.categoryIsActive != 4 ? this.getData() : this.getQmg()
+            },
             async getCategory() {
                 let cats = await this.$axios
                     .$get("/word/getCategories")
-                    .then((response) => {
-                        this.subjects = response.subjects
-                        this.subjectsInner = response.subjects.find(el => el.lat_name == this.$route.params.subject)
-                        this.cat_text[0] = this.subjectsInner.name
-                        this.directions = response.directions
-                        this.directionsInner = response.directions.find(el => el.lat_name == this.$route.params.direction)
-                        this.cat_text[1] = this.directionsInner.name
-                        this.classes = response.classes
-                        this.classesInner = response.classes.find(el => el.lat_name == this.$route.params.class.replace('.html', ''))
-                        this.cat_text[2] = this.classesInner.name
-                        this.changeUrlState()
-                    });
-
+                    .then((response) => (
+                        this.subjects = response.subjects,
+                        this.directions = response.directions,
+                        this.classes = response.classes));
             },
             async getData() {
                 this.loading = true;
@@ -333,7 +327,7 @@
                 }
             },
             addHashToLocation(params) {
-                history.replaceState({},
+                history.pushState({},
                     null,
                     this.$store.state.appUrl + params
                 )
@@ -367,8 +361,9 @@
 
         },
         async fetch() {
-            await this.getCategory();
+            this.teginWordSearch(3)
             await this.getData();
+            await this.getCategory();
             this.popular_materials = await this.$axios.$get('/word/popular');
         },
     }

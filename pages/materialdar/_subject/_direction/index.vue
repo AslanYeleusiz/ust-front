@@ -206,11 +206,9 @@
                         this.subjectsInner = response.subjects.find(el => el.lat_name == this.$route.params.subject)
                         this.cat_text[0] = this.subjectsInner.name
                         this.directions = response.directions
-                        this.directionsInner = response.directions.find(el => el.lat_name == this.$route.params.direction)
+                        this.directionsInner = response.directions.find(el => el.lat_name == this.$route.params.direction.replace('.html', ''))
                         this.cat_text[1] = this.directionsInner.name
                         this.classes = response.classes
-                        this.classesInner = response.classes.find(el => el.lat_name == this.$route.params.class.replace('.html', ''))
-                        this.cat_text[2] = this.classesInner.name
                         this.changeUrlState()
                     });
 
@@ -223,7 +221,7 @@
                         title: this.search,
                         subject: this.subjectsInner ? this.subjectsInner.lat_name : null,
                         direction: this.directionsInner ? this.directionsInner.lat_name : null,
-                        class: this.classesInner ? this.classesInner.lat_name : null,
+                        class: null,
                         page: this.currentPage,
                         sell: this.categoryIsActive,
                     }
