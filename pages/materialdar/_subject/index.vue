@@ -194,12 +194,12 @@
             clearSearchRes() {
                 this.search = '';
             },
-            async Pageload(n) {
+            Pageload(n) {
                 this.currentPage = n;
                 this.categoryIsActive < 4 ? this.getData() : this.getQmg();
             },
-            async getCategory() {
-                let cats = await this.$axios
+            getCategory() {
+                let cats = this.$axios
                     .$get("/word/getCategories")
                     .then((response) => {
                         this.subjects = response.subjects
@@ -211,10 +211,10 @@
                     });
 
             },
-            async getData() {
+            getData() {
                 this.loading = true;
                 this.popular_materials = null;
-                await this.$axios.$get('/word', {
+                this.$axios.$get('/word', {
                     params: {
                         title: this.search,
                         subject: this.subjectsInner ? this.subjectsInner.lat_name : this.$route.params.subject.replace('.html', ''),
@@ -362,10 +362,10 @@
 
 
         },
-        async fetch() {
-            await this.getCategory();
-            await this.getData();
-            this.popular_materials = await this.$axios.$get('/word/popular');
+        mounted() {
+            this.getCategory();
+            this.getData();
+            this.popular_materials = this.$axios.$get('/word/popular');
         },
     }
 

@@ -78,9 +78,7 @@
 
                     <div class="d-flex justify-content-between align-items-center">
                         <span class="value">{{categoryIsActive < 3 ? 'Барлығы' : categoryIsActive == 3 ? 'Жинақтар' : 'ҚМЖ саны'}}: <b>{{materials_count}}</b> {{categoryIsActive < 4 ? 'материал' : ''}}</span>
-                        <template v-if="categoryIsActive==4">
-                            <btnGroup :category='qmgCat' placeholder='Пән: таңдау' type=2 @entered-category='qmgSearch($event)' />
-                        </template>
+                        <btnGroup v-if="categoryIsActive==4" :category='qmgCat' placeholder='Пән: таңдау' type=2 @entered-category='qmgSearch($event)' />
                     </div>
                     <div v-if='categoryIsActive<3'>
                         <list :popular_materials='popular_materials' :materials='materials' :loading='loading' :categoryIsActive='categoryIsActive' :currentPage="currentPage" />
