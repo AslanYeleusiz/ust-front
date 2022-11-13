@@ -16,13 +16,13 @@
                 </div>
             </div>
             <div class="cst-ct">
-                <form action="" class="adisteme">
+                <div class="adisteme">
                     <div class="h2">Оқу әдістемелік материалдар</div>
-                    <form @submit.prevent class="searchBlock">
+                    <div class="searchBlock">
                         <cstBtn @click.native.prevent="searchData()" class="searchBtn" text="Іздеу" />
                         <input v-model='search' type="text" class="form-control searchInput" placeholder="Зат есім сабақ жоспары" v-on:keyup.enter="searchData()">
                         <div @click="clearSearchRes()" class="d-flex aj-c clearInput">&#10006;</div>
-                    </form>
+                    </div>
                     <transition name="categories">
                         <div v-show="searchCategoryShow && categoryIsActive<4" class="category">
                             <btnGroup :category='subjects' :placeholder='cat_text[0]' @entered-category='subjectsSearch($event)' />
@@ -42,7 +42,7 @@
                             </button>
                         </div>
                     </transition>
-                </form>
+                </div>
             </div>
             <div class="advice">
                 <div class="cst-ct">
