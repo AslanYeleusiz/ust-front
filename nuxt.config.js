@@ -136,7 +136,7 @@ export default {
         }
     },
     axios: {
-        baseURL: 'http://127.0.0.1:8000/api',
+        baseURL: 'https://test2.ust.kz/api',
         retry: true,
     },
     // Build Configuration: https://go.nuxtjs.dev/config-build
