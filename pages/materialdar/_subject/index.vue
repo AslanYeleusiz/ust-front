@@ -16,13 +16,13 @@
                 </div>
             </div>
             <div class="cst-ct">
-                <form action="" class="adisteme">
+                <div class="adisteme">
                     <div class="h2">Оқу әдістемелік материалдар</div>
-                    <form @submit.prevent class="searchBlock">
+                    <div class="searchBlock">
                         <cstBtn @click.native.prevent="getData()" class="searchBtn" text="Іздеу" />
                         <input v-model='search' type="text" class="form-control searchInput" placeholder="Зат есім сабақ жоспары" v-on:keyup.enter="getData()">
                         <div @click="clearSearchRes()" class="d-flex aj-c clearInput">&#10006;</div>
-                    </form>
+                    </div>
                     <transition name="categories">
                         <div v-show="searchCategoryShow && categoryIsActive<4" class="category">
                             <btnGroup :category='subjects' :placeholder='cat_text[0]' @entered-category='subjectsSearch($event)' />
@@ -42,7 +42,7 @@
                             </button>
                         </div>
                     </transition>
-                </form>
+                </div>
             </div>
             <div class="advice">
                 <div class="cst-ct">
@@ -194,12 +194,12 @@
             clearSearchRes() {
                 this.search = '';
             },
-            Pageload(n) {
+            async Pageload(n) {
                 this.currentPage = n;
                 this.categoryIsActive < 4 ? this.getData() : this.getQmg();
             },
-            getCategory() {
-                let cats = this.$axios
+            async getCategory() {
+                let cats = await this.$axios
                     .$get("/word/getCategories")
                     .then((response) => {
                         this.subjects = response.subjects
@@ -211,10 +211,10 @@
                     });
 
             },
-            getData() {
+            async getData() {
                 this.loading = true;
                 this.popular_materials = null;
-                this.$axios.$get('/word', {
+                await this.$axios.$get('/word', {
                     params: {
                         title: this.search,
                         subject: this.subjectsInner ? this.subjectsInner.lat_name : this.$route.params.subject.replace('.html', ''),
@@ -362,10 +362,10 @@
 
 
         },
-        mounted() {
-            this.getCategory();
-            this.getData();
-            this.popular_materials = this.$axios.$get('/word/popular');
+        async fetch() {
+            await this.getCategory();
+            await this.getData();
+            this.popular_materials = await this.$axios.$get('/word/popular');
         },
     }
 
