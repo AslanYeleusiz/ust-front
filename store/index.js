@@ -1,4 +1,4 @@
 export const state = () => ({
-  apiUrl: 'https://test2.ust.kz',
-  appUrl: 'https://test.ust.kz',
+  apiUrl: 'http://127.0.0.1:8000',
+  appUrl: 'http://localhost:3000',
 })

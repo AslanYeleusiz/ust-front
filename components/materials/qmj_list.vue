@@ -22,20 +22,21 @@
         props: ['loading', 'materials'],
         methods: {
             gotoQmg(e) {
-                var slug = this.materials[e].lat_title + '-' + this.materials[e].id + '.html'
-                this.$axios.$get('/word/qmg/' + slug).then((res) => {
-                    console.log(res.data)
-                    this.$router.push({
-                        name: 'qmg-slug',
-                        params: {
-                            slug: slug,
-                            bolim: res.data.bolim,
-                            qmg: res.data.qmg,
-                            qmgOrders: res.data.qmgOrder
-                        }
+                if(this.$loginOrRoute()){
+                    var slug = this.materials[e].lat_title + '-' + this.materials[e].id + '.html'
+                    this.$axios.$get('/word/qmg/' + slug).then((res) => {
+                        console.log(res.data)
+                        this.$router.push({
+                            name: 'qmg-slug',
+                            params: {
+                                slug: slug,
+                                bolim: res.data.bolim,
+                                qmg: res.data.qmg,
+                                qmgOrders: res.data.qmgOrder
+                            }
+                        })
                     })
-                })
-
+                }
             }
         }
     }

@@ -77,7 +77,7 @@
                     <div class="qr pd_bottom">
                         <div class="body">
                             <div class="h">Kaspi QR арқылы төлеу</div>
-                            <cstBtn square=1 text='Kaspi QR көрсету' />
+                            <cstBtn @click.native="sendKaspi" square=1 text='Kaspi QR көрсету' />
                         </div>
                     </div>
                 </div>
@@ -201,6 +201,16 @@
             successNext() {
                 this.anim.play()
                 this.oplataOpen = 7
+            },
+            sendKaspi() {
+                this.$axios.post('https://kaspi.kz/online', {
+                    TranId: 1,
+                    OrderId: this.$auth.user.id,
+                    Amount: 100,
+                    Service: 'UstazTilegi',
+                    returnUrl: this.$store.state.apiUrl + this.$route.path,
+                    Signature: '',
+                })
             }
         },
 
