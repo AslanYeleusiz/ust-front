@@ -208,7 +208,7 @@
                     OrderId: this.$auth.user.id,
                     Amount: 100,
                     Service: 'UstazTilegi',
-                    returnUrl: this.$store.state.apiUrl + this.$route.path,
+                    returnUrl: this.$store.state.appUrl + this.$route.path,
                     Signature: '',
                 })
             }
