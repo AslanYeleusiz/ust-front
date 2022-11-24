@@ -1,6 +1,6 @@
 <template>
     <div>
-        <oplataPopup :oplataOpen="oplataPopup" @closePopup="oplataPopup=0" @next="oplataPopup++" />
+        <oplataPopup :price="calcPercent(material.sell)" :oplataOpen="oplataPopup" @closePopup="oplataPopup=0" @next="oplataPopup++" />
         <header_kroshki :header='header' gotoUrl='/material' />
         <section class="main">
             <div class="cst-ct">

@@ -60,6 +60,8 @@
     }
     label{
         margin-bottom: 5px;
+        color: #888888;
+
     }
     .danger input {
         border: 1px solid #dc3545;

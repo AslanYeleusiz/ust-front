@@ -101,7 +101,7 @@
                                 </div>
                                 <div class="jarna">
                                     <div class="span">Жарнасы</div>
-                                    <div class="value">600 тг</div>
+                                    <div class="value">{{price}} тг</div>
                                 </div>
                             </div>
                         </div>
@@ -151,9 +151,9 @@
                             <img src="~assets/images/wallet-check.png" alt="">
                         </div>
                         <div class="h">{{ oplataOpen==6 ? 'Материал төленуде...' : 'Материал сәтті сатып алынды!' }}</div>
-                            <div v-show="oplataOpen==6 || oplataOpen==5" class="lottie" :class="{border:oplataOpen==6}">
-                                <Lottie v-if="oplataOpen==6 || oplataOpen==5" :width="80" :height="80" :options="waitOptions" v-on:animCreated="handleAnimation" />
-                            </div>
+                        <div v-show="oplataOpen==6 || oplataOpen==5" class="lottie" :class="{border:oplataOpen==6}">
+                            <Lottie v-if="oplataOpen==6 || oplataOpen==5" :width="80" :height="80" :options="waitOptions" v-on:animCreated="handleAnimation" />
+                        </div>
                         <div v-show="oplataOpen==7" class="lottie2" :class="{border:oplataOpen==6}">
                             <Lottie v-if="oplataOpen==7" :width="120" :height="120" :options="doneOptions" v-on:animCreated="handleAnimation" />
                         </div>
@@ -180,7 +180,7 @@
             exitBtn,
             Lottie,
         },
-        props: ['oplataOpen'],
+        props: ['oplataOpen', 'price'],
         data() {
             return {
                 anim: false,
@@ -203,18 +203,22 @@
                 this.oplataOpen = 7
             },
             sendKaspi() {
+
                 this.$axios.post('https://kaspi.kz/online', {
-                    TranId: 1,
-                    OrderId: this.$auth.user.id,
-                    Amount: 100,
-                    Service: 'UstazTilegi',
-                    returnUrl: this.$store.state.appUrl + this.$route.path,
-                    Signature: '',
-                })
-            }
+                    headers: {
+                        "Content-Type": "multipart/form-data",
+                    },
+                    params: {
+                        'TranId': 1,
+                        'OrderId': this.$auth.user.id,
+                        'Amount': this.price,
+                        'Service': 'UstazTilegi',
+                        'returnUrl': this.$store.state.appUrl + this.$route.path,
+                        'Signature': "",
+                    }
+                } );
+            },
         },
-
-
     }
 
 </script>

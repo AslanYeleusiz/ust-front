@@ -38,6 +38,14 @@
 
 
 <style scoped lang="scss">
+    label{
+        font-family: Raleway;
+font-size: 16px;
+font-weight: 400;
+line-height: 23px;
+        color: #888888;
+
+    }
     .mb{
         margin-bottom: 15px;
     }

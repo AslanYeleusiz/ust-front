@@ -1,88 +1,117 @@
 <template>
     <transition name="fadePopup">
         <div v-if="loginOpen > 0" class="loginPopup" @mousedown.self="$emit('closePopup')">
-            <transition name="fade">
-                <div v-show="loginOpen == 1" class="loginBlock loginWidth" >
-                    <div class="cst_pd_popup">
-                        <div class="closeBtnBar">
-                            <exitDefaultBtn @click.native="$emit('closePopup')" class="closeBtn" />
-                        </div>
-                        <div class="header">Кабинетке кіру</div>
-                    </div>
-                    <login @closePopup="$emit('closePopup')"/>
-                    <button @click="$emit('resetPassword')" class="btn reset-password">Құпия сөзді ұмыттыңыз ба?</button>
-                    <div class="cst_pd_popup">
-                        <button @click="$emit('openRegister')" class="btn register w-100">
-                            Тіркелу
-                        </button>
-                    </div>
-                </div>
-            </transition>
-            <transition name="fade">
-                <div v-show="loginOpen == 2" class="loginBlock registerWidth" @click.stop>
-                    <div class="cst_pd_popup">
-                        <div class="closeBtnBar">
-                            <exitDefaultBtn @click.native="$emit('closePopup')" class="closeBtn" />
-                        </div>
-                        <div class="header">Тіркелу</div>
-                    </div>
-                    <div class="cst_pd_popup">
-                        <register @closePopup="$emit('closePopup')"/>
-                        <div class="footer">
-                            «Тіркелу» батырмасын басу арқылы сіз пайдаланушы келісімінде көрсетілген шарттармен келісесіз
-                        </div>
-                    </div>
-                </div>
-            </transition>
-            <transition name="fade">
-                <div v-show="loginOpen == 3" class="loginBlock emailConfirmWidth" @click.stop>
-                    <div class="closeBtnBar">
-                        <button @click="$emit('openLogin')" class="btn left">
-                            <img src="~assets/images/arrow-left-blue.svg" alt="">
-                            Артқа
-                        </button>
-                        <exitDefaultBtn @click.native="$emit('closePopup')" class="closeBtn" />
-                    </div>
-                    <div class="cst_pd_popup">
-                        <div class="header">Құпия сөзді жаңарту</div>
-                        <form action="" class="loginForm">
-                            <div class="registerForm">
-                                <cstInput type-name="Email" name-wrap="Email" string-name="Email Почтаңыз" string-placeholder="E-mail " />
-                            </div>
-                            <button class="btn btn-primary enter w-100">Жалғастыру</button>
-                        </form>
-                    </div>
-                </div>
-            </transition>
-            <transition name="fade">
-                <div v-show="loginOpen == 4" class="loginBlock emailConfirmWidth successWidth" @click.stop>
+            <div class="loginBlock loginWidth">
+                <div class="cst_pd_popup">
                     <div class="closeBtnBar">
                         <exitDefaultBtn @click.native="$emit('closePopup')" class="closeBtn" />
                     </div>
-                    <div class="cst_pd_popup">
-                        Sembiev_n@mail.ru почтасына құпия сөз және сайтқа кіру нұсқаулығы жіберілді. Входящие немесе спам деген папкаларды көріңіз.
-                    </div>
+                    <div class="header">Кабинетке кіру</div>
+                    <template v-if="loginOpen == 1">
+                        <cstInput v-model="form.phone" type-name="text" name-wrap="tel_num" string-name="Телефон номер:" string-placeholder="+7 (7__) - ___ - __ - __" class="mt-15" :danger="errors.phone" :dangerText="errors.phone" @click.native="errors.phone = null" v-on:keyup.enter.native="checkPhone" />
+                        <div class="cst-btn-size">
+                            <cstBtn :loading="loading" @click.native="checkPhone" text="Жалғастыру" square=1 />
+                        </div>
+                    </template>
+                    <template v-if="loginOpen > 1">
+                        <cstInputDisabled @openLogin="$emit('openLogin')" class="mt-15" :text="form.phone" string-name="Телефон номер:" />
+                        <cstPasswordInput v-model="form.password" type-name="password" name-wrap="password" string-name="Құпиясөз:" string-placeholder="•••••••••••••••••" :danger="errors.password" :dangerText="errors.password" @click.native="errors.password = null" class="mt-15" v-on:keyup.enter.native="login" />
+                        <div class="cst-btn-size mt-15">
+                            <cstBtn :loading="loading" @click.native="login" text="Кіру" square=1 />
+                        </div>
+                        <div class="mt-30 text-center">
+                            <div class="danger">{{errors.internal_server_error}}</div>
+                            <template v-if="loginOpen == 2">
+                                <button @click="sendSms" class="btn cst_btn_sms">{{errors.internal_server_error ? 'Қайтадан көру' : 'Смс арқылы құпия сөзді еске салу'}}</button>
+                            </template>
+                            <template v-if="loginOpen == 3">
+                                <span class="timer_span">Сіздің номеріңізге құпия сөз жіберілді</span>
+                                <div class="timer">SMS-ті 00:59 секундттан кейін қайта жібере аласыз</div>
+                            </template>
+                        </div>
+
+                    </template>
                 </div>
-            </transition>
+            </div>
         </div>
     </transition>
 </template>
 
 <script>
     import cstInput from '@/components/forms/cstInput.vue'
+    import cstInputDisabled from '@/components/forms/cstInputDisabled.vue'
     import cstPasswordInput from '@/components/forms/cstPasswordInput.vue'
-    import login from '@/components/auth/login.vue'
-    import register from '@/components/auth/register.vue'
     import exitDefaultBtn from '@/components/forms/exitDefaultBtn.vue'
-
+    import cstBtn from '@/components/forms/btn.vue'
     export default {
         components: {
             cstInput,
             cstPasswordInput,
-            login,
-            register,
-            exitDefaultBtn
+            exitDefaultBtn,
+            cstInputDisabled,
+            cstBtn,
         },
+        data() {
+            return {
+                form: {
+                    phone: null,
+                    password: null,
+                },
+                errors: {
+                    phone: null,
+                    password: null,
+                    internal_server_error: null,
+                },
+                loading: 0,
+            }
+        },
+        methods: {
+            checkPhone(){
+                this.loading = 1
+                this.$api.post('/auth/login/check-phone', this.form).then((res)=>{
+                    this.loading = 0
+                    if(res.data.loginOpen == 2) this.$emit('nextLogin')
+                    else this.$emit('smsLogin')
+                }).catch((error)=>{
+                    this.loading = 0
+                    const data = error.response.data.errors;
+                    for (let [key, value] of Object.entries(this.errors)) {
+                         this.errors[key] = data[key] !== undefined ? data[key].join() : null;
+                    }
+                })
+            },
+            login(){
+                this.loading = 1
+                this.$auth.options.redirect = false
+                this.$auth.loginWith('laravelJWT', { data: {
+                    phone: this.form.phone,
+                    password: this.form.password
+                } }).then((res) => {
+                    localStorage.setItem('access_token', res.data.access_token);
+                    window.location.reload();
+                    this.loading = 0
+
+                }).catch((error) => {
+                    this.loading = 0
+                    const data = error.response.data.errors;
+                    for (let [key, value] of Object.entries(this.errors)) {
+                         this.errors[key] = data[key] !== undefined ? data[key].join() : null;
+                    }
+                });
+            },
+            sendSms(){
+                this.loading = 1
+                this.$api.post('/auth/reset-password/send-sms', this.form).then((res)=>{
+                    this.loading = 0
+                    console.log(res)
+                }).catch((error)=>{
+                    this.loading = 0
+                    this.errors.internal_server_error = error.response.data.errors.sendSms[0]
+                    console.log(error)
+                })
+            }
+        },
+
         props: ['loginOpen'],
     }
 
@@ -95,7 +124,6 @@
         font-weight: 400;
         line-height: 23px;
         color: #888888;
-        border-bottom: 1px solid #C7C7C7;
 
         .cst_pd_popup {
             padding: 0 50px;
@@ -112,6 +140,7 @@
             }
         }
     }
+
     .loginPopup {
         font-family: Gilroy;
         font-size: 14px;
@@ -126,14 +155,17 @@
         align-items: center;
         z-index: 20;
         background: rgba(0, 0, 0, 0.6);
+
         .loginBlock {
             position: absolute;
             width: 100%;
             max-height: 100vh;
             overflow-y: scroll;
+
             &::-webkit-scrollbar {
                 display: none;
             }
+
             padding: 40px 0 60px;
             background: #ffffff;
             box-shadow: 0px 4px 24px rgba(0, 0, 0, 0.1);
@@ -142,186 +174,83 @@
             font-size: 16px;
             font-weight: 500;
             line-height: 23px;
-            .cst_pd_popup {padding: 0 50px;}
-            .reset-password {
-                position: absolute;
-                left: 50%;
-                height: 40px;
-                transform: translate(-50%, -20px);
-                background: #ffffff;
-                color: #1E63E9;
-                &::after {
-                    content: '';
-                    width: 0;
-                    height: 1px;
-                    display: block;
-                    background: #1C4CCF;
-                    transition: 0.3s;
-                }
-                &:hover::after {width: 100%;}
+
+            .cst_pd_popup {
+                padding: 0 50px;
             }
-            .register {
-                border: 1px solid #1E63E9;
-                border-radius: 10px;
-                margin-top: 40px;
-                height: 50px;
+
+            .mt-15 {
+                margin-top: 15px;
+            }
+
+            .mt-30 {
+                margin-top: 30px;
+            }
+
+            .danger{
+                color: #dc3545;
+            }
+
+            .timer_span {
+                color: #363636;
+                font-weight: 600;
+            }
+
+            .timer {
+                margin-top: 10px;
+                font-family: Raleway;
+                font-size: 16px;
+                font-weight: 400;
+                line-height: 19px;
+                text-align: center;
+                color: #363636;
+            }
+
+            .cst_btn_sms {
+                padding: 0;
+                font-family: Raleway;
+                font-size: 16px;
+                font-weight: 600;
+                line-height: 23px;
                 color: #1E63E9;
+
                 &:hover {
-                    background: #1E63E9;
-                    color: #ffffff;
+                    text-decoration: underline;
                 }
+
             }
+
+            .cst-btn-size {
+                padding-top: 10px;
+
+                height: 60px;
+            }
+
             .closeBtnBar {
                 display: flex;
                 justify-content: flex-end;
             }
+
             .closeBtn {
                 padding: 0;
                 position: absolute;
                 transform: translate(30px, -20px);
             }
         }
-        .loginWidth {max-width: 470px;}
-        .registerWidth {
-            max-width: 830px;
-            padding-bottom: 40px;
-            hr {
-                border-top: 1px solid #C7C7C7;
-                margin: 25px 0 40px;
-            }
-            .loginForm {
-                border-bottom: none;
-                padding-bottom: 20px;
-                .registerForm {
-                    display: grid;
-                    grid-template-columns: 1fr 1fr;
-                    grid-gap: 50px;
-                    @media all and (max-width: 767px){
-                        grid-template-columns: 1fr;
-                        grid-gap: 15px;
-                    }
 
-                }
-                .radio {
-                    display: grid;
-                    grid-template-columns: 1fr 1fr 1fr;
-                    padding-right: 138px;
-                    @media all and (max-width: 767px){
-                        grid-template-columns: 1fr 1fr;
-                        grid-gap: 20px 0;
-                    }
-                    @media all and (max-width: 643px){
-                        padding-right: 30px;
-                    }
-                    @media all and (max-width: 537px){
-                        padding-right: 0;
-                    }
-
-                    .radio-item {
-                        flex-direction: row;
-                        display: flex;
-                        align-items: center;
-                        input[type='radio'] {
-                            position: relative;
-                            width: 20px;
-                            height: 20px;
-                            -webkit-appearance: none;
-                            -moz-appearance: none;
-                            appearance: none;
-                            outline: none;
-                            cursor: pointer;
-                        }
-                        input[type='radio']::before {
-                            content: '';
-                            position: absolute;
-                            top: 50%;
-                            left: 50%;
-                            width: 20px;
-                            height: 20px;
-                            transform: translate(-50%, -50%);
-                            border: 2px solid #1E63E9;
-                            border-radius: 6px;
-                        }
-                        input[type='radio']:checked::after {
-                            content: '';
-                            position: absolute;
-                            top: 50%;
-                            left: 50%;
-                            width: 20px;
-                            height: 20px;
-                            border-radius: 6px;
-                            background: 50% 40% / 50% 50% url(assets/images/liked.svg) no-repeat;
-                            background-color: #1E63E9;
-                            transform: translate(-50%, -50%);
-                            visibility: visible;
-                        }
-                        label {
-                            margin: 0;
-                            font-size: 18px;
-                            line-height: 22px;
-                            cursor: pointer;
-                            color: #363636;
-                            padding-left: 15px;
-                        }
-                    }
-                }
-                .enter {margin-top: 40px;}
-            }
-            .footer {
-                line-height: 20px;
-                text-align: center;
-                color: #8B8B8B;
-            }
-
-        }
-        .emailConfirmWidth {
+        .loginWidth {
             max-width: 470px;
-            padding: 20px 20px 60px;
-            .cst_pd_popup {padding: 30px 30px 0;}
-            .closeBtnBar {
-                justify-content: space-between;
-                align-items: center;
-                .left {
-                    display: flex;
-                    flex-direction: row;
-                    align-items: center;
-                    font-size: 16px;
-                    font-weight: 600;
-                    padding: 0;
-                    color: #3E6CED;
-                    img {margin-right: 4px;}
-                }
-                .closeBtn {
-                    position: relative;
-                    transform: none;
-                }
-            }
-            .loginForm {
-                padding: 0;
-                border-bottom: none;
-            }
         }
-        .successWidth {
-            font-family: Raleway;
-            font-size: 20px;
-            font-weight: 600;
-            line-height: 23px;
-            color: #03B113;
-            text-align: center;
-            .closeBtnBar {
-                justify-content: flex-end;
-                .closeBtn {
-                    position: absolute;
-                    transform: translate(0px, 10px);
-                }
-            }
-        }
+
+
         .header {
             font-family: Raleway;
             font-size: 24px;
             font-weight: 800;
             line-height: 28px;
+            padding-bottom: 15px;
         }
+
         .loginForm {
             margin-top: 30px;
             padding-bottom: 40px;
@@ -329,37 +258,43 @@
             font-weight: 400;
             line-height: 23px;
             color: #888888;
-            border-bottom: 1px solid #C7C7C7;
+
             .enter {
                 height: 50px;
                 background: rgba(#1E63E9, 0.9);
                 border-radius: 10px;
                 margin-top: 20px;
+
                 &:hover {
                     background: #1E63E9;
                 }
             }
         }
     }
+
 </style>
 <style scoped lang="scss">
     .fade-enter-active,
     .fade-leave-active {
         transition: .5s;
     }
+
     .fade-enter,
     .fade-leave-to {
         opacity: 0;
         transform: translateY(-15%);
         transition: 0.5s;
     }
+
     .fadePopup-enter-active,
     .fadePopup-leave-active {
         transition: .5s;
     }
+
     .fadePopup-enter,
     .fadePopup-leave-to {
         opacity: 0;
         transition: 0.3s;
     }
+
 </style>

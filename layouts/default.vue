@@ -1,6 +1,6 @@
 <template>
     <div class="layout-default">
-        <loginPopup :login-open="loginPopup" @closePopup="loginPopup=0" @openLogin="loginPopup=1" @openRegister="loginPopup=2" @resetPassword="loginPopup=3"/>
+        <loginPopup :login-open="loginPopup" @closePopup="loginPopup=0" @openLogin="loginPopup=1" @nextLogin="loginPopup=2" @smsLogin="loginPopup=3" />
         <successPopup />
         <leftSlideBar :slide-open="slideActive" @openMenu="slideBarShow" @openLogin="loginPopup=1" />
         <mainHeader @openMenu="slideBarShow" />
