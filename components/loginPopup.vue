@@ -22,13 +22,13 @@
                         </div>
                         <div class="mt-30 text-center">
                             <div class="danger">{{errors.sendSms}}</div>
-                            <template v-if="loginOpen == 2">
+                            <div v-if="!isSend">
                                 <button @click="sendSms" class="btn cst_btn_sms">{{errors.sendSms ? 'Қайтадан көру' : 'Смс арқылы құпия сөзді еске салу'}}</button>
-                            </template>
-                            <template v-if="loginOpen == 3">
+                            </div>
+                            <div v-else>
                                 <span class="timer_span">Сіздің номеріңізге құпия сөз жіберілді</span>
-                                <div class="timer">SMS-ті 00:59 секундттан кейін қайта жібере аласыз</div>
-                            </template>
+                                <div class="timer">SMS-ті {{cT.minuts}}:{{cT.seconds}} секундттан кейін қайта жібере аласыз</div>
+                            </div>
                         </div>
 
                     </template>
@@ -64,15 +64,41 @@
                     sendSms: null,
                 },
                 loading: 0,
+                cT: {
+                    currentTime: 0,
+                    minuts: 0,
+                    seconds: 59,
+                },
+                timer: null,
+                isSend: false,
             }
         },
         methods: {
+            startTimer() {
+                this.cT.currentTime = 59
+                this.timer = setInterval(() => {
+                    this.cT.currentTime--;
+                    let s = this.cT.currentTime;
+                    this.cT.minuts = Math.floor(s / 60);
+                    this.cT.seconds = Math.floor(s % 60);
+                    if (s < 1) this.stopTimer()
+                }, 1000)
+            },
+            stopTimer() {
+                this.isSend = false
+                clearTimeout(this.timer)
+                this.cT.minuts = 0;
+                this.cT.seconds = 59;
+            },
             checkPhone(){
                 this.loading = 1
                 this.$axios.post('/auth/login/check-phone', this.form).then((res)=>{
                     this.loading = 0
-                    if(res.data.loginOpen == 2) this.$emit('nextLogin')
-                    else this.$emit('smsLogin')
+                    this.$emit('nextLogin')
+                    if(res.data.loginOpen != 2){
+                        this.isSend = true
+                        this.startTimer()
+                    }
                     this.errors.sendSms = null
                 }).catch((error)=>{
                     this.loading = 0
@@ -108,6 +134,10 @@
                     this.loading = 0
                     console.log(res)
                     this.errors.sendSms = null
+                    if(res.data.loginOpen == 3) {
+                        this.isSend = true
+                        this.startTimer()
+                    } else this.errors.sendSms = 'Серверлік ақай пайда болды'
                 }).catch((error)=>{
                     this.loading = 0
                     this.errors.sendSms = error.response.data.errors.sendSms[0]
