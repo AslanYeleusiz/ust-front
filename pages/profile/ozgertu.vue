@@ -46,7 +46,7 @@
                     </div>
                     <div class="block" :style="{ backgroundImage: `url(${getImgUrl('email_block.png')})` }">
                         <div class="head">Email</div>
-                        <div class="body" :class="{green: $auth.user.email_rastalgan}">armanaydar@gmail.com</div>
+                        <div class="body" :class="{green: $auth.user.email_rastalgan}">{{$auth.user.email}}</div>
                         <div v-if='$auth.user.email_rastalgan' class="success">
                             <img src="~assets/images/shield-green.svg" alt="">
                             Расталған
