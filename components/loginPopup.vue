@@ -223,6 +223,7 @@
 
             .danger{
                 color: #dc3545;
+                font-weight: 400;
             }
 
             .timer_span {
