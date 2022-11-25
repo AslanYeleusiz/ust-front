@@ -96,13 +96,13 @@
                 </div>
                 <div v-if="popupIsActive==10" class="body password">
                     <div class="cst_size_btn">
-                        <cstPasswordInput v-model="oldPassword" stringName="Қазіргі құпия сөз" stringPlaceholder="********" nameWrap="oldPassword" />
+                        <cstPasswordInput v-model="oldPassword" stringName="Қазіргі құпия сөз" stringPlaceholder="********" nameWrap="oldPassword" :dangerText="errors.oldPassword" :danger="errors.oldPassword" />
                     </div>
                     <div class="cst_size_btn">
-                        <cstPasswordInput v-model="password" stringName="Жаңа құпия сөз" stringPlaceholder="********" nameWrap="newPassword" />
+                        <cstPasswordInput v-model="password" stringName="Жаңа құпия сөз" stringPlaceholder="********" nameWrap="newPassword" :dangerText="errors.password" :danger="errors.password" />
                     </div>
                     <div class="cst_size_btn">
-                        <cstPasswordInput v-model="passwordConfirm" stringName="Жаңа құпия сөзді қайталаңыз" stringPlaceholder="********" nameWrap="newPasswordConfirm" />
+                        <cstPasswordInput v-model="passwordConfirm" stringName="Жаңа құпия сөзді қайталаңыз" stringPlaceholder="********" nameWrap="newPasswordConfirm" :dangerText="errors.passwordConfirm" :danger="errors.passwordConfirm" />
                     </div>
                     <div class="cst_size_btn">
                         <cstBtn v-if="loading" :loading="loading" square=1 />
@@ -171,7 +171,12 @@
                 emailCodeVerify: '',
                 oldPassword: '',
                 password: '',
-                passwordConfirm: ''
+                passwordConfirm: '',
+                errors: {
+                    oldPassword: null,
+                    password: null,
+                    passwordConfirm: null,
+                }
             }
         },
         methods: {
@@ -268,12 +273,29 @@
             },
             sendNewPassword() {
                 this.loading = 1
-                setTimeout(() => {
+                for (let [key, value] of Object.entries(this.errors)) {
+                     this.errors[key] = null;
+                }
+                this.$api.post('/auth/reset-password',{
+                    oldPassword: this.oldPassword,
+                    password: this.password,
+                    passwordConfirm: this.passwordConfirm,
+                }).then((res)=>{
                     this.loading = 0
-                    this.popupIsActive = 11
-                    this.stopTimer()
-                    this.startTimer()
-                }, 1500)
+                    this.popupIsActive = 12
+                }).catch((error)=>{
+                    this.loading = 0
+                    const data = error.response.data.errors;
+                    for (let [key, value] of Object.entries(this.errors)) {
+                         this.errors[key] = data[key] !== undefined ? data[key].join() : null;
+                    }
+                })
+//                setTimeout(() => {
+//                    this.loading = 0
+//                    this.popupIsActive = 11
+//                    this.stopTimer()
+//                    this.startTimer()
+//                }, 1500)
             },
             sendPincodePassword() {
                 this.loading = 1
