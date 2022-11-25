@@ -12,6 +12,7 @@
                         <div class="cst-btn-size">
                             <cstBtn :loading="loading" @click.native="checkPhone" text="Жалғастыру" square=1 />
                         </div>
+                        <div class="danger text-center mt-3">{{errors.sendSms}}</div>
                     </template>
                     <template v-if="loginOpen > 1">
                         <cstInputDisabled @openLogin="$emit('openLogin')" class="mt-15" :text="form.phone" string-name="Телефон номер:" />
@@ -20,9 +21,9 @@
                             <cstBtn :loading="loading" @click.native="login" text="Кіру" square=1 />
                         </div>
                         <div class="mt-30 text-center">
-                            <div class="danger">{{errors.internal_server_error}}</div>
+                            <div class="danger">{{errors.sendSms}}</div>
                             <template v-if="loginOpen == 2">
-                                <button @click="sendSms" class="btn cst_btn_sms">{{errors.internal_server_error ? 'Қайтадан көру' : 'Смс арқылы құпия сөзді еске салу'}}</button>
+                                <button @click="sendSms" class="btn cst_btn_sms">{{errors.sendSms ? 'Қайтадан көру' : 'Смс арқылы құпия сөзді еске салу'}}</button>
                             </template>
                             <template v-if="loginOpen == 3">
                                 <span class="timer_span">Сіздің номеріңізге құпия сөз жіберілді</span>
@@ -60,7 +61,7 @@
                 errors: {
                     phone: null,
                     password: null,
-                    internal_server_error: null,
+                    sendSms: null,
                 },
                 loading: 0,
             }
@@ -68,10 +69,11 @@
         methods: {
             checkPhone(){
                 this.loading = 1
-                this.$api.post('/auth/login/check-phone', this.form).then((res)=>{
+                this.$axios.post('/auth/login/check-phone', this.form).then((res)=>{
                     this.loading = 0
                     if(res.data.loginOpen == 2) this.$emit('nextLogin')
                     else this.$emit('smsLogin')
+                    this.errors.sendSms = null
                 }).catch((error)=>{
                     this.loading = 0
                     const data = error.response.data.errors;
@@ -87,6 +89,7 @@
                     phone: this.form.phone,
                     password: this.form.password
                 } }).then((res) => {
+                    this.errors.sendSms = null
                     localStorage.setItem('access_token', res.data.access_token);
                     window.location.reload();
                     this.loading = 0
@@ -104,9 +107,10 @@
                 this.$api.post('/auth/reset-password/send-sms', this.form).then((res)=>{
                     this.loading = 0
                     console.log(res)
+                    this.errors.sendSms = null
                 }).catch((error)=>{
                     this.loading = 0
-                    this.errors.internal_server_error = error.response.data.errors.sendSms[0]
+                    this.errors.sendSms = error.response.data.errors.sendSms[0]
                     console.log(error)
                 })
             }
