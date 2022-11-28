@@ -81,7 +81,15 @@
                     <div class="qr pd_bottom">
                         <div class="body">
                             <div class="h">Kaspi QR арқылы төлеу</div>
-                            <cstBtn @click.native="sendKaspi" square=1 text='Kaspi QR көрсету' />
+                            <form action="https://kaspi.kz/online" id="kaspiqrbutton1-triger" method="post">
+                                <input type="hidden" name="TranId" value="1">
+                                <input type="hidden" name="OrderId" :value="$auth.user.id">
+                                <input type="hidden" name="Amount" id="pricekaspi" :value="price">
+                                <input type="hidden" name="Service" value="UstazTilegi">
+                                <input type="hidden" name="returnUrl" id="kaspissilka" :value="$store.state.appUrl + $route.path">
+                                <input type="hidden" name="Signature" value="">
+                                <cstBtn square=1 text='Kaspi QR көрсету' />
+                            </form>
                         </div>
                     </div>
                 </div>
@@ -222,12 +230,12 @@
                         "Content-Type": "multipart/form-data",
                     },
                     params: {
-                        'TranId': 1,
-                        'OrderId': this.$auth.user.id,
-                        'Amount': this.price,
-                        'Service': 'UstazTilegi',
-                        'returnUrl': this.$store.state.appUrl + this.$route.path,
-                        'Signature': "",
+                        TranId: 1,
+                        OrderId: this.$auth.user.id,
+                        Amount: this.price,
+                        Service: 'UstazTilegi',
+                        returnUrl: this.$store.state.appUrl + this.$route.path,
+                        Signature: "",
                     }
                 } );
             },
