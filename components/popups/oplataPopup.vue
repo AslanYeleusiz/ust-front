@@ -84,7 +84,7 @@
                             <form action="https://kaspi.kz/online" id="kaspiqrbutton1-triger" method="post">
                                 <input type="hidden" name="TranId" value="1">
                                 <input type="hidden" name="OrderId" :value="$auth.user.id">
-                                <input type="hidden" name="Amount" id="pricekaspi" :value="price">
+                                <input type="hidden" name="Amount" id="pricekaspi" :value="price+'00'">
                                 <input type="hidden" name="Service" value="UstazTilegi">
                                 <input type="hidden" name="returnUrl" id="kaspissilka" :value="$store.state.appUrl + $route.path">
                                 <input type="hidden" name="Signature" value="">
