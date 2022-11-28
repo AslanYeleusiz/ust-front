@@ -40,7 +40,7 @@
                     </div>
                     <div class="right">
                         <div class="payment">
-                            <template v-if="!isPurchased">
+                            <template v-if="!isPurchased && $auth.user.id != material.user_id">
                                 <div class="free">
                                     <template v-if="material.sell>0">
                                         Бүгін алсаңыз
@@ -64,7 +64,9 @@
                                 <img src="~assets/images/wallet-check.png" alt="">
                                 <div class="free">
                                     <span class="gradient">
-                                        Материал сатып<br>алынған
+                                        {{$auth.user.id == material.user_id ? 'Материал' : 'Материал сатып'}}
+                                        <br>
+                                        {{$auth.user.id == material.user_id ? '№'+material.id : 'алынған'}}
                                     </span>
                                 </div>
                                 <cstBtn @click.native="download()" text="Жүктеп алу" img="importwhite.svg" class="cst_size" />
@@ -85,7 +87,7 @@
                 <template v-else>
                     <iframe :src="'https://view.officeapps.live.com/op/embed.aspx?src=https://ust.kz/frontend/web/'+material.file_doc" width='100%' height='600px' frameborder='0'></iframe>
                 </template>
-                <bigBtn v-if="!isPurchased" @click.native="buyThisMaterial()" class="downloadBtn" :text="calcPercent(material.sell) + 'тг - Сатып алу'" img="importwhite.svg" />
+                <bigBtn v-if="!isPurchased && material.sell>0" @click.native="buyThisMaterial()" class="downloadBtn" :text="calcPercent(material.sell) + 'тг - Сатып алу'" img="importwhite.svg" />
                 <bigBtn v-else @click.native="download()" class="downloadBtn" text="Материалды жүктеу" img="importwhite.svg" />
                 <div class="share">
                     Материал ұнаса әріптестеріңізбен бөлісіңіз
@@ -118,8 +120,10 @@
                             Бұл сертификат «Ustaz tilegi» Республикалық ғылыми – әдістемелік журналының желілік басылымына өз авторлық жұмысын жарияланғанын растайды. Журнал Қазақстан Республикасы Ақпарат және Қоғамдық даму министрлігінің №KZ09VPY00029937 куәлігін алған. Сондықтан аттестацияға жарамды.
                         </div>
                         <div class="certBtns">
-                            <emptyBtn text="Сертификатты көру" />
-                            <emptyBtn text="Осындай сертификат алу" />
+                            <emptyBtn @click.native="getCertificate" text="Сертификатты көру" />
+                            <NuxtLink to="/zharialau">
+                                <emptyBtn text="Осындай сертификат алу" />
+                            </NuxtLink>
                         </div>
                     </div>
                 </div>
@@ -233,8 +237,21 @@
                     })
                 }
             },
+            getCertificate() {
+                this.$axios.get('/word/' + this.material.id + '/certificate', {
+                    responseType: 'blob'
+                }).then((response) => {
+                    var fileURL = window.URL.createObjectURL(new Blob([response.data]));
+                    var fileLink = document.createElement('a');
+                    fileLink.href = fileURL;
+                    var d = new Date();
+                    fileLink.setAttribute('download', d.toLocaleString() + '.jpeg');
+                    document.body.appendChild(fileLink);
+                    fileLink.click();
+                })
+            },
             calcPercent(e) {
-                return e * 0.7;
+                return Math.round(e * 0.7);
             },
             copyUrl() {
                 let tempInput = document.createElement('textarea');
