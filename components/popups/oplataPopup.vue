@@ -9,7 +9,7 @@
                     </div>
                     <div class="body pd_bottom">
                         <div class="h">Төлем сомасын енгізіңіз:</div>
-                        <cstInput typeName='number' stringPlaceholder='Мысалы: 5000' nameWrap='sum' />
+                        <cstInput typeName='number' stringPlaceholder='Мысалы: 5000' nameWrap='sum' v-model="price" />
                         <cstBtn @click.native="oplataOpen=2" square=1 text='Жалғастыру' />
                     </div>
                 </div>
@@ -39,6 +39,10 @@
                             <img src="~assets/images/terminal.png" alt="">
                             <span>Терминалмен төлеу</span>
                         </button>
+                        <button @click="whatsappOpen" class="btn variants">
+                            <img src="~assets/images/whatsapp.png" alt="">
+                            <span>WhatsApp-қа жазу</span>
+                        </button>
                     </div>
                 </div>
             </transition>
@@ -61,7 +65,7 @@
                                 </div>
                                 <div class="jarna">
                                     <div class="span">Жарнасы</div>
-                                    <div class="value">600 тг</div>
+                                    <div class="value">{{price ? price : '600'}} тг</div>
                                 </div>
                             </div>
                         </div>
@@ -101,7 +105,7 @@
                                 </div>
                                 <div class="jarna">
                                     <div class="span">Жарнасы</div>
-                                    <div class="value">{{price}} тг</div>
+                                    <div class="value">{{price ? price : '600'}} тг</div>
                                 </div>
                             </div>
                         </div>
@@ -122,7 +126,7 @@
                             <img src="~assets/images/empty-wallet-remove.png" alt="">
                         </div>
                         <div class="h">Сіздің қаражатыңыз жеткіліксіз!</div>
-                        <div class="desc">Сіздің қаражатыңыз жеткіліксіз!</div>
+                        <div class="desc">Төлем жасау әдісін таңдаңыз:</div>
                     </div>
                     <div class="variable error">
                         <button @click="oplataOpen=3" class="btn variants">
@@ -137,6 +141,11 @@
                             <img src="~assets/images/terminal.png" alt="">
                             <span>Терминалмен төлеу</span>
                         </button>
+                        <button @click="whatsappOpen" class="btn variants">
+                            <img src="~assets/images/whatsapp.png" alt="">
+                            <span>WhatsApp-қа жазу</span>
+                        </button>
+
                     </div>
                 </div>
             </transition>
@@ -195,6 +204,10 @@
             }
         },
         methods: {
+            whatsappOpen(){
+                var cash = this.price ? this.price : '600';
+                return window.open('https://api.whatsapp.com/send?phone=+77755498911&text=Сәлеметсіз бе. Сайттағы балансымды толтырғым келеді. Маған төлем реквизитін жіберсеңіз. Төлем: '+cash+'тг ID: '+this.$auth.user.id+'','send',`scrollbars=no,resizable=no,status=no,location=no,toolbar=no,menubar=no,width=0,height=0,left=-1000,top=-1000`)
+            },
             handleAnimation: function(anim) {
                 this.anim = anim;
             },

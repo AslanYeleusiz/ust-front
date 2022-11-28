@@ -1,5 +1,6 @@
 <template>
     <div>
+        <oplataPopup price="3000" :oplataOpen="oplataOpen" @closePopup="oplataOpen=0" @next="oplataOpen++" />
         <erezhe :isOpen='erezhe_popup' @closePopup='erezhe_popup=0' />
         <header>
             <div class="otstup"></div>
@@ -83,9 +84,9 @@
                         </div>
                         <div class="block">
                             <div class="category">
-                                <btnGroup :category='subjects' placeholder='Пәнді таңдаңыз' @entered-category='form.zhanr=subjects[$event+1].name' />
-                                <btnGroup :category='directions' placeholder='Бағытын таңдаңыз' @entered-category='form.zhanr2=directions[$event+1].name' />
-                                <btnGroup :category='classes' placeholder='Сыныбын таңдаңыз' @entered-category='form.zhanr3=classes[$event+1].name' />
+                                <btnGroup :category='subjects' placeholder='Пәнді таңдаңыз' @entered-category='form.zhanr=subjects[$event+1].name' :danger="errors.zhanr" @clearDanger="errors.zhanr=null" />
+                                <btnGroup :category='directions' placeholder='Бағытын таңдаңыз' @entered-category='form.zhanr2=directions[$event+1].name' :danger="errors.zhanr2" @clearDanger="errors.zhanr2=null" />
+                                <btnGroup :category='classes' placeholder='Сыныбын таңдаңыз' @entered-category='form.zhanr3=classes[$event+1].name' :danger="errors.zhanr3" @clearDanger="errors.zhanr3=null" />
                             </div>
                             <div class="info">
                                 <img src="~assets/images/message-question-yellow.svg" alt="">
@@ -167,12 +168,14 @@
     import edit from '@/components/svg/edit.vue'
     import btnGroup from '@/components/forms/btnGroup.vue'
     import erezhe from '@/components/popups/erezhe.vue'
+    import oplataPopup from '@/components/popups/oplataPopup.vue'
 
     export default {
         components: {
             Lottie,
             edit,
             btnGroup,
+            oplataPopup,
             erezhe
         },
         data() {
@@ -187,6 +190,7 @@
                 sellSumType: [250, 450, 700, 900, 1300, 1500, 1900, 2500],
                 activeSellSum: null,
                 anim: null,
+                oplataOpen: 0,
                 form: {
                     title: '',
                     description: '',
@@ -210,6 +214,10 @@
                     title: null,
                     work: null,
                     file_doc: null,
+                    zhanr: null,
+                    zhanr2: null,
+                    zhanr3: null,
+                    balance_none: null,
                 },
                 file_error: '',
                 file_name: '',
@@ -257,15 +265,32 @@
             sendData() { // send data to DB
                 this.$api.$post("/word/zharialau", this.form, {}).then(res => {
                     this.formHasSended = true;
-                    this.$bus.$emit('successPopup');
-                    this.$router.push('/menin-materialdarym');
+                    if(this.form.zhinak){
+                        this.oplataOpen = 6
+                        setTimeout(()=>{
+                            this.oplataOpen = 0
+                            this.$bus.$emit('successPopup');
+                            this.$router.push('/menin-materialdarym');
+                        },500)
+                    }else{
+                        this.$bus.$emit('successPopup');
+                        this.$router.push('/menin-materialdarym');
+                    }
+
+
                 })
                 .catch(error => {
                     const data = error.response.data.errors;
                     var container = this.$el.querySelector(`#main`);
                     for (let [key, value] of Object.entries(this.errors))
                         this.errors[key] = data[key] !== undefined ? data[key].join() : null;
-                    if (data) container.scrollIntoView({behavior: "smooth"});
+
+                    if(data['balance_none']){
+                        this.oplataOpen = 6
+                        setTimeout(()=>{
+                            this.oplataOpen = 5
+                        },500)
+                    }else container.scrollIntoView({behavior: "smooth"});
                 });
             },
             previewFiles(event) {
@@ -591,11 +616,12 @@
             .category {
                 display: grid;
                 grid-template-columns: 1fr 1fr 1fr;
+                grid-template-rows: 40px;
                 grid-gap: 10px;
-                height: 40px;
 
                 @media all and (max-width: 883px) {
                     grid-template-columns: 1fr;
+                    grid-template-rows: 40px 40px 40px;
                 }
             }
 

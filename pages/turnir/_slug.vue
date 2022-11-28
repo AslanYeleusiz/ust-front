@@ -1,5 +1,6 @@
 <template>
     <div>
+        <oplataPopup :price="turnir.price" :oplataOpen="oplataPopup" @closePopup="oplataPopup=0" @next="oplataPopup++" />
         <turnirPopup :active="active" @close="active=0" :tuser="tuser" @testTapsyru="testTapsyru" />
         <confirmedPopup />
         <header_kroshki :header="header" />
@@ -30,7 +31,7 @@
                                         <div v-if="form.go" class="score">Балл: {{form.durys+form.kate}}/{{form.durys}}</div>
                                     </div>
                                     <div v-if="form.go" class="wrap grid">
-                                        <editBtn :text="form.diplom+' дәрежелі дипломды жүктеу'+(form.success ? '' : ' - '+form.price+' тг')" img='3' />
+                                        <editBtn @click.native="getCertificate(index)" :text="certCalc(form.diplom)+(form.success ? '' : ' - '+form.price+' тг')" img='3' />
                                         <editBtn @click.native="details(index)" text="Толығырақ" img='4' />
                                     </div>
                                     <div v-if="!form.success" class="wrap">
@@ -94,7 +95,7 @@
                                     </div>
                                     <div v-if="!form.success" class="wrap zhetekshi">
                                         <editBtn v-if="form.update_count>0" @click.native="form.editUser=1" text="Өзгерту" img='1' />
-                                        <editBtn text="Алғыс хатты жүктеу" img='3' />
+                                        <editBtn @click.native="getThankLetter(form.id)" text="Алғыс хатты жүктеу" img='3' />
                                     </div>
                                 </div>
                                 <div class="numeric">
@@ -108,7 +109,6 @@
                                 <div class="wrap">
                                     <saveBtn v-if="loading" loading=1 />
                                     <saveBtn v-else @click.native="zh_addNewuser()" text="Сақтау" />
-
                                     <saveBtn @click.native="cencelNewAddUser()" text="Болдырмау" red=1 />
                                 </div>
                             </div>
@@ -142,6 +142,7 @@
     import turnirLanding from '@/components/landing/turnir.vue'
     import header_kroshki from '@/components/header_kroshki.vue'
     import turnirPopup from '@/components/popups/turnirPopup.vue'
+    import oplataPopup from '@/components/popups/oplataPopup.vue'
 
     export default {
         components: {
@@ -152,6 +153,7 @@
             confirmedPopup,
             turnirLanding,
             header_kroshki,
+            oplataPopup,
             turnirPopup
         },
         data() {
@@ -164,6 +166,7 @@
                 }],
                 forms: [],
                 zhetekshi: [],
+                oplataPopup: 0,
                 active: 0,
                 newName: '',
                 addUser: 0,
@@ -174,6 +177,7 @@
                     id: null,
                     month: '',
                     name: '',
+                    price: 200,
                 },
                 tuser: {
                     fio_user: "",
@@ -190,6 +194,50 @@
             }
         },
         methods: {
+            certCalc(id){
+                if(id == 4){
+                    return 'Сертификатты жүктеу'
+                }else{
+                    return id+' дәрежелі дипломды жүктеу'
+                }
+            },
+            getCertificate(index){
+                 var id = this.forms[index].id
+                this.$api.get('/turnirs/'+id+'/certificate', {
+                    responseType: 'blob'
+                }).then((response)=>{
+                    var fileURL = window.URL.createObjectURL(new Blob([response.data]));
+                    var fileLink = document.createElement('a');
+                    fileLink.href = fileURL;
+                    var d = new Date();
+                    fileLink.setAttribute('download', d.toLocaleString()+'.jpeg');
+                    document.body.appendChild(fileLink);
+                    fileLink.click();
+                }).catch((err)=>{
+                    if(err.response.status == 422){
+                        this.oplataPopup = 6
+                        this.oplataToGetCertificate(index)
+                    }
+                })
+            },
+            oplataToGetCertificate(index){
+                var id = this.forms[index].id
+                this.$api.get('/turnirs/'+id+'/purchase').then((res)=>{
+                    if(res.data.success){
+                        this.oplataPopup = 7
+                        this.forms[index].success = 1
+                        const userToUpdate = {
+                            ...this.$auth.user
+                        }
+                        userToUpdate.balance = res.data.balance
+                        this.$auth.setUser(userToUpdate)
+                    }
+                }).catch((err)=>{
+                    if(err.response.data.errors.no_balance)
+                        this.turnir.price = this.forms[index].price
+                        this.oplataPopup = 5
+                })
+            },
             fio_update(id, index) {
                 this.forms[index].loading = 1
                 const form = {
@@ -222,6 +270,19 @@
             zh_fio_update_cencel(id) {
                 this.zhetekshi[id].fio_ozgertu = this.zhetekshi[id].fio_user
                 this.zhetekshi[id].editUser = 0
+            },
+            getThankLetter(id){
+                this.$api.get('/turnirs/'+id+'/thankLetter',{
+                    responseType: 'blob'
+                }).then((response)=>{
+                    var fileURL = window.URL.createObjectURL(new Blob([response.data]));
+                    var fileLink = document.createElement('a');
+                    fileLink.href = fileURL;
+                    var d = new Date();
+                    fileLink.setAttribute('download', d.toLocaleString()+'.jpeg');
+                    document.body.appendChild(fileLink);
+                    fileLink.click();
+                })
             },
             openPopup(id) {
                 this.active = id

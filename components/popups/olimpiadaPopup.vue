@@ -41,7 +41,7 @@
                     </div>
                     <div class="btn_group">
                         <div class="cst_size_btn">
-                            <cstBtn :text="marapat(tuser.o_tizim.result) + ' жүктеу'" />
+                            <cstBtn @click.native="getCertificate" :text="marapat(tuser.o_tizim.result) + ' жүктеу'" />
                         </div>
                         <div class="cst_size_btn">
                             <glassBtn @click.native="katemenJumys" text="Қатемен жұмыс" svg=1 radian=1 />
@@ -105,6 +105,19 @@
         },
         props: ['active', 'tuser'],
         methods: {
+            getCertificate(){
+                this.$api.get('/olimpiada/'+this.tuser.idd+'/certificate',{
+                    responseType: 'blob'
+                }).then((response)=>{
+                    var fileURL = window.URL.createObjectURL(new Blob([response.data]));
+                    var fileLink = document.createElement('a');
+                    fileLink.href = fileURL;
+                    var d = new Date();
+                    fileLink.setAttribute('download', d.toLocaleString()+'.jpeg');
+                    document.body.appendChild(fileLink);
+                    fileLink.click();
+                })
+            },
             oblys(id) {
                 switch(id){
                     case 1: {return 'Облыстық'}

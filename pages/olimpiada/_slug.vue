@@ -1,5 +1,6 @@
 <template>
     <div>
+        <oplataPopup price="400" :oplataOpen="oplataPopup" @closePopup="oplataPopup=0" @next="oplataPopup++" />
         <olimpiadaPopup :active="active" @close="active=0" :tuser="o_user" />
         <confirmedPopup />
         <header_kroshki :header="header" />
@@ -43,10 +44,10 @@
                                 <div class="body">
                                     <div class="name-wrap">
                                         <div class="name">{{o_user.o_katysushy_fio}}</div>
-                                        <div v-if="o_user.tizim" class="ball">Балл: 20/{{o_user.tizim.result}}</div>
+                                        <div v-if="o_user.o_tizim" class="ball">Балл: 20/{{o_user.o_tizim.result}}</div>
                                     </div>
                                     <div v-if="o_user.bari_tapsirdy" class="wrap-go">
-                                        <editBtn text="3 дәрежелі дипломды жүктеу" img='3' />
+                                        <editBtn @click.native="getCertificate(o_user.idd)" :text="certCalc(o_user.o_tizim.result)+' жүктеу'" img='3' />
                                         <editBtn @click.native="moreResults(index)" text="Толығырақ" img='4' />
                                     </div>
                                     <div v-else class="wrap-edit">
@@ -105,11 +106,11 @@
                             <div v-if="zhetekshi.edit" class="block edit">
                                 <div class="body">
                                     <div class="solo-wrap">
-                                        <cstInput class="cst_input_40" stringPlaceholder="Қатысушының толық аты-жөні" />
+                                        <cstInput v-model="zhetekshi.name" class="cst_input_40" stringPlaceholder="Қатысушының толық аты-жөні" />
                                     </div>
                                     <div class="wrap">
                                         <saveBtn v-if="zhetekshi.loading" loading=1 />
-                                        <saveBtn v-else text="Сақтау" />
+                                        <saveBtn @click.native="updateZhetekshi(index)" v-else text="Сақтау" />
                                         <saveBtn @click.native="zhetekshi.edit=0" text="Болдырмау" red=1 />
                                     </div>
                                     <div class="numeric">
@@ -122,7 +123,7 @@
                                     <div class="name">{{zhetekshi.name}}</div>
                                     <div class="wrap-zhetekshi">
                                         <editBtn @click.native="zhetekshi.edit=1" text="Өзгерту" img='1' />
-                                        <editBtn text="Алғыс хатты жүктеу" img='3' />
+                                        <editBtn @click.native="getAlgys(zhetekshi.id)" text="Алғыс хатты жүктеу" img='3' />
                                     </div>
                                     <div class="numeric">
                                         <div class="num">{{index+1}}</div>
@@ -177,6 +178,7 @@
     import editBtn from '@/components/forms/editBtn.vue'
     import olimpiadaPopup from '@/components/popups/olimpiadaPopup.vue'
     import olimpLanding from '@/components/landing/olimp.vue'
+    import oplataPopup from '@/components/popups/oplataPopup.vue'
 
     export default {
         components: {
@@ -188,6 +190,7 @@
             editBtn,
             cstBtn,
             olimpiadaPopup,
+            oplataPopup,
             olimpLanding
         },
         data() {
@@ -203,6 +206,7 @@
                 preload: 1,
                 go: 0,
                 addNewUser: 0,
+                oplataPopup: 0,
                 newUserName: '',
                 newUserNomer: 1,
                 errorNewUserName: '',
@@ -226,6 +230,38 @@
             }
         },
         methods: {
+            certCalc(val){
+                if(val >= 19) return '1 дәрежелі дипломды';
+                else if(val >= 16) return '2 дәрежелі дипломды';
+                else if(val >= 13) return '3 дәрежелі дипломды';
+                else return 'Сертификатты';
+            },
+            getCertificate(id){
+                this.$api.get('/olimpiada/'+id+'/certificate',{
+                    responseType: 'blob'
+                }).then((response)=>{
+                    var fileURL = window.URL.createObjectURL(new Blob([response.data]));
+                    var fileLink = document.createElement('a');
+                    fileLink.href = fileURL;
+                    var d = new Date();
+                    fileLink.setAttribute('download', d.toLocaleString()+'.jpeg');
+                    document.body.appendChild(fileLink);
+                    fileLink.click();
+                })
+            },
+            getAlgys(id){
+                this.$api.get('/olimpiada/'+id+'/thankLetter',{
+                    responseType: 'blob'
+                }).then((response)=>{
+                    var fileURL = window.URL.createObjectURL(new Blob([response.data]));
+                    var fileLink = document.createElement('a');
+                    fileLink.href = fileURL;
+                    var d = new Date();
+                    fileLink.setAttribute('download', d.toLocaleString()+'.jpeg');
+                    document.body.appendChild(fileLink);
+                    fileLink.click();
+                })
+            },
             confirmDeleteUser(index) {
                 let o_user = this.o_users[index]
                 this.$dialog.open({
@@ -258,6 +294,21 @@
                 })
                 // АПИ ИЗМЕНЕНИЕ ИМЕНИ ДОДЕЛАТЬ
             },
+            updateZhetekshi(index){
+                this.zhetekshiler[index].loading = true
+                this.$api.post('/olimpiada/zhetekshi/'+this.zhetekshiler[index].id+'/update', {
+                    name: this.zhetekshiler[index].name,
+                }).then((res) => {
+                    this.zhetekshiler[index].loading = 0;
+                    if (res.data.status == true) {
+                        this.zhetekshiler[index].edit = 0;
+                        this.zhetekshiler[index].update_count--;
+                    }
+
+                }).catch((err) => {
+                    this.zhetekshiler[index].loading = 0;
+                })
+            },
             deleteUser(index) {
                 let user = this.o_users[index]
                 this.$api.get('/olimpiada/user/' + user.idd + '/destroy').then((res) => {
@@ -272,6 +323,7 @@
             },
             olimpTolem(index) {
                 this.o_users[index].loading = 1
+                this.oplataPopup = 6
                 this.$api.post('/olimpiada/test/tolem-zhasau', {
                     id: this.o_users[index].idd,
                     nomer: index + 1,
@@ -280,14 +332,14 @@
                     if (res.data.success == true) {
                         this.o_users[index].success = 1
                         this.o_users[index].o_tizim = res.data.o_tizim
-                        this.active = 4
+                        this.oplataPopup = 7
                         const userToUpdate = {
                             ...this.$auth.user
                         }
                         userToUpdate.balance = res.data.balance
                         this.$auth.setUser(userToUpdate)
                     } else if (res.data.success == false) {
-                        this.active = 5
+                        this.oplataPopup = 5
                     }
                     console.log(this.o_users)
                 }).catch((err) => {

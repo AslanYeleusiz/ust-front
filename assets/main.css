@@ -60,6 +60,13 @@ select:focus{
     border-bottom: 1px solid #D6D6D6;
     overflow: hidden;
 }
+.exit_btn_main_ex{
+    display: none;
+}
+.exit_btn_main_ex svg{
+    width: 20px;
+    height: 20px;
+}
 .menuSlideBar.disabled {
     width: 83px;
 }

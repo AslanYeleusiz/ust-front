@@ -1,8 +1,9 @@
 <template>
     <div>
         <div class="menuSlideBar" :class="{disabled: slideOpen}">
-            <div class="d-flex menuHeaderLogo aj-c">
+            <div class="d-flex aj-c menuHeaderLogo">
                 <navBarLogo />
+                <exitBtn @click.native="$emit('openMenu')" class="exit_btn_main_ex" />
             </div>
             <button @click="$emit('openMenu')" class="open_menu_button d-flex aj-c">
                 <arrowLeft :class="{imgRotate: slideOpen}" />
@@ -121,6 +122,7 @@
     import documentText from '@/components/svg/documentText.vue'
     import folder from '@/components/svg/folder.vue'
     import arrowLeft from '@/components/svg/arrowLeftCopy.vue'
+    import exitBtn from '@/components/forms/exitDefaultBtn.vue'
 
     export default {
         components: {
@@ -133,7 +135,8 @@
             monitorRecorder,
             documentText,
             folder,
-            arrowLeft
+            arrowLeft,
+            exitBtn,
         },
         methods: {
             getImgUrl(pet) {

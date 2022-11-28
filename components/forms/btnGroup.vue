@@ -1,5 +1,5 @@
 <template>
-    <div class="btn-group" v-click-outside="hide">
+    <div class="btn-group" :class="{danger:danger}" v-click-outside="hide">
         <button type="button" class="btn myBtn" :class="{active: isOpen, soup: type==2}" data-bs-toggle="dropdown" aria-expanded="false"  @click="openedMenu">
            <template v-if='isActive!=null'>
                {{category[isActive] ? category[isActive].name : 'Жүктелуде...'}}
@@ -25,10 +25,11 @@
                 isActive: this.active ?? null,
             }
         },
-        props: ['category', 'placeholder', 'type', 'active'],
+        props: ['category', 'placeholder', 'type', 'active', 'danger'],
         methods: {
             openedMenu() {
                 this.isOpen ? this.isOpen = false : this.isOpen = true
+                this.$emit('clearDanger')
             },
             hide() {
                 this.isOpen = false
@@ -61,6 +62,9 @@
     }
     .dropdown-menu {
         display: block;
+    }
+    .danger .myBtn{
+        border: 1px solid #dc3545;
     }
     .myBtn{
         display: flex;
