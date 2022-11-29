@@ -1,7 +1,7 @@
 <template>
     <div>
         <oplataPopup :price="turnir.price" :oplataOpen="oplataPopup" @closePopup="oplataPopup=0" @next="oplataPopup++" />
-        <turnirPopup :active="active" @close="active=0" :tuser="tuser" @testTapsyru="testTapsyru" />
+        <turnirPopup :active="active" @close="active=0" :tuser="tuser" @testTapsyru="testTapsyru" @oplataCert="getCertificate" />
         <confirmedPopup />
         <header_kroshki :header="header" />
         <div class="main">
@@ -50,7 +50,14 @@
                         </template>
                         <div v-if="addUser" class="block">
                             <div class="body add">
-                                <cstInput v-model="newName" stringPlaceholder="Қатысушының толық аты-жөні" @keyup.enter.native="addNewuser()" />
+                                <cstInput
+                                    v-model="newName"
+                                    class="cst_fix_span_input"
+                                    stringPlaceholder="Қатысушының толық аты-жөні"
+                                    @keyup.enter.native="addNewuser()"
+                                    @click.native="errorNewUserName=''"
+                                    :danger="errorNewUserName"
+                                    :dangerText="errorNewUserName" />
                                 <div class="wrap">
                                     <saveBtn v-if="loading" loading=1 />
                                     <saveBtn v-else @click.native="addNewuser()" text="Сақтау" />
@@ -76,7 +83,11 @@
                         <template v-for="(form, index) in zhetekshi">
                             <div v-if="form.editUser" class="block">
                                 <div class="body">
-                                    <cstInput v-model="form.fio_ozgertu" @keyup.enter.native="zh_fio_update(form.id, index)" stringPlaceholder="Жетекшінің толық аты-жөні" />
+                                    <cstInput
+                                        v-model="form.fio_ozgertu"
+                                        @keyup.enter.native="zh_fio_update(form.id, index)"
+                                        stringPlaceholder="Жетекшінің толық аты-жөні"
+                                         />
                                     <div class="wrap">
                                         <saveBtn v-if="form.loading" loading=1 />
                                         <saveBtn v-else @click.native="zh_fio_update(form.id, index)" text="Сақтау" />
@@ -105,7 +116,13 @@
                         </template>
                         <div v-if="zh_addUser" class="block">
                             <div class="body add">
-                                <cstInput v-model="zh_newName" stringPlaceholder="Жетекшінің толық аты-жөні" @keyup.enter.native="zh_addNewuser()" />
+                                <cstInput
+                                    class="cst_fix_span_input"
+                                    v-model="zh_newName"
+                                    stringPlaceholder="Жетекшінің толық аты-жөні"
+                                    @keyup.enter.native="zh_addNewuser()"
+                                    @click.native="errorNewZhetekshiName=''"
+                                    :danger="errorNewZhetekshiName" :dangerText="errorNewZhetekshiName" />
                                 <div class="wrap">
                                     <saveBtn v-if="loading" loading=1 />
                                     <saveBtn v-else @click.native="zh_addNewuser()" text="Сақтау" />
@@ -172,6 +189,8 @@
                 addUser: 0,
                 loading: 0,
                 zh_newName: '',
+                errorNewZhetekshiName: '',
+                errorNewUserName: '',
                 zh_addUser: 0,
                 turnir: {
                     id: null,
@@ -202,6 +221,7 @@
                 }
             },
             getCertificate(index){
+
                  var id = this.forms[index].id
                 this.$api.get('/turnirs/'+id+'/certificate', {
                     responseType: 'blob'
@@ -215,6 +235,7 @@
                     fileLink.click();
                 }).catch((err)=>{
                     if(err.response.status == 422){
+                        this.active = 0
                         this.oplataPopup = 6
                         this.oplataToGetCertificate(index)
                     }
@@ -314,47 +335,54 @@
                 //
             },
             addNewuser() {
-                this.loading = 1
-                const form = {
-                    fio_user: this.newName,
-                    turnir_id: this.turnir.id,
-                    turnir_name: this.turnir.name
+                if(this.newName == ''){
+                    this.errorNewUserName = 'Аты жөні толық жазылуы керек'
+                }else{
+                    this.loading = 1
+                    const form = {
+                        fio_user: this.newName,
+                        turnir_id: this.turnir.id,
+                        turnir_name: this.turnir.name
+                    }
+                    this.$api.$post('/turnirs/user/store', form).then((res) => {
+                        console.log(res);
+                        const user = res.turnir_user
+                        user['editUser'] = 0
+                        user['fio_ozgertu'] = res.turnir_user.fio_user
+                        user['loading'] = 0
+                        this.loading = 0
+                        this.forms.push(user)
+                        //                    this.$bus.$emit('successPopup')  соңында косамын
+                        this.cencelNewAddUser()
+                    })
                 }
-                this.$api.$post('/turnirs/user/store', form).then((res) => {
-                    console.log(res);
-                    const user = res.turnir_user
-                    user['editUser'] = 0
-                    user['fio_ozgertu'] = res.turnir_user.fio_user
-                    user['loading'] = 0
-                    this.loading = 0
-                    this.forms.push(user)
-                    //                    this.$bus.$emit('successPopup')  соңында косамын
-                    this.cencelNewAddUser()
-                }).catch((err) => {
-                    this.loading = 0
-                })
             },
             zh_addNewuser() {
                 this.loading = 1
-                if (this.forms.length / 4 <= this.zhetekshi.length) {
-                    // ӘР КАТЫСУШЫНЫН success ТЕКСЕРЫП ОШИБКА ШЫГАРУ КК
-                    this.active = 2
-                } else {
-                    const form = {
-                        zhetekshi_name: this.zh_newName,
-                        turnir_id: this.turnir.id
-                    }
-                    this.$api.$post('/turnirs/zhetekshi/store', form).then((res) => {
-                        const zhetekshi = res.zhetekshi
-                        zhetekshi['fio_ozgertu'] = zhetekshi['zhetekshi_name']
-                        zhetekshi['loading'] = 0
-                        zhetekshi['editUser'] = 0
-                        this.zhetekshi.push(zhetekshi);
-                        console.log(res)
-                    })
+                if (this.oplataValidate()) {
+                    if(this.zh_newName == ''){
+                       this.errorNewZhetekshiName = 'Аты жөні толық жазылуы керек'
+                    }else{
+                        const form = {
+                            zhetekshi_name: this.zh_newName,
+                            turnir_id: this.turnir.id
+                        }
+                        this.$api.$post('/turnirs/zhetekshi/store', form).then((res) => {
+                            const zhetekshi = res.zhetekshi
+                            zhetekshi['fio_ozgertu'] = zhetekshi['zhetekshi_name']
+                            zhetekshi['loading'] = 0
+                            zhetekshi['editUser'] = 0
+                            this.setZhNameUsers(zhetekshi['zhetekshi_name'])
 
+                            this.zhetekshi.push(zhetekshi);
+                            console.log(res)
+                        })
+                        this.cencelNewAddUser();
+                    }
+                } else {
+                    this.active = 2
                 }
-                this.cencelNewAddUser();
+
                 this.loading = 0
             },
             deleteUser(id, index) {
@@ -385,6 +413,19 @@
                     case 4: {this.tuser.turnir.cat_name = "Студент"; break;}
                 }
                 this.active = 1;
+            },
+            oplataValidate() {
+                let val = 0
+                this.forms.forEach((e)=>{
+                    if(e.success && e.zh_name == null) val++
+                })
+                return val >= 5 ? true : false
+            },
+            setZhNameUsers(text) {
+                this.forms.forEach((e)=>{
+                    if(e.success && e.zh_name == null)
+                        e.zh_name = text
+                })
             },
             getData() {
                 this.$api.$get('/turnirs/' + this.$route.params.slug).then((res) => {

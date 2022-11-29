@@ -33,7 +33,7 @@
                         </div>
                         <div v-if="tuser.diplom" class="list_item">
                             <img src="~assets/images/turnir_diploma.svg" alt="">
-                            <span class="light">Марапатыңыз: </span><span>{{tuser.diplom}} дәрежелі диплом</span>
+                            <span class="light">Марапатыңыз: </span><span>{{certCalc2(tuser.diplom)}}</span>
                         </div>
                         <div class="list_item">
                             <img src="~assets/images/turnir_Calendar.svg" alt="">
@@ -43,8 +43,10 @@
                     <div class="btn_group">
                         <div class="cst_size_btn">
                             <cstBtn
-                                :text="tuser.diplom+' дәрежелі дипломды жүктеу '+tuser.price+'тг'"
-                                square=1 />
+                                :text="certCalc(tuser.diplom) + (tuser.success ? '' : ' '+tuser.price +'тг')"
+                                square=1
+                                @click.native="$emit('oplataCert', tuser.index)"
+                                 />
                         </div>
                         <div class="cst_size_btn">
                             <glassBtn
@@ -99,7 +101,24 @@
             glassBtn,
 //            VideoPlayer
         },
-        props: ['active', 'tuser']
+        props: ['active', 'tuser'],
+        methods: {
+            certCalc(id){
+                if(id == 4){
+                    return 'Сертификатты жүктеу'
+                }else{
+                    return id+' дәрежелі дипломды жүктеу'
+                }
+            },
+            certCalc2(id){
+                if(id == 4){
+                    return 'Сертификат'
+                }else{
+                    return id+' дәрежелі диплом'
+                }
+            },
+
+        }
     }
 
 </script>

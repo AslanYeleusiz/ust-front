@@ -412,8 +412,8 @@
                 this.active = 1;
             },
             setNewZhetekshi() {
+                this.loading = 1
                 if(this.oplataValidate()){
-                    this.loading = 1
                     if(this.newZhetekshiName == ''){
                         this.errorNewZhetekshiName = 'Аты жөні толық жазылуы керек'
                     }else{
@@ -429,13 +429,14 @@
                             this.updateToAddZhetekshi(zhetekshi.id)
                             this.clearFeedBack()
                         }).catch((err)=>{
-                            this.loading = 0
+
                             console.log(err)
                         })
                     }
                 }else{
                     this.active = 2
                 }
+                this.loading = 0
 
             },
             oplataValidate() {
