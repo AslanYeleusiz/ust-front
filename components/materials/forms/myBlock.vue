@@ -37,17 +37,17 @@
             {{material.description}}
         </div>
         <div class="certBtns">
-            <button class="btn certBtn" @click="$emit('certificate')">
+            <button class="btn certBtn" @click.prevent="$emit('certificate')">
                 <download color="#ffffff"/>
                 Сертификатты жүктеу / тегін
             </button>
-            <button class="btn certBtn">
+            <button @click.prevent="$emit('getAlgys')" class="btn certBtn">
                 <download color="#ffffff"/>
-                Алғыс хатты жүктеу / 1500 тг
+                Алғыс хатты жүктеу {{material.algys ? '' : '/ 1500 тг'}}
             </button>
-            <button class="btn certBtn">
+            <button class="btn certBtn" @click="$emit('thankLetter')">
                 <download color="#ffffff"/>
-                Құрмет грамотасын жүктеу / 2000тг
+                Құрмет грамотасын жүктеу {{material.kurmet ? '' : '/ 2000 тг'}}
             </button>
             <button class="btn certBtn">
                 Жинаққа жариялау
@@ -263,6 +263,12 @@
                     width: 20px;
                     height: 20px;
                     margin-right: 10px;
+                }
+                &:hover{
+                    background: #8E5618;
+                }
+                &:active{
+                    background: #CD6B00;
                 }
             }
         }

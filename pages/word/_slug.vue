@@ -40,7 +40,7 @@
                     </div>
                     <div class="right">
                         <div class="payment">
-                            <template v-if="!isPurchased && $auth.user.id != material.user_id">
+                            <template v-if="!isPurchased && ($auth.user ? $auth.user.id : 0) != material.user_id">
                                 <div class="free">
                                     <template v-if="material.sell>0">
                                         Бүгін алсаңыз
@@ -87,7 +87,7 @@
                 <template v-else>
                     <iframe :src="'https://view.officeapps.live.com/op/embed.aspx?src=https://ust.kz/frontend/web/'+material.file_doc" width='100%' height='600px' frameborder='0'></iframe>
                 </template>
-                <bigBtn v-if="!isPurchased && material.sell>0" @click.native="buyThisMaterial()" class="downloadBtn" :text="calcPercent(material.sell) + 'тг - Сатып алу'" img="importwhite.svg" />
+                <bigBtn v-if="!isPurchased && material.sell>0 && ($auth.user ? $auth.user.id : 0) != material.user_id" @click.native="buyThisMaterial()" class="downloadBtn" :text="calcPercent(material.sell) + 'тг - Сатып алу'" img="importwhite.svg" />
                 <bigBtn v-else @click.native="download()" class="downloadBtn" text="Материалды жүктеу" img="importwhite.svg" />
                 <div class="share">
                     Материал ұнаса әріптестеріңізбен бөлісіңіз

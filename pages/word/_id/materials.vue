@@ -6,7 +6,7 @@
                 <div class="main_header">
                     <div class="cst-ct d-flex a-c j-b">
                         <div class="d-flex overflow">
-                            Арманов Арманның жеке парақшасы
+                            {{user.fio ? user.fio : 'Қолданушының'}} жеке парақшасы
                         </div>
                         <div class="d-flex a-c free-cert">
                             <div class="free-cert-button">
@@ -70,7 +70,7 @@
         props: ['head', 'active'],
         methods: {
             getApiImgUrl(pet) {
-                pet = pet == '' ? 'userDefault.png' : pet;
+                pet = !pet ? 'userDefault.png' : pet;
                 var images = this.$store.state.apiUrl + '/images/avatars/' + pet;
                 console.log(images)
                 return images

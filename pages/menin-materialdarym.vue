@@ -1,6 +1,8 @@
 <template>
     <div>
     <deletePopup :isOpen="deletePopupOpen" :material_id="deleteMaterialId" @closePopup="deletePopupOpen=false"/>
+
+       <oplataPopup :price="oplataSell" :oplataOpen="oplataPopup" @closePopup="oplataPopup=0" @next="oplataPopup++" />
         <headLink :head='head' active=1 />
         <div class="main">
             <div class="cst-ct">
@@ -23,7 +25,7 @@
         <div class="materials-list">
             <div class="cst-ct">
                 <template v-if="categoryIsActive==0">
-                    <myMaterials/>
+                    <myMaterials @setOplataPopup="setOplataPopup" />
                 </template>
                 <template v-else-if="categoryIsActive==1">
                     <zhinak />
@@ -43,6 +45,7 @@
     import zhinak from '@/components/materials/my_materials/zhinak.vue'
     import qmg from '@/components/materials/my_materials/qmg.vue'
     import deletePopup from '@/components/popups/deletePopup.vue'
+    import oplataPopup from '@/components/popups/oplataPopup.vue'
     import headLink from '@/components/header.vue'
 
     export default {
@@ -67,7 +70,13 @@
             zhinak,
             qmg,
             deletePopup,
+            oplataPopup,
             headLink
+        },
+        methods: {
+            setOplataPopup(id){
+                return this.oplataPopup = id
+            }
         },
         data() {
             return {
@@ -81,6 +90,8 @@
                 categories: ['Материалдарым', 'Жинақтарым', 'Дайын ҚМЖ-ларым'],
                 categoryIsActive: 0,
                 deletePopupOpen: false,
+                oplataPopup: 0,
+                oplataSell: null,
                 deleteMaterialId: null,
             }
         },

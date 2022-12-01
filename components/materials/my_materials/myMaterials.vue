@@ -11,12 +11,16 @@
         <div v-show="loading == 1" class="text-center mt-3">
             <b-spinner variant="primary" label="Text Centered"></b-spinner>
         </div>
-        <template v-for="material in materials">
+        <template v-for="(material, index) in materials">
             <div v-if="material.purchased">
                 <block :material="material" />
             </div>
             <div v-else>
-                <myBlock :material="material" @certificate="getCertificate(material.id)" />
+                <myBlock :material="material"
+                    @certificate="getCertificate(material.id)"
+                    @getAlgys="getAlgys(index)"
+                    @thankLetter="getKurmet(index)"
+                     />
             </div>
         </template>
         <div class="paginate">
@@ -52,6 +56,7 @@
                 loading: false,
                 materials: [],
                 materials_count: 0,
+                oplataSell: 400,
                 COUNT: 0,
                 currentPage: 1,
                 lastPage: 1,
@@ -80,16 +85,78 @@
 
             },
             getCertificate(id) {
-                this.$axios.$get('/menin-materialdarym/' + id + '/certificate', {
+                this.$axios.get('/word/' + id + '/certificate', {
                     responseType: 'blob'
                 }).then((response) => {
-                    const blob = new Blob([response]);
-                    const link = document.createElement('a');
-                    link.href = window.URL.createObjectURL(blob);
-                    link.download = 'certificate.jpg';
-                    link.click();
+                    var fileURL = window.URL.createObjectURL(new Blob([response.data]));
+                    var fileLink = document.createElement('a');
+                    fileLink.href = fileURL;
+                    var d = new Date();
+                    fileLink.setAttribute('download', d.toLocaleString() + '.jpeg');
+                    document.body.appendChild(fileLink);
+                    fileLink.click();
                 })
             },
+            getAlgys(index) {
+                if(this.materials[index].algys){
+                    this.$api.get('/word/' + this.materials[index].id + '/getAlgys', {
+                        responseType: 'blob'
+                    }).then((response) => {
+                        var fileURL = window.URL.createObjectURL(new Blob([response.data]));
+                        var fileLink = document.createElement('a');
+                        fileLink.href = fileURL;
+                        var d = new Date();
+                        fileLink.setAttribute('download', d.toLocaleString() + '.jpeg');
+                        document.body.appendChild(fileLink);
+                        fileLink.click();
+                    })
+                }else this.buyForAlgys(index)
+            },
+            buyForAlgys(index){
+                this.$emit('setOplataPopup', 6);
+                this.$api.get('/word/' + this.materials[index].id + '/buyAlgys').then((res) => {
+                    this.materials[index].algys = res.data.ser_id
+                    this.$emit('setOplataPopup', 7);
+                    const userToUpdate = {
+                        ...this.$auth.user
+                    }
+                    userToUpdate.balance = res.data.balance
+                    this.$auth.setUser(userToUpdate)
+                }).catch((err) =>{
+                    if(err.response.data.errors.balance) this.$emit('setOplataPopup', 5);
+                })
+            },
+            getKurmet(index) {
+                if(this.materials[index].kurmet){
+                    this.$api.get('/word/' + this.materials[index].id + '/getKurmet', {
+                        responseType: 'blob'
+                    }).then((response) => {
+                        var fileURL = window.URL.createObjectURL(new Blob([response.data]));
+                        var fileLink = document.createElement('a');
+                        fileLink.href = fileURL;
+                        var d = new Date();
+                        fileLink.setAttribute('download', d.toLocaleString() + '.jpeg');
+                        document.body.appendChild(fileLink);
+                        fileLink.click();
+                    })
+                }else this.buyForKurmet(index)
+            },
+            buyForKurmet(index){
+                this.$emit('setOplataPopup', 6);
+                this.$api.get('/word/' + this.materials[index].id + '/buyKurmet').then((res) => {
+                    this.materials[index].kurmet = res.data.ser_id
+                    this.$emit('setOplataPopup', 7);
+                    const userToUpdate = {
+                        ...this.$auth.user
+                    }
+                    userToUpdate.balance = res.data.balance
+                    this.$auth.setUser(userToUpdate)
+                }).catch((err) =>{
+                    if(err.response.data.errors.balance) this.$emit('setOplataPopup', 5);
+                })
+            },
+
+
             Pageload(e) {
                 this.currentPage = e;
                 this.getData();
