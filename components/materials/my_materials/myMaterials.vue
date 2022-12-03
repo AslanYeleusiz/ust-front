@@ -78,7 +78,7 @@
                     this.currentPage = posts.materials.current_page;
                     this.lastPage = posts.materials.last_page;
                     this.materials = posts.materials.data;
-                    if (posts.count_materials == 0) this.loading = 2;
+                    if (posts.materials.data.length == 0) this.loading = 2;
                     else this.loading = false;
                 }).catch(error => {
                     console.log('error: ' + error);
