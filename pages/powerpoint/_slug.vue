@@ -1,6 +1,6 @@
 <template>
     <div>
-        <oplataPopup :oplataOpen="oplataPopup" @closePopup="oplataPopup=0" @next="oplataPopup++" />
+        <oplataPopup :price="calcPercent(material.sell)" :oplataOpen="oplataPopup" @closePopup="oplataPopup=0" @next="oplataPopup++" />
         <header_kroshki :header='header' gotoUrl='/material' />
         <section class="main">
             <div class="cst-ct">
@@ -40,21 +40,26 @@
                     </div>
                     <div class="right">
                         <div class="payment">
-                            <template v-if="!isPurchased">
+                            <template v-if="!isPurchased && ($auth.user ? $auth.user.id : 0) != material.user_id">
                                 <div class="free">
                                     <template v-if="material.sell>0">
-                                        Бүгін алсаңыз
-                                        <span class="skidka">
-                                            30% жеңілдік
-                                        </span><br>
-                                        беріледі
+                                        <template v-if="material.skidka">
+                                            Бүгін алсаңыз
+                                            <span class="skidka">
+                                                {{material.skidka.skidka}}% жеңілдік
+                                            </span><br>
+                                            беріледі
+                                        </template>
+                                        <template v-else>
+                                            Материал ақылы
+                                        </template>
                                     </template>
                                     <template v-else>
                                         Материал тегін
                                     </template>
                                 </div>
                                 <div v-if="material.sell>0" class="text-center mt-10">
-                                    <span class="old">{{material.sell}} тг</span> <span class="new">{{calcPercent(material.sell)}} тг</span>
+                                    <span v-if="material.skidka" class="old">{{material.sell}} тг</span> <span class="new">{{calcPercent(material.sell)}} тг</span>
                                 </div>
                                 <cstBtn v-if="!loading && material.sell>0" @click.native="buyThisMaterial()" :text="calcPercent(material.sell) + 'тг - Сатып алу'" img="importwhite.svg" class="cst_size" />
                                 <cstBtn v-else-if="loading" loading=1 class="cst_size" />
@@ -64,7 +69,9 @@
                                 <img src="~assets/images/wallet-check.png" alt="">
                                 <div class="free">
                                     <span class="gradient">
-                                        Материал сатып<br>алынған
+                                        {{$auth.user.id == material.user_id ? 'Материал' : 'Материал сатып'}}
+                                        <br>
+                                        {{$auth.user.id == material.user_id ? '№'+material.id : 'алынған'}}
                                     </span>
                                 </div>
                                 <cstBtn @click.native="download()" text="Жүктеп алу" img="importwhite.svg" class="cst_size" />
@@ -85,7 +92,7 @@
                 <template v-else>
                     <iframe :src="'https://view.officeapps.live.com/op/embed.aspx?src=https://ust.kz/frontend/web/'+material.file_doc" width='100%' height='600px' frameborder='0'></iframe>
                 </template>
-                <bigBtn v-if="!isPurchased" @click.native="buyThisMaterial()" class="downloadBtn" :text="calcPercent(material.sell) + 'тг - Сатып алу'" img="importwhite.svg" />
+                <bigBtn v-if="!isPurchased && material.sell>0 && ($auth.user ? $auth.user.id : 0) != material.user_id" @click.native="buyThisMaterial()" class="downloadBtn" :text="calcPercent(material.sell) + 'тг - Сатып алу'" img="importwhite.svg" />
                 <bigBtn v-else @click.native="download()" class="downloadBtn" text="Материалды жүктеу" img="importwhite.svg" />
                 <div class="share">
                     Материал ұнаса әріптестеріңізбен бөлісіңіз
@@ -118,8 +125,10 @@
                             Бұл сертификат «Ustaz tilegi» Республикалық ғылыми – әдістемелік журналының желілік басылымына өз авторлық жұмысын жарияланғанын растайды. Журнал Қазақстан Республикасы Ақпарат және Қоғамдық даму министрлігінің №KZ09VPY00029937 куәлігін алған. Сондықтан аттестацияға жарамды.
                         </div>
                         <div class="certBtns">
-                            <emptyBtn text="Сертификатты көру" />
-                            <emptyBtn text="Осындай сертификат алу" />
+                            <emptyBtn @click.native="getCertificate" text="Сертификатты көру" />
+                            <NuxtLink to="/zharialau">
+                                <emptyBtn text="Осындай сертификат алу" />
+                            </NuxtLink>
                         </div>
                     </div>
                 </div>
@@ -220,6 +229,7 @@
                     this.loading = 1
                     this.$api.post('/word/' + this.material.id + '/purchase', {
                         sell: this.calcPercent(this.material.sell),
+                        skidka: this.material.skidka ? this.material.skidka.skidka : 0,
                     }).then((res) => {
                         console.log(res);
                         if (res.data.purchase) {
@@ -233,8 +243,21 @@
                     })
                 }
             },
+            getCertificate() {
+                this.$axios.get('/word/' + this.material.id + '/certificate', {
+                    responseType: 'blob'
+                }).then((response) => {
+                    var fileURL = window.URL.createObjectURL(new Blob([response.data]));
+                    var fileLink = document.createElement('a');
+                    fileLink.href = fileURL;
+                    var d = new Date();
+                    fileLink.setAttribute('download', d.toLocaleString() + '.jpeg');
+                    document.body.appendChild(fileLink);
+                    fileLink.click();
+                })
+            },
             calcPercent(e) {
-                return e * 0.7;
+                return Math.round(e - e * (this.material.skidka ? this.material.skidka.skidka : 0) / 100);
             },
             copyUrl() {
                 let tempInput = document.createElement('textarea');
@@ -269,7 +292,7 @@
                 //                this.$axios.$get('/word/'+this.material.user.id+'/materials').then((res)=>{
                 //                    console.log(res)
                 //                })
-                this.$router.push('/word/' + this.material.user.id + '/materials')
+                this.$router.push('/word/' + this.material.user_id + '/materials')
             }
         },
         async fetch() {

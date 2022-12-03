@@ -12,17 +12,18 @@
             <b-spinner variant="primary" label="Text Centered"></b-spinner>
         </div>
         <template v-for="(material, index) in materials">
-            <div v-if="material.purchased">
-                <block :material="material" />
-            </div>
-            <div v-else>
+            <div v-if="!material.purchase">
                 <myBlock :material="material"
                     @certificate="getCertificate(material.id)"
                     @getAlgys="getAlgys(index)"
                     @thankLetter="getKurmet(index)"
                      />
             </div>
+            <div v-else>
+                <block :material="material" />
+            </div>
         </template>
+
         <div class="paginate">
             <pagination :currentPage="currentPage" :lastPage="lastPage" @set-page="Pageload" />
         </div>
@@ -70,7 +71,7 @@
                         page: this.currentPage
                     }
                 }).then(res => {
-                    console.log('then: ' + res);
+                    console.log(res);
                     let posts = res.data;
                     this.materials_count = posts.count_materials;
                     this.COUNT = posts.COUNT;

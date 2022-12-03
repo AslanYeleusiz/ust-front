@@ -43,18 +43,23 @@
                             <template v-if="!isPurchased && ($auth.user ? $auth.user.id : 0) != material.user_id">
                                 <div class="free">
                                     <template v-if="material.sell>0">
-                                        Бүгін алсаңыз
-                                        <span class="skidka">
-                                            30% жеңілдік
-                                        </span><br>
-                                        беріледі
+                                        <template v-if="material.skidka">
+                                            Бүгін алсаңыз
+                                            <span class="skidka">
+                                                {{material.skidka.skidka}}% жеңілдік
+                                            </span><br>
+                                            беріледі
+                                        </template>
+                                        <template v-else>
+                                            Материал ақылы
+                                        </template>
                                     </template>
                                     <template v-else>
                                         Материал тегін
                                     </template>
                                 </div>
                                 <div v-if="material.sell>0" class="text-center mt-10">
-                                    <span class="old">{{material.sell}} тг</span> <span class="new">{{calcPercent(material.sell)}} тг</span>
+                                    <span v-if="material.skidka" class="old">{{material.sell}} тг</span> <span class="new">{{calcPercent(material.sell)}} тг</span>
                                 </div>
                                 <cstBtn v-if="!loading && material.sell>0" @click.native="buyThisMaterial()" :text="calcPercent(material.sell) + 'тг - Сатып алу'" img="importwhite.svg" class="cst_size" />
                                 <cstBtn v-else-if="loading" loading=1 class="cst_size" />
@@ -224,6 +229,7 @@
                     this.loading = 1
                     this.$api.post('/word/' + this.material.id + '/purchase', {
                         sell: this.calcPercent(this.material.sell),
+                        skidka: this.material.skidka ? this.material.skidka.skidka : 0,
                     }).then((res) => {
                         console.log(res);
                         if (res.data.purchase) {
@@ -251,7 +257,7 @@
                 })
             },
             calcPercent(e) {
-                return Math.round(e * 0.7);
+                return Math.round(e - e * (this.material.skidka ? this.material.skidka.skidka : 0) / 100);
             },
             copyUrl() {
                 let tempInput = document.createElement('textarea');
@@ -286,7 +292,7 @@
                 //                this.$axios.$get('/word/'+this.material.user.id+'/materials').then((res)=>{
                 //                    console.log(res)
                 //                })
-                this.$router.push('/word/' + this.material.user.id + '/materials')
+                this.$router.push('/word/' + this.material.user_id + '/materials')
             }
         },
         async fetch() {

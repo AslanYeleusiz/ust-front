@@ -48,7 +48,7 @@
             this.$bus.$on('closeMenu', ()=>{
                 this.slideActive = true;
             })
-
+            this.slideActive = window.innerWidth > 769 ? false : true;
         }
     }
 
