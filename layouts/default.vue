@@ -28,7 +28,7 @@
         },
         data() {
             return {
-                slideActive: false,
+                slideActive: true,
                 loginPopup: 0,
             }
         },
@@ -48,7 +48,7 @@
             this.$bus.$on('closeMenu', ()=>{
                 this.slideActive = true;
             })
-            this.slideActive = window.innerWidth > 769 ? false : true;
+            this.slideActive = window.innerWidth <= 769 ? true : false;
         }
     }
 
