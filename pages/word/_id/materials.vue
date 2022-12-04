@@ -61,7 +61,9 @@
         data() {
             return {
                 materials: [],
-                user: null,
+                user: {
+                    fio: null,
+                },
                 currentPage: 1,
                 loading: 0,
             }
@@ -81,7 +83,7 @@
                 this.getData();
             },
             getData() {
-                his.$axios.$get('word/' + this.$route.params.id + '/materials', {
+                this.$axios.$get('word/' + this.$route.params.id + '/materials', {
                     params: {
                         page: this.currentPage
                     }
@@ -91,8 +93,8 @@
                 })
             }
         },
-        async fetch() {
-            await this.$axios.$get('word/' + this.$route.params.id + '/materials').then((res) => {
+        mounted() {
+            this.$axios.$get('word/' + this.$route.params.id + '/materials').then((res) => {
                 this.materials = res.materials
                 this.user = res.user
                 console.log(res.user)

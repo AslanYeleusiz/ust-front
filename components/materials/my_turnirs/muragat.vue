@@ -24,18 +24,39 @@
                                 <div v-for="(tuser, index) in sortedTuser(month)">
                                     <div class="tuser_block">
                                         <div class="numeric">{{index+1}}</div>
-                                        <div class="body">
+                                        <div v-if="tuser.edit" class="body_wrap">
+                                            <div class="input-wrap">
+                                                <cstInput class="cst_input_40 cst_fix_span_input" stringPlaceholder="Қатыsсушының толық аты-жөні" @keyup.enter.native="editUser(index)" v-model="tuser.fio_user" :danger="tuser.error" :dangerText="tuser.error" />
+                                            </div>
+                                            <div class="wrap">
+                                                <saveBtn v-if="tuser.loading" loading=1 />
+                                                <saveBtn v-else @click.native="editUser(index)" text="Сақтау" />
+                                                <saveBtn @click.native="tuser.edit=0" text="Болдырмау" red=1 />
+                                            </div>
+                                        </div>
+                                        <div v-else class="body">
                                             <div class="name">{{tuser.fio_user}}</div>
                                             <div class="btn_list">
-                                                <div class="cst_size_btn v1">
-                                                    <editBtn text="Сертификатты жүктеу" img='3' />
-                                                </div>
-                                                <div class="cst_size_btn v2">
-                                                    <editBtn text="Ата-анаға алғыс хатты жүктеу" img='3' />
-                                                </div>
-                                                <div class="cst_size_btn v3">
-                                                    <editBtn text="Толығырақ" img='4' />
-                                                </div>
+                                                <template v-if="tuser.go">
+                                                    <div class="cst_size_btn v1">
+                                                        <editBtn @click.native="$emit('getCertificate',index,tuser.id)" :text="certCalc(tuser.diplom) +(tuser.success ? '' : ' - '+tuser.price+' тг')" img='3' />
+                                                    </div>
+                                                    <div class="cst_size_btn v2">
+                                                        <editBtn text="Ата-анаға алғыс хатты жүктеу" img='3' />
+                                                    </div>
+                                                    <div class="cst_size_btn v3">
+                                                        <editBtn @click.native="moreResults(tuser)" text="Толығырақ" img='4' />
+                                                    </div>
+                                                </template>
+                                                <template v-else>
+                                                    <div v-if="tuser.update_count" class="cst_size_btn v4">
+                                                        <editBtn @click.native="tuser.edit=1" text="Өзгерту" img='1' />
+                                                    </div>
+                                                    <div class="cst_size_btn v5">
+                                                        <cstBtn v-if="tuser.loading" loading=1 radian=1 />
+                                                        <cstBtn v-else @click.native="startTurnir(index)" text="Тест тапсыру" radian=1 />
+                                                    </div>
+                                                </template>
                                             </div>
                                         </div>
                                     </div>
@@ -78,10 +99,16 @@
 <script>
     import btnGroup from '@/components/forms/btnGroup.vue'
     import editBtn from '@/components/forms/editBtn.vue'
+    import cstBtn from '@/components/forms/btn.vue'
+    import cstInput from '@/components/forms/cstInput.vue'
+    import saveBtn from '@/components/forms/saveBtn.vue'
 
     export default {
         components: {
             btnGroup,
+            cstBtn,
+            cstInput,
+            saveBtn,
             editBtn
         },
         props: ['thisYear'],
@@ -100,11 +127,52 @@
             }
         },
         methods: {
+            moreResults(e) {
+                this.$emit('moreResults', e);
+            },
             enterYear(res) {
                 this.loading = 1
                 this.activeMonth = []
                 this.year = this.years[res]
                 this.getData()
+            },
+            startTurnir(id) {
+                let slug = this.tusers[id].lat_name + '-' + this.tusers[id].turnir.id
+                if (this.$auth.strategy.token.get()) {
+                    this.$api.$get('/turnirs/' + slug).then((res) => {
+                        this.$router.push({
+                            name: 'turnir-slug',
+                            params: {
+                                slug: slug,
+                                turnir: res.turnir,
+                                turnir_users: res.turnir_users,
+                                zhetekshi: res.zhetekshi,
+                            }
+                        });
+                    });
+                } else this.$bus.$emit('openLogin')
+            },
+            certCalc(id) {
+                if (id == 4) {
+                    return 'Сертификатты жүктеу'
+                } else {
+                    return id + ' дәрежелі дипломды жүктеу'
+                }
+            },
+            editUser(index) {
+                this.tusers[index].loading = 1
+                this.$api.post('/turnirs/user/'+this.tusers[index].id+'/update', {
+                    fio_user: this.tusers[index].fio_user,
+//                    synyp: this.tusers[index].o_tury.synyp
+                }).then((res) => {
+                    this.tusers[index].loading = 0;
+                    if (res.data.status == 200) {
+                        this.tusers[index].edit = 0;
+                        this.tusers[index].update_count--;
+                    }
+                }).catch((err) => {
+
+                })
             },
             getData() {
                 this.$api.$get('/turnirs/my_turnirs/muragat', {
@@ -214,7 +282,8 @@
                 font-weight: 400;
                 line-height: 22px;
                 color: #363636;
-                &.zhetekshi{
+
+                &.zhetekshi {
                     margin-top: 50px;
                 }
             }
@@ -261,12 +330,52 @@
                             display: grid;
                             grid-template-columns: auto auto auto;
                             gap: 10px;
-                            @media all and (max-width: 991px){
+
+                            @media all and (max-width: 991px) {
                                 grid-template-columns: auto;
                             }
 
                         }
 
+                    }
+                    .body_wrap {
+                        padding: 25px 15px;
+                        background: #FFF1E4;
+
+                        .wrap-go {
+                            position: relative;
+                            z-index: 3;
+                            margin-top: 15px;
+                            display: grid;
+                            grid-template-columns: 280px 180px;
+                            grid-template-rows: 40px;
+                            grid-gap: 10px;
+
+                        }
+
+                        .input-wrap {
+                            display: grid;
+                            grid-template-columns: 1fr;
+                            grid-gap: 10px;
+                            position: relative;
+                            z-index: 4;
+
+
+                            .cst-size-btn {
+                                width: 200px;
+                                display: grid;
+                            }
+                        }
+
+                        .wrap {
+                            margin-top: 10px;
+                            display: grid;
+                            grid-template-columns: 135px 135px;
+                            grid-gap: 10px;
+                            position: relative;
+                            height: 40px;
+                            z-index: 3;
+                        }
                     }
                 }
             }
@@ -287,6 +396,14 @@
 
         &.v3 {
             max-width: 160px;
+        }
+
+        &.v4 {
+            width: 135px;
+        }
+
+        &.v5 {
+            width: 220px;
         }
 
     }
@@ -316,7 +433,8 @@
         .list .list_block .info {
             margin-top: 20px;
         }
-        .list .list_block .tuser_list .tuser_block .body .name{
+
+        .list .list_block .tuser_list .tuser_block .body .name {
             width: 100%;
         }
     }

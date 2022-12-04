@@ -37,7 +37,7 @@
                         </div>
                         <div class="list_item">
                             <img src="~assets/images/turnir_Calendar.svg" alt="">
-                            <span class="light">Уақыты: </span><span>{{tuser.test_complete_date}}</span>
+                            <span class="light">Уақыты: </span><span>{{tuser.date}}</span>
                         </div>
                     </div>
                     <div class="btn_group">
@@ -45,7 +45,7 @@
                             <cstBtn
                                 :text="certCalc(tuser.diplom) + (tuser.success ? '' : ' '+tuser.price +'тг')"
                                 square=1
-                                @click.native="$emit('oplataCert', tuser.index)"
+                                @click.native="$emit('oplataCert', tuser.index,tuser.id)"
                                  />
                         </div>
                         <div class="cst_size_btn">

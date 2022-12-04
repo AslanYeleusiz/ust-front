@@ -1,5 +1,6 @@
 <template>
     <div>
+        <videoPopup :isOpen="videoOpen" :youtube="youtubeLink" @closePopup="videoOpen=0"></videoPopup>
         <header>
             <div class="otstup"></div>
             <div class="main_header">
@@ -141,6 +142,7 @@
 
             </div>
         </section>
+        <!--
         <section class="main_sharalar">
             <div class="cst-ct">
                 <h2 class="h2">Жоспарланған іс-шаралар</h2>
@@ -161,6 +163,37 @@
             </div>
 
 
+        </section>
+-->
+        <section class="main_diploms">
+            <div class="cst-ct">
+                <div class="mb_notification">
+                    <img src="~assets/images/success3d.png" alt="">
+                    <div class="mb_text">Біздің олимпиадалар рұқсат етілген олимпиадалар тізімінде бар. Жарыстарға қатысып, алған марапаттарыңыз портфолиоға салуға жарамды.</div>
+                </div>
+                <div class="mb_head">
+                    ДИПЛОМДАР МЕН СЕРТИФИКАТТАР
+                    <div class="mb_prepend">
+                        алып, санатыңызды көтеріңіз!
+                    </div>
+                </div>
+                <div class="mb_body">
+                    <div v-for="zhospar in zhosparlar" :key="zhospar" :style="{backgroundImage: `url(` + getImgUrl(zhospar.img) + `)`}" class="mb_block">
+                        <div class="mb_title">{{zhospar.title}}</div>
+                        <div>
+                            <div class="a-c">
+                                <img src="~assets/images/coin.svg" alt="">
+                                <div>Қатысу жарнасы: 490 тг</div>
+                            </div>
+                            <div class="a-c">
+                                <img src="~assets/images/calendar-2.svg" alt="">
+                                <div>Уақыты: 1-31 қазан аралығында</div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
         </section>
         <section class="main_calc">
             <div class="cst-ct">
@@ -249,14 +282,14 @@
                 </div>
                 <div class="mq_list">
                     <template v-for="(links_item, index) in questions">
-                        <NuxtLink :to="links_item.route_name">
+                        <a href="#" @click.prevent="videoOpen=1">
                             <div class="mq_block">
                                 <div class="play">
                                     <img src="~assets/images/playCent.svg" alt="">
                                 </div>
                                 <div class="desc">{{links_item.title}}</div>
                             </div>
-                        </NuxtLink>
+                        </a>
                     </template>
                 </div>
             </div>
@@ -268,28 +301,16 @@
     import cstBtn from '@/components/forms/btn.vue'
     import certBtn from '@/components/forms/certBtn.vue'
     import notification from '@/components/svg/notification.vue'
+    import videoPopup from '@/components/popups/videoPopup.vue'
 
     export default {
         components: {
             cstBtn,
             certBtn,
-            notification
+            notification,
+            videoPopup,
         },
         layout: 'default',
-        methods: {
-            getImgUrl(pet) {
-                var images = require.context('../assets/images/', false)
-                return images('./' + pet)
-            },
-            getType(num) {
-                if (num == 1) return 'Вебинар';
-                else return 'Не вебинар';
-            },
-            gotoProfile() {
-                this.$router.push('/profile');
-            }
-        },
-        props: ['slideOpen'],
         data() {
             return {
                 options: {
@@ -301,11 +322,14 @@
                     autoplayHoverPause: true,
                     paginationEnable: false,
                 },
+                youtubeLink: 'https://www.youtube.com/watch?v=UZ7PjWSFhFM',
                 calcMaterialsValue: 15,
                 calclDownloads: 15,
                 calcMaterialCost: 1000,
+                videoOpen: 0,
                 title: 'Ustaz tilegi - Ұстаз тілегі Республикалық ұастаздар сайты',
-                links_items: [{
+                links_items: [
+                    {
                         image: 'userl.svg',
                         head: 'Жеке кабинет',
                         body: 'Сіздің барлық жетістіктеріңіз осында',
@@ -378,7 +402,8 @@
                         route_name: 'zhinaq',
                     },
                 ],
-                links_to_page: [{
+                links_to_page: [
+                    {
                         image: 'message-question.svg',
                         name: 'Жеке кеңес алу',
                         route_name: 'zheke_qenes_alu',
@@ -430,40 +455,29 @@
                     },
                 ],
                 zhosparlar: [{
-                        type: 1,
-                        title: 'Сабақта қолданылатын үздік әдіс-тәсілдер',
-                        date: '11 Қараша, 16:00',
+                        title: 'Республикалық Қазан айының зияткерлік олимпиадасы',
                         route_name: 'sabaqta_qoldanylatyn_yszdik_adis_tasilder',
+                        img: 'mb_cup.png',
                     },
                     {
-                        type: 1,
-                        title: 'Сабақта қолданылатын үздік әдіс-тәсілдер',
-                        date: '11 Қараша, 16:00',
+                        title: 'Қазан айының блиц-турнирі',
                         route_name: 'sabaqta_qoldanylatyn_yszdik_adis_tasilder',
+                        img: 'mb_medal-star.png',
                     },
                     {
-                        type: 1,
-                        title: 'Сабақта қолданылатын үздік әдіс-тәсілдер',
-                        date: '11 Қараша, 16:00',
+                        title: 'Республикалық байқаулар',
                         route_name: 'sabaqta_qoldanylatyn_yszdik_adis_tasilder',
+                        img: 'mb_medal.png',
                     },
                     {
-                        type: 1,
                         title: 'Сабақта қолданылатын үздік әдіс-тәсілдер',
-                        date: '11 Қараша, 16:00',
                         route_name: 'sabaqta_qoldanylatyn_yszdik_adis_tasilder',
+                        img: 'mb_cup.png',
                     },
                     {
-                        type: 1,
-                        title: 'Сабақта қолданылатын үздік әдіс-тәсілдер',
-                        date: '11 Қараша, 16:00',
+                        title: 'Халықаралық Қазан айының зияткерлік олимпиадасы',
                         route_name: 'sabaqta_qoldanylatyn_yszdik_adis_tasilder',
-                    },
-                    {
-                        type: 1,
-                        title: 'Сабақта қолданылатын үздік әдіс-тәсілдер',
-                        date: '11 Қараша, 16:00',
-                        route_name: 'sabaqta_qoldanylatyn_yszdik_adis_tasilder',
+                        img: 'mb_cup.png',
                     },
                 ],
                 questions: [{
@@ -484,8 +498,24 @@
                     },
 
                 ]
+
             }
         },
+        methods: {
+            getImgUrl(pet) {
+                var images = require.context('../assets/images/', false)
+                return images('./' + pet)
+            },
+            getType(num) {
+                if (num == 1) return 'Вебинар';
+                else return 'Не вебинар';
+            },
+            gotoProfile() {
+                this.$router.push('/profile');
+            }
+        },
+        props: ['slideOpen'],
+
         head() {
             return {
                 title: this.title,
@@ -502,16 +532,20 @@
             display: none;
         }
     }
-    .cst_size_btn{
+
+    .cst_size_btn {
         height: 55px;
-        @media all and (max-width: 767px){
+
+        @media all and (max-width: 767px) {
             height: 40px;
         }
-        @media all and (max-width: 500px){
+
+        @media all and (max-width: 500px) {
             height: 55px;
         }
 
     }
+
     .otstup {
         padding-bottom: 66px;
     }

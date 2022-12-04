@@ -7,6 +7,7 @@ export default ({ app }) => {
         'profile',
         'turnir-slug',
         'menin-turnirlerim',
+        'menin-olimpiadalarym',
         'qmg-slug',
     ]
     app.router.beforeEach((to, from, next) => {

@@ -14,6 +14,24 @@
         background-size: auto 100%;
     }
 
+    .mb_text {
+        font-size: 15px;
+        line-height: 19px;
+    }
+    .mb_notification img{
+        width: 40px;
+        height: 40px;
+    }
+    .mb_head {
+        font-size: 36px;
+        line-height: 43px;
+    }
+    .mb_prepend {
+        font-size: 22px;
+        line-height: 26px;
+    }
+
+
     .link-item {
         width: auto;
         height: auto;
@@ -94,6 +112,22 @@
         font-size: 32px;
         line-height: 34px;
     }
+
+    .mb_notification {
+    padding: 20px 15px 20px 20px;
+}
+    .mb_head {
+    font-size: 34px;
+    line-height: 38px;
+}
+    .mb_prepend {
+    font-size: 20px;
+    line-height: 24px;
+}
+    .mb_title {
+    font-size: 16px;
+    line-height: 19px;
+}
 
     .block1 .bcontent button {
         font-size: 16px;
@@ -214,6 +248,31 @@
     .htext {
         font-size: 26px;
     }
+
+    .mb_body {
+        grid-template-columns: 1fr;
+        grid-gap: 20px;
+    }
+    .mb_head {
+    font-size: 30px;
+    line-height: 34px;
+}
+    .mb_prepend {
+    font-size: 18px;
+    line-height: 22px;
+}
+    .mb_text {
+    font-size: 14px;
+    line-height: 18px;
+}
+    .mb_notification img {
+    width: 35px;
+    height: 35px;
+}
+    .mb_notification {
+    grid-gap: 15px;
+}
+
 
     .block1 .dtext {
         font-size: 14px;
@@ -500,7 +559,18 @@
         font-size: 14px;
         line-height: 16px;
     }
-
+    .mb_head {
+    font-size: 27px;
+    line-height: 31px;
+}
+.mb_prepend {
+    font-size: 16px;
+    line-height: 20px;
+}
+    .mb_text {
+    font-size: 13px;
+    line-height: 17px;
+}
     .lbody {
         font-size: 10px;
         line-height: 12px;
@@ -666,6 +736,15 @@
         line-height: 28px;
     }
 
+    .mb_head {
+    font-size: 24px;
+    line-height: 29px;
+}
+    .mb_prepend {
+    font-size: 14px;
+    line-height: 18px;
+}
+
     .mobile_main_slider .block2 .dtext,
     .mobile_main_slider .block3 .dtext {
         margin-top: 15px;
@@ -694,6 +773,10 @@
     .link-item {
         padding: 10px 16px;
     }
+    .mb_head {
+    font-size: 21px;
+    line-height: 27px;
+}
 }
 
 @media all and (max-width: 372px) {

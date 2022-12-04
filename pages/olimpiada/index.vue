@@ -366,6 +366,7 @@
                 font-size: 20px;
                 font-weight: 800;
                 line-height: 23px;
+                position: relative;
                 text-transform: uppercase;
                 @media all and (max-width: 767px){
                     font-size: 18px;
@@ -375,6 +376,7 @@
                     position: absolute;
                     width: 12px;
                     height: 12px;
+                    right: 0;
                     border-bottom: 2px solid #fff;
                     border-left: 2px solid #fff;
                     transform: translateX(-30px) rotate(-45deg);
@@ -384,11 +386,12 @@
                 &::after{
                     content: '';
                     position: absolute;
+                    left: 0;
                     width: 12px;
                     height: 12px;
                     border-bottom: 2px solid #fff;
                     border-left: 2px solid #fff;
-                    transform: translateX(18px) rotate(-45deg);
+                    transform: translate(30px, -22px) rotate(-45deg);
                     animation: animate2 0.7s alternate infinite;
                 }
             }
@@ -404,8 +407,8 @@
         100%{transform: translate(-30px,4px) rotate(-45deg);}
     }
     @keyframes animate2{
-        0%{transform: translate(18px,-2px) rotate(-45deg);}
-        100%{transform: translate(18px,4px) rotate(-45deg);}
+        0%{transform: translate(30px,-22px) rotate(-45deg);}
+        100%{transform: translate(30px,-16px) rotate(-45deg);}
     }
     .olimp_list {
         .category-overflow{

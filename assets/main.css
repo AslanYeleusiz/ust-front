@@ -448,7 +448,8 @@ select:focus{
     line-height: 19px;
 }
 
-/*Main sharalar*/
+/*
+Main sharalar
 .main_sharalar{
     padding: 100px 0;
     background: #F8F8F8;
@@ -495,7 +496,92 @@ select:focus{
     font-size: 16px;
     line-height: 19px;
 }
+*/
 
+/*Main diploms*/
+
+.main_diploms{
+    padding: 100px 0;
+    background: #F8F8F8;
+}
+.mb_notification{
+    display: grid;
+    grid-template-columns: auto 1fr;
+    grid-gap: 20px;
+    align-items: center;
+    background: #EAFFEA;
+    border: 1px solid #03B113;
+    border-radius: 10px;
+    padding: 30px 20px 30px 30px;
+}
+.mb_text{
+    color: #363636;
+    font-size: 18px;
+    font-weight: 400;
+    line-height: 21px;
+
+}
+.mb_head{
+    font-size: 40px;
+    font-weight: 800;
+    line-height: 47px;
+    text-align: center;
+    margin-top: 50px;
+    color: #363636;
+}
+.mb_prepend{
+    margin-top: 10px;
+    font-size: 24px;
+    font-weight: 600;
+    line-height: 28px;
+    text-transform: uppercase;
+}
+.mb_body{
+    margin-top: 50px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 20px;
+}
+.mb_block{
+    height: 100%;
+    padding: 25px 20px 30px;
+    background-color: #FFFFFF;
+    background-position: 100% 105%;
+    background-repeat: no-repeat;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    border: 1px solid #F0F0F0;
+    border-radius: 6px;
+    transition: 0.2s;
+}
+
+.mb_block:hover{
+    cursor: pointer;
+    box-shadow: 0px 4px 50px rgba(0, 0, 0, 0.1);
+}
+.mb_block:hover .mb_title{
+    color: #1E63E9;
+}
+.mb_title{
+    font-size: 18px;
+    font-weight: 600;
+    line-height: 21px;
+    color: #000000;
+    padding-bottom: 5px;
+}
+.mb_block img{
+    padding-right: 10px;
+}
+.mb_block .a-c{
+    display: flex;
+    color: #888888;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 16px;
+    margin-top: 10px;
+
+}
 
 /*main_calculator*/
 .main_calc{

@@ -1,6 +1,8 @@
 <template>
     <div>
         <headerLink :head='head' active=1 />
+        <turnirPopup :active="myactive" @close="myactive=0" :tuser="tuser" @testTapsyru="testTapsyru" @oplataCert="getCertificate" />
+        <oplataPopup :price="tuser.price" :oplataOpen="oplataPopup" @closePopup="oplataPopup=0" @next="oplataPopup++" />
         <div class="main">
             <div class="cst-ct">
                 <div class="informer">
@@ -15,7 +17,7 @@
             </div>
         </div>
         <belsendi_turnirler v-if="active" :loading="loading" :turnirs="turnirs" />
-        <muragat v-else :thisYear="thisYear" />
+        <muragat v-else :thisYear="thisYear" @moreResults="moreResults" @testTapsyru="testTapsyru" @getCertificate="getCertificate" />
     </div>
 </template>
 
@@ -26,12 +28,16 @@
     import headerLink from '@/components/header.vue'
     import belsendi_turnirler from '@/components/materials/my_turnirs/belsendi_turnirler.vue'
     import muragat from '@/components/materials/my_turnirs/muragat.vue'
+    import turnirPopup from '@/components/popups/turnirPopup.vue'
+    import oplataPopup from '@/components/popups/oplataPopup.vue'
 
     export default {
         components: {
             headerLink,
             Lottie,
             belsendi_turnirler,
+            turnirPopup,
+            oplataPopup,
             muragat
         },
         data() {
@@ -48,7 +54,17 @@
                 },
                 active: 1,
                 animationSpeed: 1,
+                oplataPopup: 0,
                 loading: 1,
+                tuser: {
+                    turnir: {
+                        name: null,
+                    },
+                    diplom: null,
+                    name: null,
+                    price: 500,
+                },
+                myactive: 0,
                 turnirs: [],
                 muragat_count: null,
                 thisYear: 2022,
@@ -57,6 +73,69 @@
         methods: {
             handleAnimation: function(anim) {
                 this.anim = anim;
+            },
+            moreResults(tuser){
+                console.log(tuser)
+                this.tuser = tuser;
+                this.tuser.dengei = "Республикалық"
+                switch(tuser.turnir.category){
+                    case 1: {this.tuser.turnir.cat_name = "Тәрбиеші"; break;}
+                    case 2: {this.tuser.turnir.cat_name = "Ұстаз"; break;}
+                    case 3: {this.tuser.turnir.cat_name = "Оқушы"; break;}
+                    case 4: {this.tuser.turnir.cat_name = "Студент"; break;}
+                }
+                this.myactive = 1;
+            },
+            testTapsyru(tuser_id, index){
+                this.$api.$get('/turnirs/' + this.tuser.lat_name + '-' + this.tuser.turnir.id + '/test').then((res) => {
+                    this.$router.push({
+                        name: 'turnir-test',
+                        params: {
+                            questions: res.questions,
+                            question_count: res.questions.length,
+                            turnir: this.tuser.turnir,
+                            fio_user: this.tuser.fio_user,
+                            id_user: this.tuser.id,
+                        }
+                    });
+                })
+            },
+            getCertificate(index, id){
+                this.$api.get('/turnirs/'+id+'/certificate', {
+                    responseType: 'blob'
+                }).then((response)=>{
+                    var fileURL = window.URL.createObjectURL(new Blob([response.data]));
+                    var fileLink = document.createElement('a');
+                    fileLink.href = fileURL;
+                    var d = new Date();
+                    fileLink.setAttribute('download', d.toLocaleString()+'.jpeg');
+                    document.body.appendChild(fileLink);
+                    fileLink.click();
+                }).catch((err)=>{
+                    if(err.response.status == 422){
+                        this.active = 0
+                        this.oplataPopup = 6
+                        this.oplataToGetCertificate(index)
+                    }
+                })
+            },
+            oplataToGetCertificate(index){
+                var id = this.tuser.id
+                this.$api.get('/turnirs/'+id+'/purchase').then((res)=>{
+                    if(res.data.success){
+                        this.oplataPopup = 7
+                        this.tuser.success = 1
+                        const userToUpdate = {
+                            ...this.$auth.user
+                        }
+                        userToUpdate.balance = res.data.balance
+                        this.$auth.setUser(userToUpdate)
+                    }
+                }).catch((err)=>{
+                    if(err.response.data.errors.no_balance)
+                        this.turnir.price = this.tuser.price
+                        this.oplataPopup = 5
+                })
             },
             getData() {
                 this.loading = 1

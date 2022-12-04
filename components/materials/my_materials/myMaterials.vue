@@ -4,7 +4,7 @@
             <div class="batlygy">
                 Барлығы: {{materials_count}}
             </div>
-            <btnGroup :category='filter' placeholder='Барлығы' type='2' />
+            <btnGroup :category='filter' placeholder='Барлығы' type='2' @entered-category='filterSearch($event)' />
         </div>
         <hr>
         <not_found v-if="loading == 2" text="Материалдар тізімі бос." desc="Материал жариялау үшін 'Метериалды жариялау' бастырмасын басыныз" btnText="Метериалды жариялау" link="/zharialau" />
@@ -54,6 +54,7 @@
                 }, {
                     name: 'Ақылы материалдарым'
                 }],
+                filterInner: 0,
                 loading: false,
                 materials: [],
                 materials_count: 0,
@@ -68,7 +69,8 @@
                 this.loading = true;
                 await this.$api.$get('/menin-materialdarym', {
                     params: {
-                        page: this.currentPage
+                        page: this.currentPage,
+                        filter: this.filterInner,
                     }
                 }).then(res => {
                     console.log(res);
@@ -84,6 +86,10 @@
                     console.log('error: ' + error);
                 });
 
+            },
+            filterSearch(e){
+                this.filterInner = e
+                this.getData()
             },
             getCertificate(id) {
                 this.$axios.get('/word/' + id + '/certificate', {

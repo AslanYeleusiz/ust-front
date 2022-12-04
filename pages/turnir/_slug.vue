@@ -31,7 +31,7 @@
                                         <div v-if="form.go" class="score">Балл: {{form.durys+form.kate}}/{{form.durys}}</div>
                                     </div>
                                     <div v-if="form.go" class="wrap grid">
-                                        <editBtn @click.native="getCertificate(index)" :text="certCalc(form.diplom)+(form.success ? '' : ' - '+form.price+' тг')" img='3' />
+                                        <editBtn @click.native="getCertificate(index,form.id)" :text="certCalc(form.diplom)+(form.success ? '' : ' - '+form.price+' тг')" img='3' />
                                         <editBtn @click.native="details(index)" text="Толығырақ" img='4' />
                                     </div>
                                     <div v-if="!form.success" class="wrap">
@@ -220,7 +220,7 @@
                     return id+' дәрежелі дипломды жүктеу'
                 }
             },
-            getCertificate(index){
+            getCertificate(index,id){
 
                  var id = this.forms[index].id
                 this.$api.get('/turnirs/'+id+'/certificate', {

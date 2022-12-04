@@ -41,7 +41,7 @@
                                                 <div class="btn_list">
                                                     <template v-if="tuser.bari_tapsirdy">
                                                         <div class="cst_size_btn v1">
-                                                            <editBtn :text="calcSertType(tuser.o_tizim.result) + ' жүктеу'" img='3' />
+                                                            <editBtn @click.native="getCertificate(tuser.idd)" :text="calcSertType(tuser.o_tizim.result) + ' жүктеу'" img='3' />
                                                         </div>
                                                         <div class="cst_size_btn v2">
                                                             <editBtn text="Ата-анаға алғыс хатты жүктеу" img='3' />
@@ -145,6 +145,19 @@
                 this.activeMonth = []
                 this.year = this.years[res]
                 this.getData()
+            },
+            getCertificate(id){
+                this.$api.get('/olimpiada/'+id+'/certificate',{
+                    responseType: 'blob'
+                }).then((response)=>{
+                    var fileURL = window.URL.createObjectURL(new Blob([response.data]));
+                    var fileLink = document.createElement('a');
+                    fileLink.href = fileURL;
+                    var d = new Date();
+                    fileLink.setAttribute('download', d.toLocaleString()+'.jpeg');
+                    document.body.appendChild(fileLink);
+                    fileLink.click();
+                })
             },
             getData() {
                 this.$api.$get('/olimpiada/olimpiadalarym/muragat', {

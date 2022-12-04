@@ -4,7 +4,7 @@
         <successPopup />
         <leftSlideBar :slide-open="slideActive" @openMenu="slideBarShow" @openLogin="loginPopup=1" />
         <mainHeader @openMenu="slideBarShow" />
-        <Nuxt />
+        <Nuxt v-if="hasLoaded" />
         <helpButton />
         <footerDefault />
     </div>
@@ -30,6 +30,7 @@
             return {
                 slideActive: true,
                 loginPopup: 0,
+                hasLoaded: false,
             }
         },
         props: {
@@ -48,7 +49,12 @@
             this.$bus.$on('closeMenu', ()=>{
                 this.slideActive = true;
             })
-            this.slideActive = window.innerWidth <= 769 ? true : false;
+            setTimeout(()=>{
+                this.slideActive = (window.innerWidth <= 769 ? true : false);
+            },700)
+        },
+        created(){
+            this.hasLoaded = true;
         }
     }
 
